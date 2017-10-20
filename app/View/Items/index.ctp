@@ -2,27 +2,27 @@
 
 <h1>Blog posts</h1>
 <?php echo $this->Html->link(
-    'Add Post',
-    array('controller' => 'posts', 'action' => 'add')
+    '追加する',
+    array('controller' => 'items', 'action' => 'add')
 ); ?>
 <table>
     <tr>
-        <th>Id</th>
-        <th>Title</th>
+        <th>番号</th>
+        <th>カテゴリ</th>
         <th>Created</th>
     </tr>
 
     <!-- ここから、$posts配列をループして、投稿記事の情報を表示 -->
 
-    <?php foreach ($posts as $post): ?>
+    <?php foreach ($items as $item): ?>
     <tr>
-        <td><?php echo $post['Post']['id']; ?></td>
+        <td><?php echo $item['Item']['id']; ?></td>
         <td>
-            <?php echo $this->Html->link($post['Post']['title'],
-array('controller' => 'posts', 'action' => 'view', $post['Post']['id'])); ?>
+            <?php echo $this->Html->link($item['Item']['category'],
+array('controller' => 'items', 'action' => 'view', $item['Item']['category'])); ?>
         </td>
-        <td><?php echo $post['Post']['created']; ?></td>
+        <td><?php echo $item['Item']['created']; ?></td>
     </tr>
     <?php endforeach; ?>
-    <?php unset($post); ?>
+    <?php unset($item); ?>
 </table>
