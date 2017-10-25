@@ -25,9 +25,6 @@
         <th>作成日時</th>
         <th>最終更新日時</th>
     </tr>
-
-    <!-- ここから、$posts配列をループして、投稿記事の情報を表示 -->
-
     <?php foreach ($items as $item): ?>
     <tr>
         <td><?php echo $item['Item']['id']; ?></td>
