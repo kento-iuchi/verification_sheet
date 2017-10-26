@@ -49,10 +49,11 @@
         <td><?php echo $item['Item']['created']; ?></td>
         <td><?php echo $item['Item']['modified']; ?></td>
     </tr>
+    <?php endforeach; ?>
     <tr>
-        <?php echo $this->Form->create('Item');?>
+        <?php echo $this->Form->create('Item', array('url' => 'add'));?>
         <td></td>
-        <td><?php echo $this->Form->input('category', array('label' => false));?></td>
+        <td><?php echo $this->Form->input('category', array('label' => false));?></td>/td>
         <td><?php echo $this->Form->input('division', array('label' => false));?></td>
         <td><?php echo $this->Form->input('content', array('label' => false));?></td>
         <td><?php echo $this->Form->input('chatwork_url', array('label' => false));?></td>
@@ -70,8 +71,7 @@
         <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
         <td><?php echo $this->Form->input('response_to_confirm_comment', array('label' => false));?></td>
-        <td><?php echo $this->Form->end('送信', array('label' => false));?></td>
+        <td><?php echo $this->Form->end('送信');?></td>
     </tr>
-    <?php endforeach; ?>
     <?php unset($item); ?>
 </table>
