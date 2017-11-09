@@ -1,5 +1,6 @@
 <!-- File: /app/View/Posts/index.ctp -->
 
+
 <table>
     <tr id="table_titles">
         <th>番号</th>
@@ -8,7 +9,7 @@
         <th>内容</th>
         <th>chatwork URL</th>
         <th>github URL</th>
-        <th>確認優先度<br>必須リリース日</th>
+        <th>確認優先度<br>（必須リリース日）</th>
         <th>プルリク</th>
         <th>プルリク<br>更新日</th>
         <th>ステータス</th>
@@ -40,7 +41,7 @@
         <td><?php echo $item['Item']['status']; ?></td>
         <td><?php echo $item['Item']['tech_release_judgement']; ?></td>
         <td><?php echo $item['Item']['supp_release_judgement']; ?></td>
-        <td><?php echo $item['Item']['sale_release_judgement']; ?></td>
+        <td><?php echo $item['Item']['elapsed']; ?></td>
         <td><?php echo $item['Item']['scheduled_release_date']; ?></td>
         <td><?php echo $item['Item']['grace_days_of_verification_complete']; ?></td>
         <td><?php echo $item['Item']['merge_finish_date_to_master']; ?></td>
@@ -50,7 +51,7 @@
         <td><?php echo $item['Item']['created']; ?></td>
         <td><?php echo $item['Item']['modified']; ?></td>
         <td><?php echo $this->Html->link('編集', array('action'=>'edit', $item['Item']['id'])); ?></td>
-        <td></td>
+        <td><?php echo $this->Form->postLink('削除', array('action' => 'delete', $item['Item']['id'])); ?></td>
     </tr>
     <?php endforeach; ?>
     <tr>

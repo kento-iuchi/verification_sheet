@@ -6,7 +6,7 @@ class ItemsController extends AppController {
     public function index() {
         $this->set('items', $this->Item->find('all'));
 
-        $this->autoLayout = false;
+        // $this->autoLayout = false;
         $this->layout = 'IndexLayout';
     }
 
@@ -34,6 +34,7 @@ class ItemsController extends AppController {
         return $this->redirect(array('action' => 'index'));
     }
 
+
     public function edit($id = null) {
         $this->Item->id = $id;
         if ($this->request->is('get')) {
@@ -47,6 +48,25 @@ class ItemsController extends AppController {
                 $this->Session->error(__('failed!'));
             }
         }
+    }
+
+
+    public function delete($id) {
+        if ($this->request->is('get')) {
+            throw new MethodNotAllowedException();
+        }
+
+        if ($this->Item->delete($id)) {
+            $this->Flash->success(
+                __('The post with id: %s has been deleted.', h($id))
+            );
+        } else {
+            $this->Flash->error(
+                __('The post with id: %s could not be deleted.', h($id))
+            );
+        }
+
+        return $this->redirect(array('action' => 'index'));
     }
 
 
