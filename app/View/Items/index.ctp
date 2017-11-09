@@ -1,12 +1,24 @@
 <!-- File: /app/View/Posts/index.ctp -->
 
-
-<table>
-    <tr id="table_titles">
+<div id="main_table">
+<table id="view_part_header" class="table_view_part">
+    <tr class="table_titles">
         <th>番号</th>
         <th>カテゴリ</th>
         <th>区分</th>
         <th>内容</th>
+    </tr>
+    <?php foreach ($items as $item): ?>
+    <tr id="item_<?php echo h($item['Item']['id']); ?>" class="view_part_item">
+        <td><?php echo $item['Item']['id']; ?></td>
+        <td><?php echo $item['Item']['category']; ?></td>
+        <td><?php echo $item['Item']['division']; ?></td>
+        <td><?php echo $item['Item']['content']; ?></td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+<table id="view_part_data" class="table_view_part">
+    <tr class="table_titles">
         <th>chatwork URL</th>
         <th>github URL</th>
         <th>確認優先度<br>（必須リリース日）</th>
@@ -28,11 +40,7 @@
         <th></th>
     </tr>
     <?php foreach ($items as $item): ?>
-    <tr id="item_<?php echo h($item['Item']['id']); ?>">
-        <td><?php echo $item['Item']['id']; ?></td>
-        <td><?php echo $item['Item']['category']; ?></td>
-        <td><?php echo $item['Item']['division']; ?></td>
-        <td><?php echo $item['Item']['content']; ?></td>
+    <tr id="item_<?php echo h($item['Item']['id']); ?>" class="view_part_item">
         <td><?php echo $item['Item']['chatwork_url']; ?></td>
         <td><?php echo $item['Item']['github_url']; ?></td>
         <td><?php echo $item['Item']['confirm_priority']; ?></td>
@@ -54,6 +62,9 @@
         <td><?php echo $this->Form->postLink('削除', array('action' => 'delete', $item['Item']['id']), array('confirm'=>'削除しますか?')); ?></td>
     </tr>
     <?php endforeach; ?>
+</table>
+<?php unset($item); ?>
+<table>
     <tr>
         <?php echo $this->Form->create('Item', array('url' => 'add'));?>
         <td></td>
@@ -77,5 +88,5 @@
         <td><?php echo $this->Form->input('response_to_confirm_comment', array('label' => false));?></td>
         <td><?php echo $this->Form->end('送信');?></td>
     </tr>
-    <?php unset($item); ?>
 </table>
+</div>
