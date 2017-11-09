@@ -51,7 +51,7 @@
         <td><?php echo $item['Item']['created']; ?></td>
         <td><?php echo $item['Item']['modified']; ?></td>
         <td><?php echo $this->Html->link('編集', array('action'=>'edit', $item['Item']['id'])); ?></td>
-        <td><?php echo $this->Form->postLink('削除', array('action' => 'delete', $item['Item']['id'])); ?></td>
+        <td><?php echo $this->Form->postLink('削除', array('action' => 'delete', $item['Item']['id']), array('confirm'=>'削除しますか?')); ?></td>
     </tr>
     <?php endforeach; ?>
     <tr>
