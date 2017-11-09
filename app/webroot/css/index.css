@@ -1,8 +1,41 @@
+#main_table {
+    width: 1800px;
+    position: relative;
+}
+
 .table_titles {
+    height: 100px;
     font-size: 16px;
     color: white;
     background-color: #838b0d;
 }
+
+#view_part_header {
+    position: absolute;
+    width: 20%;
+    left: 0px;
+    top: 0px;
+}
+
+#view_part_data {
+    position: absolute;
+    left:20%;
+    top:0px;
+    overflow-x:scroll;
+}
+
+#view_part_data table{
+    width: 250%;
+}
+
+.view_part_item {
+    height: 64px;
+}
+
+#input_part {
+    position: absolute;
+}
+
 
 tr:nth-child(odd){
     background: ##dadea7;

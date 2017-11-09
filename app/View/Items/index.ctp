@@ -17,7 +17,8 @@
     </tr>
     <?php endforeach; ?>
 </table>
-<table id="view_part_data" class="table_view_part">
+<div id="view_part_data">
+<table class="table_view_part">
     <tr class="table_titles">
         <th>chatwork URL</th>
         <th>github URL</th>
@@ -63,8 +64,9 @@
     </tr>
     <?php endforeach; ?>
 </table>
+</div>
 <?php unset($item); ?>
-<table>
+<table id="input_part">
     <tr>
         <?php echo $this->Form->create('Item', array('url' => 'add'));?>
         <td></td>
