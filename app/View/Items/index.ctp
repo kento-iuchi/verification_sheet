@@ -1,6 +1,6 @@
 <!-- File: /app/View/Posts/index.ctp -->
-
-<div id="main_table">
+<?php echo $this->Html->script('jquery-3.2.1.min.js', array( 'inline' => false )); ?>
+<div id="view_part">
 <table id="view_part_header" class="table_view_part">
     <tr class="table_titles">
         <th>番号</th>
@@ -65,8 +65,33 @@
     <?php endforeach; ?>
 </table>
 </div>
+</div>
 <?php unset($item); ?>
-<table id="input_part">
+<?php echo $this->Html->script('index.js'); ?>
+<div id="input_part">
+<p><h2>新規作成</h2></p>
+<table>
+    <tr class="table_titles">
+        <th>chatwork URL</th>
+        <th>github URL</th>
+        <th>確認優先度<br>（必須リリース日）</th>
+        <th>プルリク</th>
+        <th>プルリク<br>更新日</th>
+        <th>ステータス</th>
+        <th>技術リリース<br>OK判断日</th>
+        <th>サポートリリース<br>OK判断日</th>
+        <th>経過日数</th>
+        <th>リリース<br>予定日</th>
+        <th>検証完了<br>猶予日数</th>
+        <th>master<br>マージ完了日</th>
+        <th>確認ポイント</th>
+        <th>確認コメント</th>
+        <th>確認コメント対応</th>
+        <th>作成日時</th>
+        <th>最終更新日時</th>
+        <th></th>
+        <th></th>
+    </tr>
     <tr>
         <?php echo $this->Form->create('Item', array('url' => 'add'));?>
         <td></td>

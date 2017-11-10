@@ -6,6 +6,7 @@
         <?= $this->fetch('title') ?>
     </title>
     <?= $this->Html->css('index.css') ?>
+    <?= $this->fetch('script'); ?>
 </head>
 <body>
     <section class="container">

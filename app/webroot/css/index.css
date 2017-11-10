@@ -1,4 +1,4 @@
-#main_table {
+#view_part {
     width: 1800px;
     position: relative;
 }
@@ -33,7 +33,8 @@
 }
 
 #input_part {
-    position: absolute;
+    position: relative;
+    padding-top: 20px;
 }
 
 
