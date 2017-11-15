@@ -1,6 +1,7 @@
 #view_part {
     width: 1800px;
     position: relative;
+    left: 3%;
 }
 
 .table_titles {
@@ -34,9 +35,8 @@
 
 #input_part {
     position: relative;
-    padding-top: 20px;
+    left: 3%;
 }
-
 
 tr:nth-child(odd){
     background: ##dadea7;

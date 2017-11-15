@@ -1,7 +1,8 @@
 $(function(){
     'use strict';
 
-    var viewPartHeight = $('#view_part_header').height()
+    var viewPartHeight = $('#view_part_header').outerHeight();
     console.log(viewPartHeight);
-    $('#input_part').css('top', viewPartHeight + 'px');
+    var inputPartTop = viewPartHeight + 30;
+    $('#input_part').css('top', inputPartTop + 'px');
 });

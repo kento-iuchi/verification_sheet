@@ -1,5 +1,6 @@
 <!-- File: /app/View/Posts/index.ctp -->
 <?php echo $this->Html->script('jquery-3.2.1.min.js', array( 'inline' => false )); ?>
+<?php echo $this->Html->script('index.js'); ?>
 <div id="view_part">
 <table id="view_part_header" class="table_view_part">
     <tr class="table_titles">
@@ -9,7 +10,7 @@
         <th>内容</th>
     </tr>
     <?php foreach ($items as $item): ?>
-    <tr id="item_<?php echo h($item['Item']['id']); ?>" class="view_part_item">
+    <tr id="item_<?php echo h($item['Item']['id'] . '_head'); ?>" class="view_part_item">
         <td><?php echo $item['Item']['id']; ?></td>
         <td><?php echo $item['Item']['category']; ?></td>
         <td><?php echo $item['Item']['division']; ?></td>
@@ -67,11 +68,14 @@
 </div>
 </div>
 <?php unset($item); ?>
-<?php echo $this->Html->script('index.js'); ?>
 <div id="input_part">
 <p><h2>新規作成</h2></p>
 <table>
     <tr class="table_titles">
+        <th>番号</th>
+        <th>カテゴリ</th>
+        <th>区分</th>
+        <th>内容</th>
         <th>chatwork URL</th>
         <th>github URL</th>
         <th>確認優先度<br>（必須リリース日）</th>
@@ -87,10 +91,6 @@
         <th>確認ポイント</th>
         <th>確認コメント</th>
         <th>確認コメント対応</th>
-        <th>作成日時</th>
-        <th>最終更新日時</th>
-        <th></th>
-        <th></th>
     </tr>
     <tr>
         <?php echo $this->Form->create('Item', array('url' => 'add'));?>
