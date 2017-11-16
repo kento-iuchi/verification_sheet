@@ -46,6 +46,9 @@ tr:nth-child(even){
     background: #ebefba;
 }
 
+td.selected{
+    background: #FFFFFF;
+}
 
 body {
   padding: 0;

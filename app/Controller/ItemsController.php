@@ -19,18 +19,7 @@ class ItemsController extends AppController {
             }
             $this->Flash->error(__('Unable to add your post.'));
         }
-        // if ($this->request->is('ajax')) {
-        //     $this->Item->create();
-        //     if ($this->Item->save($this->request->data)) {
-        //         $this->autoRender = false;
-        //         $this->autoLayout = false;
-        //         $response = $this->request->data['id'];
-        //         $this->header('Content-Type: application/json');
-        //         echo json_encode($response);
-        //         exit();
-        //     }
-        //     $this->Flash->error(__('Unable to add your post.'));
-        // }
+
         return $this->redirect(array('action' => 'index'));
     }
 

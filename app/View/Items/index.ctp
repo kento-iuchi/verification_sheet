@@ -11,10 +11,10 @@
     </tr>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '_head'); ?>" class="view_part_item">
-        <td><?php echo $item['Item']['id']; ?></td>
-        <td><?php echo $item['Item']['category']; ?></td>
-        <td><?php echo $item['Item']['division']; ?></td>
-        <td><?php echo $item['Item']['content']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_id";?>"><?php echo $item['Item']['id']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_category";?>"><?php echo $item['Item']['category']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_division";?>"><?php echo $item['Item']['division']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_content";?>"><?php echo $item['Item']['content']; ?></td>
     </tr>
     <?php endforeach; ?>
 </table>
@@ -42,22 +42,22 @@
         <th></th>
     </tr>
     <?php foreach ($items as $item): ?>
-    <tr id="item_<?php echo h($item['Item']['id']); ?>" class="view_part_item">
-        <td><?php echo $item['Item']['chatwork_url']; ?></td>
-        <td><?php echo $item['Item']['github_url']; ?></td>
-        <td><?php echo $item['Item']['confirm_priority']; ?></td>
-        <td><?php echo $item['Item']['pullrequest']; ?></td>
-        <td><?php echo $item['Item']['pullrequest_update']; ?></td>
-        <td><?php echo $item['Item']['status']; ?></td>
-        <td><?php echo $item['Item']['tech_release_judgement']; ?></td>
-        <td><?php echo $item['Item']['supp_release_judgement']; ?></td>
-        <td><?php echo $item['Item']['elapsed']; ?></td>
-        <td><?php echo $item['Item']['scheduled_release_date']; ?></td>
-        <td><?php echo $item['Item']['grace_days_of_verification_complete']; ?></td>
-        <td><?php echo $item['Item']['merge_finish_date_to_master']; ?></td>
-        <td><?php echo $item['Item']['confirm_points']; ?></td>
-        <td><?php echo $item['Item']['confirm_comment']; ?></td>
-        <td><?php echo $item['Item']['response_to_confirm_comment']; ?></td>
+    <tr id="item_<?php echo h($item['Item']['id'] . '_data'); ?>" class="view_part_item">
+        <td id="<?php echo $item['Item']['id'] . "_chatwork_url";?>"><?php echo $item['Item']['chatwork_url']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_github_url";?>"><?php echo $item['Item']['github_url']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_confirm_priority";?>"><?php echo $item['Item']['confirm_priority']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_pullrequest";?>"><?php echo $item['Item']['pullrequest']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_pullrequest_update";?>"><?php echo $item['Item']['pullrequest_update']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_status";?>"><?php echo $item['Item']['status']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_tech_release_judgement";?>"><?php echo $item['Item']['tech_release_judgement']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_supp_release_judgement";?>"><?php echo $item['Item']['supp_release_judgement']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_elapsed";?>"><?php echo $item['Item']['elapsed']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_scheduled_release_date";?>"><?php echo $item['Item']['scheduled_release_date']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_grace_days_of_verification_complete";?>"><?php echo $item['Item']['grace_days_of_verification_complete']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_merge_finish_date_to_master";?>"><?php echo $item['Item']['merge_finish_date_to_master']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_confirm_points";?>"><?php echo $item['Item']['confirm_points']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_confirm_comment";?>"><?php echo $item['Item']['confirm_comment']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_response_to_confirm_comment";?>"><?php echo $item['Item']['response_to_confirm_comment']; ?></td>
         <td><?php echo $item['Item']['created']; ?></td>
         <td><?php echo $item['Item']['modified']; ?></td>
         <td><?php echo $this->Html->link('編集', array('action'=>'edit', $item['Item']['id'])); ?></td>
@@ -114,6 +114,15 @@
         <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
         <td><?php echo $this->Form->input('response_to_confirm_comment', array('label' => false));?></td>
         <td><?php echo $this->Form->end('送信');?></td>
+    </tr>
+    <tr>
+        <td><?php echo $this->Form->create('Item', array('url' => 'edit'));?>
+            <?php echo $this->Form->input('chatwork_url', array('label' => false));?>
+            <?php echo $this->Form->end('送信');?>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
     </tr>
 </table>
 </div>
