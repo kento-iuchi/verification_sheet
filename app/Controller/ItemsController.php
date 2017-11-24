@@ -1,7 +1,8 @@
 <?php
 class ItemsController extends AppController {
-    public $helpers = array('Html', 'Form', 'Flash', 'js');
-    public $components = array('Flash');
+    public $helpers = array('Html', 'Form', 'Flash', 'js',
+                            'Eip.Eip' => array('pathToJs' => '/bootstrap-editable/js/bootstrap-editable.min.js'));
+    public $components = array('Flash', 'Eip.eip');
 
     public function index() {
         $this->set('items', $this->Item->find('all'));
@@ -58,5 +59,14 @@ class ItemsController extends AppController {
         return $this->redirect(array('action' => 'index'));
     }
 
+
+    public function eipManual() {
+    	if (!$this->myOwnSecurity($this->Auth->user())) {
+    		return $this->redirect('/');
+    	}
+    	$data = $this->Eip->setupData('Page', array('Page' => array('is_active' => 1)));
+    	$saved = $this->Page->save($data);
+    	$this->set(compact('data', 'saved'));
+    }
 
 }

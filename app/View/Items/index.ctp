@@ -43,7 +43,7 @@
     </tr>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '_data'); ?>" class="view_part_item">
-        <td id="<?php echo $item['Item']['id'] . "_chatwork_url";?>"><?php echo $item['Item']['chatwork_url']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_chatwork_url";?>"><?php echo $this->Eip->input('Item.chatwork_url', $item); ?></td>
         <td id="<?php echo $item['Item']['id'] . "_github_url";?>"><?php echo $item['Item']['github_url']; ?></td>
         <td id="<?php echo $item['Item']['id'] . "_confirm_priority";?>"><?php echo $item['Item']['confirm_priority']; ?></td>
         <td id="<?php echo $item['Item']['id'] . "_pullrequest";?>"><?php echo $item['Item']['pullrequest']; ?></td>
