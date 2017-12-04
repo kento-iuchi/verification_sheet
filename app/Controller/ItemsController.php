@@ -1,7 +1,8 @@
 <?php
 class ItemsController extends AppController {
     public $helpers = array('Html', 'Form', 'Flash', 'js',
-                            'Eip.Eip' => array('pathToJs' => '/bootstrap-editable/js/bootstrap-editable.min.js'));
+                            'Eip.Eip' => array('pathToJs' => '/bootstrap-editable/js/bootstrap-editable.min.js'),
+                            'DatePicker');
     public $components = array('Flash', 'Eip.eip');
 
     public function index() {
@@ -68,5 +69,6 @@ class ItemsController extends AppController {
     	$saved = $this->Page->save($data);
     	$this->set(compact('data', 'saved'));
     }
+
 
 }

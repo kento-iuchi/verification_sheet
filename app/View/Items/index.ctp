@@ -1,6 +1,10 @@
 <!-- File: /app/View/Posts/index.ctp -->
 <?php echo $this->Html->script('jquery-3.2.1.min.js', array( 'inline' => false )); ?>
-<?php echo $this->Html->script('index.js'); ?>
+<?php echo $this->Html->script('jquery-migrate-3.0.1.js', array( 'inline' => false )); ?>
+<?php echo $this->Html->script('jquery-ui.js', array( 'inline' => false )); ?>
+<?php echo $this->Html->script('index.js', array( 'inline' => false )); ?>
+
+<?php echo $this->Html->css('jquery-ui.css', array( 'inline' => false )); ?>
 <div id="view_part">
 <table id="view_part_header" class="table_view_part">
     <tr class="table_titles">
@@ -29,6 +33,7 @@
         <th>ステータス</th>
         <th>技術リリース<br>OK判断日</th>
         <th>サポートリリース<br>OK判断日</th>
+        <th>営業リリース<br>OK判断日</th>
         <th>経過日数</th>
         <th>リリース<br>予定日</th>
         <th>検証完了<br>猶予日数</th>
@@ -51,6 +56,7 @@
         <td id="<?php echo $item['Item']['id'] . "_status";?>"><?php echo $item['Item']['status']; ?></td>
         <td id="<?php echo $item['Item']['id'] . "_tech_release_judgement";?>"><?php echo $item['Item']['tech_release_judgement']; ?></td>
         <td id="<?php echo $item['Item']['id'] . "_supp_release_judgement";?>"><?php echo $item['Item']['supp_release_judgement']; ?></td>
+        <td id="<?php echo $item['Item']['id'] . "_sale_release_judgement";?>"><?php echo $item['Item']['sale_release_judgement']; ?></td>
         <td id="<?php echo $item['Item']['id'] . "_elapsed";?>"><?php echo $item['Item']['elapsed']; ?></td>
         <td id="<?php echo $item['Item']['id'] . "_scheduled_release_date";?>"><?php echo $item['Item']['scheduled_release_date']; ?></td>
         <td id="<?php echo $item['Item']['id'] . "_grace_days_of_verification_complete";?>"><?php echo $item['Item']['grace_days_of_verification_complete']; ?></td>
@@ -84,6 +90,7 @@
         <th>ステータス</th>
         <th>技術リリース<br>OK判断日</th>
         <th>サポートリリース<br>OK判断日</th>
+        <th>営業リリース<br>OK判断日</th>
         <th>経過日数</th>
         <th>リリース<br>予定日</th>
         <th>検証完了<br>猶予日数</th>
@@ -101,15 +108,16 @@
         <td><?php echo $this->Form->input('chatwork_url', array('label' => false));?></td>
         <td><?php echo $this->Form->input('github_url', array('label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('pullrequest', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('pullrequest_update', array('label' => false));?></td>
+        <td><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
+        <td><?php echo $this->Datepicker->datepicker('pullrequest_update', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Form->input('status', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('tech_release_judgement', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('supp_release_judgement', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('sale_release_judgement', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('scheduled_release_date', array('label' => false));?></td>
+        <td><?php echo $this->Datepicker->datepicker('tech_release_judgement', array('type' => 'text', 'label' => false));?></td>
+        <td><?php echo $this->Datepicker->datepicker('supp_release_judgement', array('type' => 'text', 'label' => false));?></td>
+        <td><?php echo $this->Datepicker->datepicker('sale_release_judgement', array('type' => 'text', 'label' => false));?></td>
+        <td><?php echo $this->Form->input('elapsed', array('label' => false));?></td>
+        <td><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Form->input('grace_days_of_verification_complete', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('merge_finish_date_to_master', array('label' => false));?></td>
+        <td><?php echo $this->Datepicker->datepicker('merge_finish_date_to_maste', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
         <td><?php echo $this->Form->input('response_to_confirm_comment', array('label' => false));?></td>
