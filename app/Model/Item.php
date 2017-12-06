@@ -17,7 +17,9 @@ class Item extends AppModel {
 
 
     public function formatDate($date){
+        echo $date;
         $date = explode("/", $date);
+        print_r($date);
         $date = implode("-", array($date[2], $date[0], $date[1]));
         return $date;
     }

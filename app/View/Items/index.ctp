@@ -5,6 +5,7 @@
 <?php echo $this->Html->script('index.js', array( 'inline' => false )); ?>
 
 <?php echo $this->Html->css('jquery-ui.css', array( 'inline' => false )); ?>
+<?php echo $this->Form->create('Item', array('url' => 'add'));?>
 <div id="view_part">
 <table id="view_part_header" class="table_view_part">
     <tr class="table_titles">
@@ -21,6 +22,12 @@
         <td id="<?php echo $item['Item']['id'] . "_content";?>"><?php echo $item['Item']['content']; ?></td>
     </tr>
     <?php endforeach; ?>
+    <tr class="input_part">
+        <td></td>
+        <td><?php echo $this->Form->input('category', array('label' => false, 'style' => 'width:80px; height:40px;'));?></td>
+        <td><?php echo $this->Form->input('division', array('label' => false, 'style' => 'width:60px;'));?></td>
+        <td><?php echo $this->Form->input('content', array('label' => false));?></td>
+    </tr>
 </table>
 <div id="view_part_data">
 <table class="table_view_part">
@@ -70,42 +77,8 @@
         <td><?php echo $this->Form->postLink('削除', array('action' => 'delete', $item['Item']['id']), array('confirm'=>'削除しますか?')); ?></td>
     </tr>
     <?php endforeach; ?>
-</table>
-</div>
-</div>
-<?php unset($item); ?>
-<div id="input_part">
-<p><h2>新規作成</h2></p>
-<table>
-    <tr class="table_titles">
-        <th>番号</th>
-        <th>カテゴリ</th>
-        <th>区分</th>
-        <th>内容</th>
-        <th>chatwork URL</th>
-        <th>github URL</th>
-        <th>確認優先度<br>（必須リリース日）</th>
-        <th>プルリク</th>
-        <th>プルリク<br>更新日</th>
-        <th>ステータス</th>
-        <th>技術リリース<br>OK判断日</th>
-        <th>サポートリリース<br>OK判断日</th>
-        <th>営業リリース<br>OK判断日</th>
-        <th>経過日数</th>
-        <th>リリース<br>予定日</th>
-        <th>検証完了<br>猶予日数</th>
-        <th>master<br>マージ完了日</th>
-        <th>確認ポイント</th>
-        <th>確認コメント</th>
-        <th>確認コメント対応</th>
-    </tr>
-    <tr>
-        <?php echo $this->Form->create('Item', array('url' => 'add'));?>
-        <td></td>
-        <td><?php echo $this->Form->input('category', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('division', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('content', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('chatwork_url', array('label' => false));?></td>
+    <tr class="input_part">
+        <td><?php echo $this->Form->input('chatwork_url', array('label' => false, 'style' => 'width:160px;'));?></td>
         <td><?php echo $this->Form->input('github_url', array('label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
@@ -117,20 +90,13 @@
         <td><?php echo $this->Form->input('elapsed', array('label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Form->input('grace_days_of_verification_complete', array('label' => false));?></td>
-        <td><?php echo $this->Datepicker->datepicker('merge_finish_date_to_maste', array('type' => 'text', 'label' => false));?></td>
+        <td><?php echo $this->Datepicker->datepicker('merge_finish_date_to_master', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
         <td><?php echo $this->Form->input('response_to_confirm_comment', array('label' => false));?></td>
         <td><?php echo $this->Form->end('送信');?></td>
     </tr>
-    <tr>
-        <td><?php echo $this->Form->create('Item', array('url' => 'edit'));?>
-            <?php echo $this->Form->input('chatwork_url', array('label' => false));?>
-            <?php echo $this->Form->end('送信');?>
-        </td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
 </table>
 </div>
+</div>
+<?php unset($item); ?>
