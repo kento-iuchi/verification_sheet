@@ -1,10 +1,22 @@
+.container {
+  margin: 0 auto;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  font-family: Verdana, sans-serif;
+}
+
 table th,td{
     font-size: 12px;
 }
+
 #view_part {
     width: 1800px;
     position: relative;
-    left: 3%;
+    left: 1%;
 }
 
 #view_part_header {
@@ -26,7 +38,7 @@ table th,td{
 }
 
 .view_part_item {
-    height: 64px;
+    height: 32px;
 }
 
 .input_part textarea,input{
@@ -54,21 +66,8 @@ td.selected{
     background: #FFFFFF;
 }
 
-body {
-  padding: 0;
-  margin: 0;
-  font-size: 16px;
-  font-family: Verdana, sans-serif;
-}
-
 .container {
   margin: 0 auto;
-}
-
-h1 {
-  font-size: 16px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 5px;
 }
 
 ul > li {

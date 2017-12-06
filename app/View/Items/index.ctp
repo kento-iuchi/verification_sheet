@@ -7,7 +7,7 @@
 <?php echo $this->Html->css('jquery-ui.css', array( 'inline' => false )); ?>
 <?php echo $this->Form->create('Item', array('url' => 'add'));?>
 <div id="view_part">
-<table id="view_part_header" class="table_view_part">
+<table id="view_part_header">
     <tr class="table_titles">
         <th>番号</th>
         <th>カテゴリ</th>
