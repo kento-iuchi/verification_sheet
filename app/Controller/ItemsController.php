@@ -5,11 +5,15 @@ class ItemsController extends AppController {
                             'DatePicker');
     public $components = array('Flash', 'Eip.eip');
 
-    public function index() {
-        $this->set('items', $this->Item->find('all'));
+    public $paginate =  array(
+        'limit' => 2,
+        'sort' => 'id',
+    );
 
-        // $this->autoLayout = false;
+    public function index() {
         $this->layout = 'IndexLayout';
+        $this->set('items',  $this->paginate());
+        // $this->set('items', $this->Item->find('all'));
     }
 
     public function add() {
