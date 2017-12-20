@@ -29,7 +29,7 @@
         <td><?php echo $this->Form->input('content', array('label' => false));?></td>
     </tr>
 </table>
-<div id="view_part_data">
+<div id='view_part_data'>
 <table class="table_view_part">
     <tr class="table_titles">
         <th>chatwork URL</th>
@@ -97,6 +97,8 @@
         <td><?php echo $this->Form->end('送信');?></td>
     </tr>
 </table>
+</div>
+<div id="page_selecter">
 <?php echo $this->Paginator->numbers (
     array (
         'before' => $this->Paginator->hasPrev() ? $this->Paginator->first('<<').' | ' : '',

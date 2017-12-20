@@ -37,6 +37,10 @@ table th,td{
     width: 120%;
 }
 
+#page_selecter {
+    position: absolute;
+    display: none;
+}
 .view_part_item {
     height: 32px;
 }

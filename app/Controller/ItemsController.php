@@ -6,7 +6,7 @@ class ItemsController extends AppController {
     public $components = array('Flash', 'Eip.eip');
 
     public $paginate =  array(
-        'limit' => 2,
+        'limit' => 10,
         'sort' => 'id',
     );
 
@@ -43,6 +43,11 @@ class ItemsController extends AppController {
                 $this->Session->error(__('failed!'));
             }
         }
+    }
+
+
+    public function edit2($id = null){
+        echo "edit!!!";
     }
 
 
