@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors',1);
+
 class ItemsController extends AppController {
     public $helpers = array('Html', 'Form', 'Flash', 'js',
                             'Eip.Eip' => array('pathToJs' => '/bootstrap-editable/js/bootstrap-editable.min.js'),
@@ -30,7 +32,7 @@ class ItemsController extends AppController {
     }
 
 
-    public function edit($id = null) {
+    public function edit_beta($id = null) {
         $this->Item->id = $id;
         if ($this->request->is('get')) {
             $this->autoLayout = false;

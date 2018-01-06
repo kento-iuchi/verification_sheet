@@ -6,6 +6,11 @@
 
 <?php echo $this->Html->css('jquery-ui.css', array( 'inline' => false )); ?>
 <?php echo $this->Form->create('Item', array('url' => 'add'));?>
+
+<?php
+ini_set("display_errors", 'On');
+error_reporting(E_ALL);
+?>
 <div id="view_part">
 <table id="view_part_header">
     <tr class="table_titles">
@@ -73,7 +78,7 @@
         <td id="<?php echo $item['Item']['id'] . "_response_to_confirm_comment";?>"><?php echo $item['Item']['response_to_confirm_comment']; ?></td>
         <td><?php echo $item['Item']['created']; ?></td>
         <td><?php echo $item['Item']['modified']; ?></td>
-        <td><?php echo $this->Html->link('編集', array('action'=>'edit', $item['Item']['id'])); ?></td>
+        <td><?php echo $this->Html->link('編集', array('action'=>'edit_beta', $item['Item']['id'])); ?></td>
         <td><?php echo $this->Form->postLink('削除', array('action' => 'delete', $item['Item']['id']), array('confirm'=>'削除しますか?')); ?></td>
     </tr>
     <?php endforeach; ?>
