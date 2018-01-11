@@ -12,15 +12,27 @@ class Item extends AppModel {
         $this->data["Item"]["sale_release_judgement"] = $this->formatDate($this->data["Item"]["sale_release_judgement"]);
         $this->data["Item"]["scheduled_release_date"] = $this->formatDate($this->data["Item"]["scheduled_release_date"]);
         $this->data["Item"]["merge_finish_date_to_master"] = $this->formatDate($this->data["Item"]["merge_finish_date_to_master"]);
+
+        foreach ($this->data["Item"] as $key => $value) {
+            if($value == "*EMPTY*"){
+                $this->data["Item"][$key] = "";
+            }
+        }
+
         return true;
     }
 
 
     public function formatDate($date){
-        echo $date;
-        $date = explode("/", $date);
-        print_r($date);
-        $date = implode("-", array($date[2], $date[0], $date[1]));
-        return $date;
+        if(preg_match('/\d{2}\/\d{2}\/\d{4}/', $date, $matches)===1){
+            // echo $date;
+            $date = explode("/", $date);
+            // print_r($date);
+            $date = implode("-", array($date[2], $date[0], $date[1]));
+            return $date;
+        }
+        else{
+            return $date;
+        }
     }
 }

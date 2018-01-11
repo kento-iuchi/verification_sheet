@@ -48,8 +48,21 @@ class ItemsController extends AppController {
     }
 
 
-    public function edit2($id = null){
-        echo "edit!!!";
+    public function edit($id = null, $column_name, $content){
+        // var_dump($id);
+        // var_dump($column_name);
+        // var_dump($content);
+        $this->Item->id = $id;
+
+        $this->request->data = $this->Item->read();
+        $this->request->data["Item"][$column_name] = $content;
+        if ($this->request->is(['ajax'])) {
+            if ($this->Item->save($this->request->data)) {
+                echo $content;
+            } else {
+                echo "失敗です";
+            }
+        }
     }
 
 

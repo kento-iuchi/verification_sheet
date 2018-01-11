@@ -20,11 +20,11 @@ error_reporting(E_ALL);
         <th>内容</th>
     </tr>
     <?php foreach ($items as $item): ?>
-    <tr id="item_<?php echo h($item['Item']['id'] . '_head'); ?>" class="view_part_item">
-        <td id="<?php echo $item['Item']['id'] . "_id";?>"><?php echo $item['Item']['id']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_category";?>"><?php echo $item['Item']['category']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_division";?>"><?php echo $item['Item']['division']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_content";?>"><?php echo $item['Item']['content']; ?></td>
+    <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item">
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-id";?>"><?php echo $item['Item']['id']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-category";?>"><?php echo $item['Item']['category']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-division";?>"><?php echo $item['Item']['division']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-content";?>"><?php echo $item['Item']['content']; ?></td>
     </tr>
     <?php endforeach; ?>
     <tr class="input_part">
@@ -59,23 +59,23 @@ error_reporting(E_ALL);
         <th></th>
     </tr>
     <?php foreach ($items as $item): ?>
-    <tr id="item_<?php echo h($item['Item']['id'] . '_data'); ?>" class="view_part_item">
-        <td id="<?php echo $item['Item']['id'] . "_chatwork_url";?>"><?php echo $this->Eip->input('Item.chatwork_url', $item); ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_github_url";?>"><?php echo $item['Item']['github_url']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_confirm_priority";?>"><?php echo $item['Item']['confirm_priority']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_pullrequest";?>"><?php echo $item['Item']['pullrequest']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_pullrequest_update";?>"><?php echo $item['Item']['pullrequest_update']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_status";?>"><?php echo $item['Item']['status']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_tech_release_judgement";?>"><?php echo $item['Item']['tech_release_judgement']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_supp_release_judgement";?>"><?php echo $item['Item']['supp_release_judgement']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_sale_release_judgement";?>"><?php echo $item['Item']['sale_release_judgement']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_elapsed";?>"><?php echo $item['Item']['elapsed']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_scheduled_release_date";?>"><?php echo $item['Item']['scheduled_release_date']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_grace_days_of_verification_complete";?>"><?php echo $item['Item']['grace_days_of_verification_complete']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_merge_finish_date_to_master";?>"><?php echo $item['Item']['merge_finish_date_to_master']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_confirm_points";?>"><?php echo $item['Item']['confirm_points']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_confirm_comment";?>"><?php echo $item['Item']['confirm_comment']; ?></td>
-        <td id="<?php echo $item['Item']['id'] . "_response_to_confirm_comment";?>"><?php echo $item['Item']['response_to_confirm_comment']; ?></td>
+    <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>"><?php echo $this->Eip->input('Item.chatwork_url', $item); ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-github_url";?>"><?php echo $item['Item']['github_url']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_priority";?>"><?php echo $item['Item']['confirm_priority']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest";?>"><?php echo $item['Item']['pullrequest']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>"><?php echo $item['Item']['pullrequest_update']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-status";?>"><?php echo $item['Item']['status']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-tech_release_judgement";?>"><?php echo $item['Item']['tech_release_judgement']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>"><?php echo $item['Item']['supp_release_judgement']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>"><?php echo $item['Item']['sale_release_judgement']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-elapsed";?>"><?php echo $item['Item']['elapsed']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-scheduled_release_date";?>"><?php echo $item['Item']['scheduled_release_date']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>"><?php echo $item['Item']['grace_days_of_verification_complete']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-merge_finish_date_to_master";?>"><?php echo $item['Item']['merge_finish_date_to_master']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_points";?>"><?php echo $item['Item']['confirm_points']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>"><?php echo $item['Item']['confirm_comment']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>"><?php echo $item['Item']['response_to_confirm_comment']; ?></td>
         <td><?php echo $item['Item']['created']; ?></td>
         <td><?php echo $item['Item']['modified']; ?></td>
         <td><?php echo $this->Html->link('編集', array('action'=>'edit_beta', $item['Item']['id'])); ?></td>
