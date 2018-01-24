@@ -11,23 +11,17 @@ $(function(){
     var recordId;
     var columnName;
     var formId
-    var content;
+    var currentText;
     var isFirstClick = true;
-    var textEdited;
     $('#view_part td.record').dblclick(function(){
-        var editUrl = "<?=$this->Html->url(array('controller' => 'items', 'action' => 'edit2'))?>"  + '/' + recordId
         if (!isFirstClick){
-            content = $('#' + formId).val()
-            postToEdit(editUrl, selectedTd, recordId, columnName, content);
-            if(textEdited != '--failed--'){
-                $(selectedTd).html(textEdited);
-            }
+            currentText = $('#' + formId).val()
+            postToEdit(selectedTd, recordId, columnName, currentText);
         }
 
-
-        $(selectedTd).html(initialText);
         currrentTd = '#' + $(this).attr('id');
         if(currrentTd == selectedTd){
+            // $(selectedTd).html(initialText);
             selectedTd = ''
             isFirstClick = true;
             return;
@@ -44,25 +38,26 @@ $(function(){
     });
 
 
-    function postToEdit(editUrl, selectedTd, id, columnName, content){
-        if(content.length == 0){
-            content = '*EMPTY*'
+    function postToEdit(selectedTd, id, columnName, currentText){
+        console.log(currentText);
+        if(currentText.length == 0){
+            currentText = '*EMPTY*'
         }
-        var editUrl = '/verification_sheet/items/edit/' + id + '/' + columnName + '/' + content
+        var editUrl = '/verification_sheet/items/edit/' + id + '/' + columnName + '/' + currentText
 
         $.ajax({
         url: editUrl,
         type: "POST",
-        data: { id : id, columnName: columnName, content: content },
+        data: { id : id, columnName: columnName, content: currentText },
         dataType: "text",
         success : function(response){
-            //通信成功時の処理
-            var contentEdited = response.split('<!DOCTYPE html>')[0];
-
-            if(contentEdited == '*EMPTY*'){
-                contentEdited = '';
+            //通信成功時
+            console.log(response)
+            var textEdited = response.split('<!DOCTYPE html>')[0];
+            if(textEdited == '*EMPTY*'){
+                textEdited = '';
             }
-            $(selectedTd).html(contentEdited);
+            $(selectedTd).html(textEdited);
         },
         error: function(){
             //通信失敗時の処理
