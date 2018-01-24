@@ -78,7 +78,7 @@ error_reporting(E_ALL);
         <td class = "record" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>"><?php echo $item['Item']['response_to_confirm_comment']; ?></td>
         <td><?php echo $item['Item']['created']; ?></td>
         <td><?php echo $item['Item']['modified']; ?></td>
-        <td><?php echo $this->Form->postLink('削除', array('action' => 'delete', $item['Item']['id']), array('confirm'=>'削除しますか?')); ?></td>
+        <td><?php echo $this->Form->postLink('完了', array('action' => 'delete', $item['Item']['id']), array('confirm'=>'削除しますか?')); ?></td>
     </tr>
     <?php endforeach; ?>
     <tr class="input_part">
