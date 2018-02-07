@@ -49,9 +49,6 @@ class ItemsController extends AppController {
 
 
     public function edit($id = null, $column_name, $content){
-        // var_dump($id);
-        // var_dump($column_name);
-        // var_dump($content);
         $this->Item->id = $id;
 
         $this->request->data = $this->Item->read();

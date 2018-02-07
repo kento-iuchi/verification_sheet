@@ -30,7 +30,7 @@ error_reporting(E_ALL);
     <tr class="input_part">
         <td></td>
         <td><?php echo $this->Form->input('category', array('label' => false, 'style' => 'width:80px; height:40px;'));?></td>
-        <td><?php echo $this->Form->input('division', array('label' => false, 'style' => 'width:60px;'));?></td>
+        <td><?php echo $this->Form->input('division', array('label' => false, 'style' => 'width:60px;', 'options' => array('改善' => '改善', '機能追加' => '機能追加', 'バグ' => 'バグ')));?></td>
         <td><?php echo $this->Form->input('content', array('label' => false));?></td>
     </tr>
 </table>
@@ -60,7 +60,7 @@ error_reporting(E_ALL);
     </tr>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
-        <td class = "record" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>"><?php echo $this->Eip->input('Item.chatwork_url', $item); ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>"><?php echo $item['Item']['chatwork_url']; ?></td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-github_url";?>"><?php echo $item['Item']['github_url']; ?></td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_priority";?>"><?php echo $item['Item']['confirm_priority']; ?></td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest";?>"><?php echo $item['Item']['pullrequest']; ?></td>
@@ -87,7 +87,12 @@ error_reporting(E_ALL);
         <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('pullrequest_update', array('type' => 'text', 'label' => false));?></td>
-        <td><?php echo $this->Form->input('status', array('label' => false));?></td>
+        <td>
+            <?php echo $this->Form->input('status',
+                  array('label' => false, 'style' => 'width:160px;',
+                  'options' => array('コードレビュー中' => 'コードレビュー中', '改修中' => '改修中', '技術二重チェック中' => '技術二重チェック中', 'サポート・営業確認中' => 'サポート・営業確認中')));
+            ?>
+        </td>
         <td><?php echo $this->Datepicker->datepicker('tech_release_judgement', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('supp_release_judgement', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('sale_release_judgement', array('type' => 'text', 'label' => false));?></td>
@@ -95,7 +100,7 @@ error_reporting(E_ALL);
         <td><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Form->input('grace_days_of_verification_complete', array('label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('merge_finish_date_to_master', array('type' => 'text', 'label' => false));?></td>
-        <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
+        <td><?php echo $this->Form->input('confirm_points', array('label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
         <td><?php echo $this->Form->input('response_to_confirm_comment', array('label' => false));?></td>
         <td><?php echo $this->Form->end('送信');?></td>
