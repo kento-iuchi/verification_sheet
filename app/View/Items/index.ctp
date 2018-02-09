@@ -60,8 +60,16 @@ error_reporting(E_ALL);
     </tr>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
-        <td class = "record" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>"><?php echo $item['Item']['chatwork_url']; ?></td>
-        <td class = "record" id="<?php echo $item['Item']['id'] . "-github_url";?>"><?php echo $item['Item']['github_url']; ?></td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>">
+            <a href = "<?php echo $item['Item']['chatwork_url']; ?>">
+                <span><?php echo $item['Item']['chatwork_url']; ?></span>
+            </a>
+        </td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-github_url";?>">
+            <a href="<?php echo $item['Item']['github_url']; ?>">
+                <span><?php echo $item['Item']['github_url']; ?></span>
+            </a>
+        </td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_priority";?>"><?php echo $item['Item']['confirm_priority']; ?></td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest";?>"><?php echo $item['Item']['pullrequest']; ?></td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>"><?php echo $item['Item']['pullrequest_update']; ?></td>
