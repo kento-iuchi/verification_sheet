@@ -69,7 +69,9 @@ error_reporting(E_ALL);
                 <span><?php echo $item['Item']['github_url']; ?></span>
             </a>
         </td>
-        <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_priority";?>"><?php echo $item['Item']['confirm_priority']; ?></td>
+        <td class = "record <?php if($item['Item']['confirm_priority'] == "高"){ echo "high_priority";} ?>" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
+            <?php echo $item['Item']['confirm_priority']; ?>
+        </td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest";?>"><?php echo $item['Item']['pullrequest']; ?></td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>"><?php echo $item['Item']['pullrequest_update']; ?></td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-status";?>"><?php echo $item['Item']['status']; ?></td>
