@@ -20,6 +20,10 @@ table th,td{
     left: 1%;
 }
 
+.table_titles {
+    height: 30px;
+}
+
 #view_part_header {
     position: absolute;
     width: 25%;
@@ -30,11 +34,12 @@ table th,td{
     position: absolute;
     left:25%;
     top:0px;
+    width: 93%;
     overflow-x:scroll;
 }
 
 #view_part_data table{
-    width: 120%;
+    width: 200%;
 }
 
 #page_selecter {

@@ -1,10 +1,13 @@
 $(function(){
     'use strict';
 
+
     var viewPartHeight = $('#view_part_header').outerHeight();
     $('#page_selecter').css('top', viewPartHeight + 'px');
     $('#page_selecter').css('display', 'block');
 
+
+    
     var currrentTd;
     var selectedTd;
     var initialText;

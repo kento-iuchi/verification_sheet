@@ -56,7 +56,6 @@ error_reporting(E_ALL);
         <th>作成日時</th>
         <th>最終更新日時</th>
         <th></th>
-        <th></th>
     </tr>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
