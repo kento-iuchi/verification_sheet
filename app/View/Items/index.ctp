@@ -35,7 +35,7 @@ error_reporting(E_ALL);
     </tr>
 </table>
 <div id='view_part_data'>
-<table class="table_view_part">
+<table id= "data_table" class="table_view_part">
     <tr class="table_titles">
         <th>chatwork URL</th>
         <th>github URL</th>

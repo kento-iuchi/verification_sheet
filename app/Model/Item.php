@@ -1,5 +1,16 @@
 <?php
-class Item extends AppModel {
+class Item extends AppModel
+{
+    public function afterFind($results, $primary = false) {
+
+        $num_record = count($results);
+        for($i = 0; $i< $num_record; $i++){
+            $results[$i]['Item']['confirm_comment'] = str_replace("\n", "</br>", $results[$i]['Item']['confirm_comment']);
+        }
+        return $results;
+    }
+
+
     public $validate = array(
     );
 
