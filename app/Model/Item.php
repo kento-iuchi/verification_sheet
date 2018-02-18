@@ -5,7 +5,9 @@ class Item extends AppModel
 
         $num_record = count($results);
         for($i = 0; $i< $num_record; $i++){
-            $results[$i]['Item']['confirm_comment'] = str_replace("\n", "</br>", $results[$i]['Item']['confirm_comment']);
+            foreach (array_keys($results[$i]['Item']) as $key) {
+                $results[$i]['Item'][$key] = str_replace("\n", "</br>", $results[$i]['Item'][$key]);
+            }
         }
         return $results;
     }

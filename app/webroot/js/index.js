@@ -72,10 +72,9 @@ $(function(){
     // テーブル同士の高さを同期
     var header_tr = $("#view_part_header tr");
     var data_tr = $("#data_table tr");
-    console.log(header_tr);
     for(var i=0, l=header_tr.length; i<l;i++ ){
-        var header_cells = header_tr.eq(i).children();
-        var data_cells = data_tr.eq(i).children();
+        var header_cells = header_tr.eq(i);
+        var data_cells = data_tr.eq(i);
 
         var header_cells_height = header_cells.height();
         var data_cells_height = data_cells.height();
