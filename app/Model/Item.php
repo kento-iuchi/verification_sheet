@@ -30,6 +30,7 @@ class Item extends AppModel
             if($value == "*EMPTY*"){
                 $this->data["Item"][$key] = "";
             }
+            $this->data["Item"][$key] = str_replace("\n", "</br>", $this->data["Item"][$key]);
         }
 
         return true;
