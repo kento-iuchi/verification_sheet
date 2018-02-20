@@ -32,7 +32,7 @@ $(function(){
         selectedTd = '#' + $(this).attr('id');
         recordId = $(this).attr('id').split('-')[0]
         columnName = $(this).attr('id').split('-')[1]
-        initialText = $(selectedTd).text();
+        initialText = $(selectedTd).text().trim();
 
         formId = $(this).attr('id') + '_form'
         var form = "<textarea rows= '3' " + "id ='" + formId + "'>" + initialText + "</textarea>"
