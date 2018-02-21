@@ -42,6 +42,7 @@ $(function(){
 
 
     function postToEdit(selectedTd, id, columnName, currentText){
+        currentText = replaceSlashAndColon(currentText);
         console.log(currentText);
         if(currentText.length == 0){
             currentText = '*EMPTY*'
@@ -60,6 +61,8 @@ $(function(){
             if(textEdited == '*EMPTY*'){
                 textEdited = '';
             }
+            textEdited = restoreSlashAndColon(textEdited);
+            
             $(selectedTd).html(textEdited);
         },
         error: function(){
@@ -68,6 +71,22 @@ $(function(){
         }
         });
     };
+
+
+    function replaceSlashAndColon(originText){
+        var textAfterReplacement = originText;
+        textAfterReplacement = textAfterReplacement.replace(/\//g, "&&SLASH&&")
+        textAfterReplacement = textAfterReplacement.replace(/:/g, "&&COLON&&")
+        return textAfterReplacement;
+    };
+
+
+    function restoreSlashAndColon(textAfterReplacement){
+        var originText = textAfterReplacement;
+        originText = originText.replace(/&&SLASH&&/g, "/");
+        originText = originText.replace(/&&COLON&&/g, ":");
+        return originText;
+    }
 
     // テーブル同士の高さを同期
     var header_tr = $("#view_part_header tr");
