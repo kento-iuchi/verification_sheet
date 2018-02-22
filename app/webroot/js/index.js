@@ -5,6 +5,7 @@ $(function(){
     var viewPartHeight = $('#view_part_header').outerHeight();
     $('#page_selecter').css('top', viewPartHeight + 'px');
     $('#page_selecter').css('display', 'block');
+    synchronizeTwoTablesHeight();
 
 
 
@@ -44,6 +45,9 @@ $(function(){
     function postToEdit(selectedTd, id, columnName, currentText){
         currentText = replaceSlashAndColon(currentText);
         console.log(currentText);
+        currentText = currentText.replace(/\r\n/g, '&&NEWLINE&&')
+        currentText = currentText.replace(/\r/g, '&&NEWLINE&&')
+        currentText = currentText.replace(/\n/g, '&&NEWLINE&&')
         if(currentText.length == 0){
             currentText = '*EMPTY*'
         }
@@ -57,16 +61,19 @@ $(function(){
         success : function(response){
             //通信成功時
             console.log(response)
-            var textEdited = response.split('<!DOCTYPE html>')[0];
+            // var textEdited = response.split('<!DOCTYPE html>')[0];
+            var textEdited = currentText;
             if(textEdited == '*EMPTY*'){
                 textEdited = '';
             }
             textEdited = restoreSlashAndColon(textEdited);
+            textEdited = textEdited.replace(/&&NEWLINE&&/g, '</br>')
             if(columnName == 'chatwork_url' || columnName == 'github_url'){
                 textEdited = '<a href="' + textEdited + '">' + textEdited + '</a>';
             }
 
             $(selectedTd).html(textEdited);
+            synchronizeTwoTablesHeight();
         },
         error: function(){
             //通信失敗時の処理
@@ -91,26 +98,24 @@ $(function(){
         return originText;
     }
 
-    // テーブル同士の高さを同期
-    var header_tr = $("#view_part_header tr");
-    var data_tr = $("#data_table tr");
-    for(var i=0, l=header_tr.length; i<l;i++ ){
-        var header_cells = header_tr.eq(i);
-        var data_cells = data_tr.eq(i);
 
-        var header_cells_height = header_cells.height();
-        var data_cells_height = data_cells.height();
-        if(header_cells_height > data_cells_height){
-            data_cells.height(header_cells_height);
-        } else if(data_cells_height > header_cells_height){
-            header_cells.height(data_cells_height);
+    function synchronizeTwoTablesHeight(){
+        var header_tr = $("#view_part_header tr");
+        var data_tr = $("#data_table tr");
+        for(var i=0, l=header_tr.length; i<l;i++ ){
+            var header_cells = header_tr.eq(i);
+            var data_cells = data_tr.eq(i);
+
+            var header_cells_height = header_cells.height();
+            var data_cells_height = data_cells.height();
+            if(header_cells_height > data_cells_height){
+                data_cells.height(header_cells_height);
+            } else if(data_cells_height > header_cells_height){
+                header_cells.height(data_cells_height);
+            }
+            // var headerTableTrHeight = header_cells[0].height();
         }
-        // var headerTableTrHeight = header_cells[0].height();
-    }
-            // var headerTableTrHeight = $($('#view_part_header').rows[_trCount]).height();
-            // var dataTableTrHeight = $($('#data_table').rows[_trCount]);
-            // console.log(headerTableTrHeight, dataTableTrHeight);
-
+    };
 
 
 });

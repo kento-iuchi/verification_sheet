@@ -30,9 +30,9 @@ class Item extends AppModel
             if($value == "*EMPTY*"){
                 $this->data["Item"][$key] = "";
             }
-            $this->data["Item"][$key] = str_replace("\n", "</br>", $this->data["Item"][$key]);
             $this->data["Item"][$key] = str_replace("&&SLASH&&", "/", $this->data["Item"][$key]);
             $this->data["Item"][$key] = str_replace("&&COLON&&", ":", $this->data["Item"][$key]);
+            $this->data["Item"][$key] = str_replace("&&NEWLINE&&", "\n", $this->data["Item"][$key]);
         }
 
         return true;
