@@ -62,7 +62,10 @@ $(function(){
                 textEdited = '';
             }
             textEdited = restoreSlashAndColon(textEdited);
-            
+            if(columnName == 'chatwork_url' || columnName == 'github_url'){
+                textEdited = '<a href="' + textEdited + '">' + textEdited + '</a>';
+            }
+
             $(selectedTd).html(textEdited);
         },
         error: function(){
