@@ -3,11 +3,22 @@ class Item extends AppModel
 {
     public function afterFind($results, $primary = false) {
 
+        $today_date = new Datetime(date("y-m-d"));
+
         $num_record = count($results);
         for($i = 0; $i< $num_record; $i++){
             foreach (array_keys($results[$i]['Item']) as $key) {
                 $results[$i]['Item'][$key] = str_replace("\n", "</br>", $results[$i]['Item'][$key]);
             }
+
+            $scheduled_release_date = new Datetime($results[$i]['Item']['scheduled_release_date']);
+            $pullrequest_date = new Datetime($results[$i]['Item']['pullrequest']);
+
+            $interval_days = $today_date->diff($scheduled_release_date);
+            $results[$i]['Item']['grace_days_of_verification_complete'] = $interval_days->format('%R%a');
+            $interval_days = $today_date->diff($pullrequest_date);
+            $results[$i]['Item']['elapsed'] = $interval_days->format('%a');
+
         }
         return $results;
     }
