@@ -105,9 +105,9 @@ error_reporting(E_ALL);
         <td><?php echo $this->Datepicker->datepicker('tech_release_judgement', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('supp_release_judgement', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('sale_release_judgement', array('type' => 'text', 'label' => false));?></td>
-        <td><?php echo $this->Form->input('elapsed', array('label' => false));?></td>
+        <td></td>
         <td><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
-        <td><?php echo $this->Form->input('grace_days_of_verification_complete', array('label' => false));?></td>
+        <td></td>
         <td><?php echo $this->Datepicker->datepicker('merge_finish_date_to_master', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_points', array('label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
