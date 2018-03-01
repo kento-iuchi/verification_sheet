@@ -15,7 +15,8 @@ class Item extends AppModel
             $pullrequest_date = new Datetime($results[$i]['Item']['pullrequest']);
 
             $interval_days = $today_date->diff($scheduled_release_date);
-            $results[$i]['Item']['grace_days_of_verification_complete'] = $interval_days->format('%R%a');
+            $grace_days = str_replace('+', '', $interval_days->format('%R%a'));
+            $results[$i]['Item']['grace_days_of_verification_complete'] = $grace_days;
             $interval_days = $today_date->diff($pullrequest_date);
             $results[$i]['Item']['elapsed'] = $interval_days->format('%a');
 
