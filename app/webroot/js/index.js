@@ -56,9 +56,10 @@ $(function(){
         if(currentText.length == 0){
             currentText = '*EMPTY*'
         }
+        var indexCurrentURL = $(location).attr('href');
+        var editUrl = indexCurrentURL + '/edit/' + id + '/' + columnName + '/' + currentText
+        console.log(editUrl);
         
-        var editUrl = '/verification_sheet/items/edit/' + id + '/' + columnName + '/' + currentText
-
         $.ajax({
         url: editUrl,
         type: "POST",
