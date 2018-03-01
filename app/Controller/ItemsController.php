@@ -19,10 +19,10 @@ class ItemsController extends AppController {
         if ($this->request->is('post')) {
             $this->Item->create();
             if ($this->Item->save($this->request->data)) {
-                $this->Flash->success(__('Your post has been saved.'));
+                // $this->Flash->success(__('Your post has been saved.'));
                 return $this->redirect(array('action' => 'index'));
             }
-            $this->Flash->error(__('Unable to add your post.'));
+            // $this->Flash->error(__('Unable to add your post.'));
         }
 
         return $this->redirect(array('action' => 'index'));

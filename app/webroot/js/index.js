@@ -56,6 +56,7 @@ $(function(){
         if(currentText.length == 0){
             currentText = '*EMPTY*'
         }
+        
         var editUrl = '/verification_sheet/items/edit/' + id + '/' + columnName + '/' + currentText
 
         $.ajax({
