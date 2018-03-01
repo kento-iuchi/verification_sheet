@@ -48,8 +48,8 @@ $(function(){
 
 
     function postToEdit(selectedTd, id, columnName, currentText){
+
         currentText = replaceSlashAndColon(currentText);
-        console.log(currentText);
         currentText = currentText.replace(/\r\n/g, '&&NEWLINE&&')
         currentText = currentText.replace(/\r/g, '&&NEWLINE&&')
         currentText = currentText.replace(/\n/g, '&&NEWLINE&&')
@@ -58,8 +58,7 @@ $(function(){
         }
         var indexCurrentURL = $(location).attr('href');
         var editUrl = indexCurrentURL + '/edit/' + id + '/' + columnName + '/' + currentText
-        console.log(editUrl);
-        
+
         $.ajax({
         url: editUrl,
         type: "POST",
@@ -67,8 +66,6 @@ $(function(){
         dataType: "text",
         success : function(response){
             //通信成功時
-            console.log(response)
-            // var textEdited = response.split('<!DOCTYPE html>')[0];
             var textEdited = currentText;
             if(textEdited == '*EMPTY*'){
                 textEdited = '';
