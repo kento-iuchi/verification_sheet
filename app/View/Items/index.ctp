@@ -39,6 +39,7 @@ error_reporting(E_ALL);
     <tr class="table_titles">
         <th>chatwork URL</th>
         <th>github URL</th>
+        <th>個別検証環境URL</th>
         <th>確認優先度<br>（必須リリース日）</th>
         <th>プルリク</th>
         <th>プルリク<br>更新日</th>
@@ -67,6 +68,11 @@ error_reporting(E_ALL);
         <td class = "record" id="<?php echo $item['Item']['id'] . "-github_url";?>">
             <a href="<?php echo $item['Item']['github_url']; ?>">
                 <span><?php echo $item['Item']['github_url']; ?></span>
+            </a>
+        </td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-verification_enviroment_url";?>">
+            <a href="<?php echo $item['Item']['verification_enviroment_url']; ?>">
+                <span><?php echo $item['Item']['verification_enviroment_url']; ?></span>
             </a>
         </td>
         <td class = "record <?php if($item['Item']['confirm_priority'] == "高"){ echo "high_priority";} ?>" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
@@ -116,6 +122,7 @@ error_reporting(E_ALL);
     </tr>
 </table>
 </div>
+</div>
 <div id="page_selecter">
 <?php echo $this->Paginator->numbers (
     array (
@@ -124,6 +131,5 @@ error_reporting(E_ALL);
     )
 );
 ?>
-</div>
 </div>
 <?php unset($item); ?>

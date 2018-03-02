@@ -5,8 +5,8 @@ class Item extends AppModel
 
         $today_date = new Datetime(date("y-m-d"));
 
-        $num_record = count($results);
-        for($i = 0; $i< $num_record; $i++){
+        $record_count = count($results);
+        for($i = 0; $i< $record_count - 1; $i++){
             foreach (array_keys($results[$i]['Item']) as $key) {
                 $results[$i]['Item'][$key] = str_replace("\n", "</br>", $results[$i]['Item'][$key]);
             }
