@@ -15,7 +15,7 @@ class ItemsController extends AppController {
         $this->set('items',  $this->paginate());
         // $this->set('items', $this->Item->find('all'));
     }
-    
+
 
     public function add()
     {
@@ -29,22 +29,6 @@ class ItemsController extends AppController {
         }
 
         return $this->redirect(array('action' => 'index'));
-    }
-
-
-    public function edit_beta($id = null) {
-        $this->Item->id = $id;
-        if ($this->request->is('get')) {
-            $this->autoLayout = false;
-            $this->request->data = $this->Item->read();
-        } else {
-            if ($this->Item->save($this->request->data)) {
-                $this->Flash->success(__('Your post has been saved.'));
-                $this->redirect(array('action'=>'index'));
-            } else {
-                $this->Session->error(__('failed!'));
-            }
-        }
     }
 
 
