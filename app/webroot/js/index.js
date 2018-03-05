@@ -56,9 +56,8 @@ $(function(){
         if(currentText.length == 0){
             currentText = '*EMPTY*'
         }
-        var indexCurrentURL = $(location).attr('href');
-        var editUrl = indexCurrentURL + '/edit/' + id + '/' + columnName + '/' + currentText
-
+        var editUrl = WEBROOT + 'items/edit/' + id + '/' + columnName + '/' + currentText
+        
         $.ajax({
         url: editUrl,
         type: "POST",

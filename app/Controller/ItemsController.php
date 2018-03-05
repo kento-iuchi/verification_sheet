@@ -1,5 +1,5 @@
 <?php
-ini_set('display_errors',1);
+// ini_set('display_errors',1);
 
 class ItemsController extends AppController {
     public $helpers = array('Html', 'Form', 'Flash', 'js', 'DatePicker');
@@ -9,13 +9,16 @@ class ItemsController extends AppController {
         'sort' => 'id',
     );
 
-    public function index() {
+    public function index()
+    {
         $this->layout = 'IndexLayout';
         $this->set('items',  $this->paginate());
         // $this->set('items', $this->Item->find('all'));
     }
+    
 
-    public function add() {
+    public function add()
+    {
         if ($this->request->is('post')) {
             $this->Item->create();
             if ($this->Item->save($this->request->data)) {
@@ -45,9 +48,11 @@ class ItemsController extends AppController {
     }
 
 
-    public function edit($id = null, $column_name, $content){
+    public function edit($id = null, $column_name, $content)
+    {
+        $this->log('aaa');
+        $this->log($content);
         $this->Item->id = $id;
-
         $this->request->data = $this->Item->read();
         $this->request->data["Item"][$column_name] = $content;
         if ($this->request->is(['ajax'])) {
@@ -60,7 +65,8 @@ class ItemsController extends AppController {
     }
 
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($this->request->is('get')) {
             throw new MethodNotAllowedException();
         }
