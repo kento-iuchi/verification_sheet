@@ -121,7 +121,7 @@ $(function(){
         }
 
         var tableHeight = $("#view_part_header").height();
-        $("#view_part").height(tableHeight + 50);
+        $("#page_selecter").offset({top : tableHeight + 20});
     };
 
 
