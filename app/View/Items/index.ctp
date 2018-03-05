@@ -12,6 +12,23 @@ ini_set("display_errors", 'On');
 error_reporting(E_ALL);
 ?>
 <div id="view_part">
+    <!-- レコード表示の前処理 -->
+    <?php
+        $today_date = new Datetime(date("y-m-d"));
+        foreach (array_keys($items) as $i) {
+            foreach (array_keys($items[$i]['Item']) as $column){
+                $items[$i]['Item'][$column] = str_replace(array("\r\n", "\r", "\n"), '</br>', $items[$i]['Item'][$column]);
+            }
+            $scheduled_release_date = new Datetime($items[$i]['Item']['scheduled_release_date']);
+            $pullrequest_date = new Datetime($items[$i]['Item']['pullrequest']);
+
+            $grace_days = str_replace('+', '', $today_date->diff($scheduled_release_date)->format('%R%a'));
+            $results[$i]['Item']['grace_days_of_verification_complete'] = $grace_days;
+            $elapsed = $today_date->diff($pullrequest_date);
+            $items[$i]['Item']['elapsed'] = $elapsed->format('%a');
+
+        }
+     ?>
 <table id="view_part_header">
     <tr class="table_titles">
         <th>番号</th>
