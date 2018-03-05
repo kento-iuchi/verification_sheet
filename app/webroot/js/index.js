@@ -119,6 +119,9 @@ $(function(){
             }
             // var headerTableTrHeight = header_cells[0].height();
         }
+
+        var tableHeight = $("#view_part_header").height();
+        $("#view_part").height(tableHeight + 50);
     };
 
 
