@@ -57,7 +57,7 @@ $(function(){
             currentText = '*EMPTY*'
         }
         var editUrl = WEBROOT + 'items/edit/' + id + '/' + columnName + '/' + currentText
-        
+
         $.ajax({
         url: editUrl,
         type: "POST",
@@ -123,5 +123,41 @@ $(function(){
         $("#page_selecter").offset({top : tableHeight + 20});
     };
 
+
+    // 完了ボタンを押した際の処理
+    $('.complete_button').click(function(){
+        if(!confirm('完了してよろしいですか？')){
+            return false;
+        }else{
+            var button_id = $(this).attr('id');
+            var item_id = button_id.split('-')[0];
+            turnItemCompleted(item_id);
+        }
+    })
+
+
+    function turnItemCompleted(item_id){
+        var completeActionURL = WEBROOT + 'items/complete/' + item_id;
+        $.ajax({
+        url: completeActionURL,
+        type: "POST",
+        data: { id : item_id },
+        dataType: "text",
+        success : function(response){
+            //通信成功時
+            alert("'完了'にしました");
+            var item_head_tr_id = '#item_' + item_id + '-head';
+            var item_data_tr_id = '#item_' + item_id + '-data';
+            $(item_head_tr_id).fadeOut(600).queue(function() {
+                $(item_head_tr_id).remove();
+                $(item_data_tr_id).remove();
+            });
+        },
+        error: function(){
+            //通信失敗時の処理
+            alert('通信失敗');
+        }
+        });
+    }
 
 });

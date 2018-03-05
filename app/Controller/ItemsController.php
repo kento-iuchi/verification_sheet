@@ -5,8 +5,9 @@ class ItemsController extends AppController {
     public $helpers = array('Html', 'Form', 'Flash', 'js', 'DatePicker');
 
     public $paginate =  array(
-        'limit' => 5,
-        'sort' => 'id',
+        'conditions' => array('is_completed' => 0),
+        'limit'      => 5,
+        'sort'       => 'id',
     );
 
     public function index()
@@ -46,23 +47,18 @@ class ItemsController extends AppController {
     }
 
 
-    public function delete($id)
+    public function complete($id = null)
     {
-        if ($this->request->is('get')) {
-            throw new MethodNotAllowedException();
+        $this->Item->id = $id;
+        $this->request->data = $this->Item->read();
+        $this->request->data['Item']['is_completed'] = 1;
+        if ($this->request->is(['ajax'])) {
+            if ($this->Item->save($this->request->data)) {
+                echo '完了しました';
+            } else {
+                echo '失敗しました';
+            }
         }
-
-        if ($this->Item->delete($id)) {
-            $this->Flash->success(
-                __('The post with id: %s has been deleted.', h($id))
-            );
-        } else {
-            $this->Flash->error(
-                __('The post with id: %s could not be deleted.', h($id))
-            );
-        }
-
-        return $this->redirect(array('action' => 'index'));
     }
 
 
