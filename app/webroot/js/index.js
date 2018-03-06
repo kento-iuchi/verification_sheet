@@ -14,21 +14,22 @@ $(function(){
     var formId;
     var currentText;
     var isFirstClick = true;
-    $('#view_part td.record').dblclick(function(){
+    $('#view_part td.record').dblclick(function()
+    {
         if (!isFirstClick){
             currentText = $('#' + formId).val();
             postToEdit(selectedTd, recordId, columnName, currentText);
         }
 
         currrentTd = '#' + $(this).attr('id');
-        if(currrentTd == selectedTd){
+        if(currrentTd == selectedTd){// 選択中のセルをもう一度ダブルクリックしたなら、何も選択していない状態に
             selectedTd = '';
             isFirstClick = true;
             return;
         }
-        selectedTd = '#' + $(this).attr('id');
-        recordId = $(this).attr('id').split('-')[0];
-        columnName = $(this).attr('id').split('-')[1];
+        selectedTd  = '#' + $(this).attr('id');
+        recordId    = $(this).attr('id').split('-')[0]// 要素idは 'レコードid_カラム名'という形式
+        columnName  = $(this).attr('id').split('-')[1];
         initialText = $(selectedTd).html();
 
         initialText = initialText.replace(/<br>|<\/br>/g, '&&NEWLINE&&');
@@ -37,20 +38,19 @@ $(function(){
         initialText = initialText.trim();
 
         formId = $(this).attr('id') + '_form';
-        console.log(initialText);
         if(columnName == 'division'){
             var form = "<select id = '" + formId + "'>" +
                        "<option value='改善' id='improvement'>改善</option>" +
                        "<option value='機能追加' id='adding_function'>機能追加</option>" +
                        "<option value='バグ' id = 'debug'>バグ</option>" +
-                       "</select>"
+                       "</select>";
         }else if(columnName == 'status'){
             var form = "<select id = '" + formId + "'>" +
                        "<option value='コードレビュー中' id='improvement'>コードレビュー中</option>" +
                        "<option value='改修中' id='adding function'>改修中</option>" +
                        "<option value='技術二重チェック中' id = 'debug'>技術二重チェック中</option>" +
                        "<option value='サポート・営業確認中' id = 'debug'>サポート・営業確認中</option>" +
-                       "</select>"
+                       "</select>";
         }else{
             var form = "<textarea rows= '3' " + "id ='" + formId + "'>" + initialText + "</textarea>";
         }
@@ -60,24 +60,23 @@ $(function(){
         if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'コードレビュー中', '改修中', '技術二重チェック中', 'サポート・営業確認中']) != -1){
             $('#' + formId).val(initialText);
         }
-        
+
         isFirstClick = false;
     });
 
-
-    function postToEdit(selectedTd, id, columnName, currentText){
-
+    function postToEdit(selectedTd, id, columnName, currentText)
+    {
         currentText = replaceSlashAndColon(currentText);
         currentText = currentText.replace(/\r\n/g, '&&NEWLINE&&');
         currentText = currentText.replace(/\r/g, '&&NEWLINE&&');
         currentText = currentText.replace(/\n/g, '&&NEWLINE&&');
         if(currentText.length == 0){
-            currentText = '*EMPTY*'
+            currentText = '*EMPTY*';
         }
-        var editUrl = WEBROOT + 'items/edit/' + id + '/' + columnName + '/' + currentText;
+        var editActionUrl = WEBROOT + 'items/edit/' + id + '/' + columnName + '/' + currentText;
 
         $.ajax({
-        url: editUrl,
+        url: editActionUrl,
         type: "POST",
         data: { id : id, columnName: columnName, content: currentText },
         dataType: "text",
@@ -104,7 +103,8 @@ $(function(){
     };
 
 
-    function replaceSlashAndColon(originText){
+    function replaceSlashAndColon(originText)
+    {
         var textAfterReplacement = originText;
         textAfterReplacement = textAfterReplacement.replace(/\//g, "&&SLASH&&");
         textAfterReplacement = textAfterReplacement.replace(/:/g, "&&COLON&&");
@@ -112,7 +112,8 @@ $(function(){
     };
 
 
-    function restoreSlashAndColon(textAfterReplacement){
+    function restoreSlashAndColon(textAfterReplacement)
+    {
         var originText = textAfterReplacement;
         originText = originText.replace(/&&SLASH&&/g, "/");
         originText = originText.replace(/&&COLON&&/g, ":");
@@ -120,7 +121,8 @@ $(function(){
     }
 
 
-    function synchronizeTwoTablesHeight(){
+    function synchronizeTwoTablesHeight()
+    {
         var header_tr = $("#view_part_header tr");
         var data_tr = $("#data_table tr");
         for(var i=0, l=header_tr.length; i<l;i++ ){
@@ -143,7 +145,8 @@ $(function(){
 
 
     // 完了ボタンを押した際の処理
-    $('.complete_button').click(function(){
+    $('.complete_button').click(function()
+    {
         if(!confirm('完了してよろしいですか？')){
             return false;
         }else{
@@ -154,7 +157,8 @@ $(function(){
     })
 
 
-    function turnItemCompleted(item_id){
+    function turnItemCompleted(item_id)
+    {
         var completeActionURL = WEBROOT + 'items/complete/' + item_id;
         $.ajax({
         url: completeActionURL,

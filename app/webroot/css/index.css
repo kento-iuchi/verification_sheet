@@ -1,15 +1,15 @@
 .container {
-  margin: 0 auto;
+    margin: 0 auto;
 }
 
 body {
-  padding: 0;
-  margin: 0;
-  font-size: 16px;
-  font-family: Verdana, sans-serif;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    font-family: Verdana, sans-serif;
 }
 
-table th,td{
+table th,td {
     font-size: 12px;
 }
 
@@ -28,13 +28,13 @@ table th,td{
 
 #view_part_data {
     position: absolute;
-    left:400px;
-    top:0px;
+    left: 400px;
+    top: 0px;
     width: calc(99% - 400px);
-    overflow-x:scroll;
+    overflow-x: scroll;
 }
 
-#view_part_data table{
+#view_part_data table {
     width: 2000px;
 }
 
@@ -47,11 +47,11 @@ table th,td{
     height: 32px;
 }
 
-tr:nth-child(odd){
+tr:nth-child(odd) {
     background: #dadea7;
 }
 
-tr:nth-child(even){
+tr:nth-child(even) {
     background: #ebefba;
 }
 
@@ -62,22 +62,22 @@ tr.table_titles {
     background-color: #838b0d;
 }
 
-.input_part textarea,input{
+.input_part textarea,input {
     width: 80px;
     height: 40px;
     font-size: 12px;
 }
 
-.high_priority{
+.high_priority {
     color: red;
     font-weight: bold;
     font-size: 16px;
 }
 
 .container {
-  margin: 0 auto;
+    margin: 0 auto;
 }
 
 ul > li {
-  padding: 3px 0;
+    padding: 3px 0;
 }

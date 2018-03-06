@@ -1,12 +1,13 @@
 <?php
 ini_set('display_errors',1);
 
-class ItemsController extends AppController {
+class ItemsController extends AppController
+{
     public $helpers = array('Html', 'Form', 'Flash', 'js', 'DatePicker');
 
     public $paginate =  array(
         'conditions' => array('is_completed' => 0),
-        'limit'      => 5,
+        'limit'      => 20,
         'sort'       => 'id',
     );
 
@@ -49,12 +50,11 @@ class ItemsController extends AppController {
         $this->request->data['Item']['is_completed'] = 1;
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
-                echo '完了しました';
+                echo '"完了"状態にしました';
             } else {
-                echo '失敗しました';
+                echo '"完了"状態にできませんでした';
             }
         }
     }
-
 
 }

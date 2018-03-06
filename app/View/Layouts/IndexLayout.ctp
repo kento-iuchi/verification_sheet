@@ -5,7 +5,16 @@
     <title>
         <?= $this->fetch('title') ?>
     </title>
-    <?= $this->Html->css('index.css') ?>
+    <?php
+        echo $this->Html->css(array(
+                'jquery-ui.css',
+            ));
+        echo $this->Html->script(array(
+                'jquery-3.2.1.min.js',
+                'jquery-migrate-3.0.1.js',
+                'jquery-ui.js',
+            ), array( 'inline' => false ));
+    ?>
     <?= $this->fetch('script'); ?>
     <script>
         var WEBROOT = '<?=$this->webroot?>';
