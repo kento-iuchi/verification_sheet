@@ -1,5 +1,5 @@
 <?php
-// ini_set('display_errors',1);
+ini_set('display_errors',1);
 
 class ItemsController extends AppController {
     public $helpers = array('Html', 'Form', 'Flash', 'js', 'DatePicker');
@@ -14,9 +14,7 @@ class ItemsController extends AppController {
     {
         $this->layout = 'IndexLayout';
         $this->set('items', $this->paginate());
-        // $this->set('items', $this->Item->find('all'));
     }
-
 
     public function add()
     {
@@ -27,10 +25,8 @@ class ItemsController extends AppController {
                 return $this->redirect(array('action' => 'index'));
             }
         }
-
         return $this->redirect(array('action' => 'index'));
     }
-
 
     public function edit($id = null, $column_name, $content)
     {
@@ -45,7 +41,6 @@ class ItemsController extends AppController {
             }
         }
     }
-
 
     public function complete($id = null)
     {

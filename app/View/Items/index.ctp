@@ -116,6 +116,7 @@ error_reporting(E_ALL);
     <tr class="input_part">
         <td><?php echo $this->Form->input('chatwork_url', array('label' => false, 'style' => 'width:160px;'));?></td>
         <td><?php echo $this->Form->input('github_url', array('label' => false));?></td>
+        <td><?php echo $this->Form->input('verification_enviroment_url', array('label' => false));?></td>
         <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('pullrequest_update', array('type' => 'text', 'label' => false));?></td>
