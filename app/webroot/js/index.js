@@ -49,28 +49,42 @@ $(function(){
         initialText = initialText.trim();
 
         formId = $(this).attr('id') + '_form';
-        if(columnName == 'division'){
+        if (columnName == 'division') {
             var form = "<select id = '" + formId + "'>" +
                        "<option value='改善' id='improvement'>改善</option>" +
                        "<option value='機能追加' id='adding_function'>機能追加</option>" +
                        "<option value='バグ' id = 'debug'>バグ</option>" +
                        "</select>";
-        }else if(columnName == 'status'){
+            $(selectedTd).html(form);
+        } else if (columnName == 'status') {
             var form = "<select id = '" + formId + "'>" +
                        "<option value='コードレビュー中' id='improvement'>コードレビュー中</option>" +
                        "<option value='改修中' id='adding function'>改修中</option>" +
                        "<option value='技術二重チェック中' id = 'debug'>技術二重チェック中</option>" +
                        "<option value='サポート・営業確認中' id = 'debug'>サポート・営業確認中</option>" +
                        "</select>";
-        }else{
+            $(selectedTd).html(form);
+        } else if (columnName == "pullrequest"
+                 ||columnName == "pullrequest_update"
+                 ||columnName == "tech_release_judgement"
+                 ||columnName == "supp_release_judgement"
+                 ||columnName == "sale_release_judgement"
+                 ||columnName == "scheduled_release_date"
+                 ||columnName == "merge_finish_date_to_master"
+        ){
+            var form = '<input type="text" id="' + formId + '" size="10" />';
+            $(selectedTd).html(form);
+            $('#'+formId).datepicker({ dateFormat: 'yy-mm-dd' });
+        } else {
             var fontsize_div = $('<div style="display:none;font-size:1em;margin:0;padding:0;height:auto;line-height:1;border:0;">&nbsp;</div>');
             var fontsize = fontsize_div.appendTo(selectedTd).height();
             var folm_cols = Math.floor(0.012 * fontsize * $(selectedTd).width());
             fontsize_div.remove();
             var form = "<textarea rows= '3' cols='" + folm_cols + "' " + "id ='" + formId + "'>" + initialText + "</textarea>";
+            $(selectedTd).html(form);
         }
 
-        $(selectedTd).html(form);
+        // $(selectedTd).html(form);
         synchronizeTwoTablesHeight();
         // セレクトボックスの初期値設定
         if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'コードレビュー中', '改修中', '技術二重チェック中', 'サポート・営業確認中']) != -1){
