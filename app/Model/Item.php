@@ -31,12 +31,11 @@ class Item extends AppModel
 
     public function formatDate($date)
     {
-        if(preg_match('/\d{2}\/\d{2}\/\d{4}/', $date, $matches)===1){
+        if(preg_match('/\d{2}\/\d{2}\/\d{4}/', $date, $matches) === 1){
             $date = explode("/", $date);
             $date = implode("-", array($date[2], $date[0], $date[1]));
             return $date;
-        }
-        else{
+        }else{
             return $date;
         }
     }

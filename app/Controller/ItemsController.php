@@ -13,7 +13,7 @@ class ItemsController extends AppController {
     public function index()
     {
         $this->layout = 'IndexLayout';
-        $this->set('items',  $this->paginate());
+        $this->set('items', $this->paginate());
         // $this->set('items', $this->Item->find('all'));
     }
 
@@ -36,12 +36,12 @@ class ItemsController extends AppController {
     {
         $this->Item->id = $id;
         $this->request->data = $this->Item->read();
-        $this->request->data["Item"][$column_name] = $content;
+        $this->request->data['Item'][$column_name] = $content;
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
                 echo $content;
             } else {
-                echo "失敗です";
+                echo '失敗です';
             }
         }
     }

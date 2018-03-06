@@ -38,10 +38,10 @@ error_reporting(E_ALL);
     </tr>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item">
-        <td class = "record" id="<?php echo $item['Item']['id'] . "-id";?>"><?php echo $item['Item']['id']; ?></td>
-        <td class = "record" id="<?php echo $item['Item']['id'] . "-category";?>"><?php echo $item['Item']['category']; ?></td>
-        <td class = "record" id="<?php echo $item['Item']['id'] . "-division";?>"><?php echo $item['Item']['division']; ?></td>
-        <td class = "record" id="<?php echo $item['Item']['id'] . "-content";?>"><?php echo $item['Item']['content']; ?></td>
+        <td class="record" id="<?php echo $item['Item']['id'] . "-id";?>"><?php echo $item['Item']['id']; ?></td>
+        <td class="record" id="<?php echo $item['Item']['id'] . "-category";?>"><?php echo $item['Item']['category']; ?></td>
+        <td class="record" id="<?php echo $item['Item']['id'] . "-division";?>"><?php echo $item['Item']['division']; ?></td>
+        <td class="record" id="<?php echo $item['Item']['id'] . "-content";?>"><?php echo $item['Item']['content']; ?></td>
     </tr>
     <?php endforeach; ?>
     <tr class="input_part">
@@ -120,8 +120,9 @@ error_reporting(E_ALL);
         <td><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
         <td><?php echo $this->Datepicker->datepicker('pullrequest_update', array('type' => 'text', 'label' => false));?></td>
         <td>
-            <?php echo $this->Form->input('status',
-                  array('label' => false, 'style' => 'width:160px;',
+            <?php echo $this->Form->input('status',array(
+                  'label' => false,
+                  'style' => 'width:160px;',
                   'options' => array('コードレビュー中' => 'コードレビュー中', '改修中' => '改修中', '技術二重チェック中' => '技術二重チェック中', 'サポート・営業確認中' => 'サポート・営業確認中')));
             ?>
         </td>
@@ -149,4 +150,3 @@ error_reporting(E_ALL);
 );
 ?>
 </div>
-<?php unset($item); ?>

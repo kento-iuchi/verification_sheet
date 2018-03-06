@@ -1,47 +1,52 @@
 $(function(){
     'use strict';
 
-
     var viewPartHeight = $('#view_part_header').outerHeight();
     $('#page_selecter').css('top', viewPartHeight + 'px');
     $('#page_selecter').css('display', 'block');
     synchronizeTwoTablesHeight();
-
-
 
     var currrentTd;
     var selectedTd;
     var initialText;
     var recordId;
     var columnName;
-    var formId
+    var formId;
     var currentText;
     var isFirstClick = true;
     $('#view_part td.record').dblclick(function(){
         if (!isFirstClick){
-            currentText = $('#' + formId).val()
+            currentText = $('#' + formId).val();
             postToEdit(selectedTd, recordId, columnName, currentText);
         }
 
         currrentTd = '#' + $(this).attr('id');
         if(currrentTd == selectedTd){
             // $(selectedTd).html(initialText);
-            selectedTd = ''
+            selectedTd = '';
             isFirstClick = true;
             return;
         }
         selectedTd = '#' + $(this).attr('id');
-        recordId = $(this).attr('id').split('-')[0]
-        columnName = $(this).attr('id').split('-')[1]
+        recordId = $(this).attr('id').split('-')[0];
+        columnName = $(this).attr('id').split('-')[1];
         initialText = $(selectedTd).html();
 
-        initialText = initialText.replace(/<br>|<\/br>/g, '&&NEWLINE&&')
-        initialText = initialText.replace(/<.+?>/g, '')
-        initialText = initialText.replace(/&&NEWLINE&&/g, '\n')
+        initialText = initialText.replace(/<br>|<\/br>/g, '&&NEWLINE&&');
+        initialText = initialText.replace(/<.+?>/g, '');
+        initialText = initialText.replace(/&&NEWLINE&&/g, '\n');
         initialText = initialText.trim();
 
         formId = $(this).attr('id') + '_form'
-        var form = "<textarea rows= '3' " + "id ='" + formId + "'>" + initialText + "</textarea>"
+        if(columnName == 'division', 'status'){
+            var form = "<select id = '" + formId + "'>" +
+                       "<option value='改善' id='improvement'>改善</option>" +
+                       "<option value='機能追加' id='adding function'>機能追加</option>" +
+                       "<option value='バグ' id = 'debug'>バグ</option>" +
+                       "</select>"
+        }else{
+            var form = "<textarea rows= '3' " + "id ='" + formId + "'>" + initialText + "</textarea>";
+        }
         $(selectedTd).html(form);
         isFirstClick = false;
     });
@@ -50,13 +55,13 @@ $(function(){
     function postToEdit(selectedTd, id, columnName, currentText){
 
         currentText = replaceSlashAndColon(currentText);
-        currentText = currentText.replace(/\r\n/g, '&&NEWLINE&&')
-        currentText = currentText.replace(/\r/g, '&&NEWLINE&&')
-        currentText = currentText.replace(/\n/g, '&&NEWLINE&&')
+        currentText = currentText.replace(/\r\n/g, '&&NEWLINE&&');
+        currentText = currentText.replace(/\r/g, '&&NEWLINE&&');
+        currentText = currentText.replace(/\n/g, '&&NEWLINE&&');
         if(currentText.length == 0){
             currentText = '*EMPTY*'
         }
-        var editUrl = WEBROOT + 'items/edit/' + id + '/' + columnName + '/' + currentText
+        var editUrl = WEBROOT + 'items/edit/' + id + '/' + columnName + '/' + currentText;
 
         $.ajax({
         url: editUrl,
@@ -70,7 +75,7 @@ $(function(){
                 textEdited = '';
             }
             textEdited = restoreSlashAndColon(textEdited);
-            textEdited = textEdited.replace(/&&NEWLINE&&/g, '</br>')
+            textEdited = textEdited.replace(/&&NEWLINE&&/g, '</br>');
             if(columnName == 'chatwork_url' || columnName == 'github_url'){
                 textEdited = '<a href="' + textEdited + '">' + textEdited + '</a>';
             }
@@ -88,8 +93,8 @@ $(function(){
 
     function replaceSlashAndColon(originText){
         var textAfterReplacement = originText;
-        textAfterReplacement = textAfterReplacement.replace(/\//g, "&&SLASH&&")
-        textAfterReplacement = textAfterReplacement.replace(/:/g, "&&COLON&&")
+        textAfterReplacement = textAfterReplacement.replace(/\//g, "&&SLASH&&");
+        textAfterReplacement = textAfterReplacement.replace(/:/g, "&&COLON&&");
         return textAfterReplacement;
     };
 
