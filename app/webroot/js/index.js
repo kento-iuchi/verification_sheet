@@ -104,7 +104,9 @@ $(function(){
             }
             textEdited = restoreSlashAndColon(textEdited);
             textEdited = textEdited.replace(/&&NEWLINE&&/g, '</br>');
-            if(columnName == 'chatwork_url' || columnName == 'github_url'){
+            if(columnName == 'chatwork_url'
+            　　|| columnName == 'github_url'
+            　　|| columnName == 'verification_enviroment_url'){
                 textEdited = '<a href="' + textEdited + '">' + textEdited + '</a>';
             }
 

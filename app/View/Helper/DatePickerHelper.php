@@ -22,7 +22,7 @@ function datepicker($fieldName, $options = array()){
     //スクリプト部分
     $script =
         "jQuery(function($){".
-        "$(\"#".$id["for"]."\").datepicker({changeMonth: true,changeYear: true});".
+        "$(\"#".$id["for"]."\").datepicker({dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});".
         "});";
 
     return $ext . $this->Html->scriptBlock($script, array('inline' => false)); }
