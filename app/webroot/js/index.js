@@ -72,9 +72,11 @@ $(function(){
                  ||columnName == "scheduled_release_date"
                  ||columnName == "merge_finish_date_to_master"
         ){
-            var form = '<input type="text" id="' + formId + '" size="10" />';
+            var form = '<input type="text" id="' + formId + '" size="10" />';// textareaではダメっぽい
             $(selectedTd).html(form);
-            $('#'+formId).datepicker({ dateFormat: 'yy-mm-dd' });
+            $('#'+formId).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, defaultDate: 0});
+            $('#'+formId).datepicker('setDate', initialText);
+            $('#'+formId).datepicker('show');
         } else {
             var fontsize_div = $('<div style="display:none;font-size:1em;margin:0;padding:0;height:auto;line-height:1;border:0;">&nbsp;</div>');
             var fontsize = fontsize_div.appendTo(selectedTd).height();
@@ -125,6 +127,14 @@ $(function(){
             }
 
             $(selectedTd).html(textEdited);
+            if (columnName == 'pullrequest_update' || columnName == 'scheduled_release_date'){
+                var pullrequestDate = new Date($('#' + id + '-pullrequest_update').text());
+                var scheduledReleaseDate = new Date($('#' + id + '-scheduled_release_date').text());
+                var todayDate = new Date();
+                // console.log(Math.round((todayDate - pullrequestDate)/86400000));
+                $('#' + id + '-elapsed').text(Math.round((todayDate - pullrequestDate)/86400000));
+                $('#' + id + '-grace_days_of_verification_complete').text(Math.round((scheduledReleaseDate - todayDate)/86400000));
+            }
             synchronizeTwoTablesHeight();
         },
         error: function(){

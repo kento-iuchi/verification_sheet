@@ -48,7 +48,7 @@ class ItemsController extends AppController
     public function complete($id = null)
     {
         $this->autoRender = false;
-        
+
         $this->Item->id = $id;
         $this->request->data = $this->Item->read();
         $this->request->data['Item']['is_completed'] = 1;
