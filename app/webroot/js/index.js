@@ -37,11 +37,11 @@ $(function(){
         initialText = initialText.trim();
 
         formId = $(this).attr('id') + '_form';
-        console.log(columnName);
+        console.log(initialText);
         if(columnName == 'division'){
             var form = "<select id = '" + formId + "'>" +
                        "<option value='改善' id='improvement'>改善</option>" +
-                       "<option value='機能追加' id='adding function'>機能追加</option>" +
+                       "<option value='機能追加' id='adding_function'>機能追加</option>" +
                        "<option value='バグ' id = 'debug'>バグ</option>" +
                        "</select>"
         }else if(columnName == 'status'){
@@ -54,7 +54,13 @@ $(function(){
         }else{
             var form = "<textarea rows= '3' " + "id ='" + formId + "'>" + initialText + "</textarea>";
         }
+
         $(selectedTd).html(form);
+        // セレクトボックスの初期値設定
+        if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'コードレビュー中', '改修中', '技術二重チェック中', 'サポート・営業確認中']) != -1){
+            $('#' + formId).val(initialText);
+        }
+        
         isFirstClick = false;
     });
 
