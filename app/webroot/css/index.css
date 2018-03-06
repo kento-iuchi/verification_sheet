@@ -24,6 +24,7 @@ table th,td {
     position: absolute;
     width: 400px;
     left: 0px;
+    table-layout: fixed;
 }
 
 #view_part_data {
@@ -32,10 +33,11 @@ table th,td {
     top: 0px;
     width: calc(99% - 400px);
     overflow-x: scroll;
+    table-layout: fixed;
 }
 
 #view_part_data table {
-    width: 2000px;
+    width: 3000px;
 }
 
 #page_selecter {
@@ -45,6 +47,7 @@ table th,td {
 
 .view_part_item {
     height: 32px;
+    word-wrap: break-word;
 }
 
 tr:nth-child(odd) {
@@ -60,6 +63,30 @@ tr.table_titles {
     font-size: 16px;
     color: white;
     background-color: #838b0d;
+}
+
+.id_row {
+    width: 25px;
+}
+
+.division_row {
+    width: 80px;
+}
+
+.url_row {
+    width: 224px;
+}
+
+.date_row {
+    width: 90px;
+}
+
+.day_count_row {
+    width: 56px;
+}
+
+.comment_row {
+    width: 300px;
 }
 
 .input_part textarea,input {

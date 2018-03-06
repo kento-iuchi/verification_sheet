@@ -11,17 +11,17 @@ error_reporting(E_ALL);
 <div id="view_part">
 <table id="view_part_header">
     <tr class="table_titles">
-        <th>番号</th>
-        <th>カテゴリ</th>
-        <th>区分</th>
-        <th>内容</th>
+        <th class="id_row">番号</th>
+        <th class="category_row">カテゴリ</th>
+        <th class="division_row">区分</th>
+        <th class="content_row">内容</th>
     </tr>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item">
-        <td class="record" id="<?php echo $item['Item']['id'] . "-id";?>"><?php echo $item['Item']['id']; ?></td>
-        <td class="record" id="<?php echo $item['Item']['id'] . "-category";?>"><?php echo $item['Item']['category']; ?></td>
-        <td class="record" id="<?php echo $item['Item']['id'] . "-division";?>"><?php echo $item['Item']['division']; ?></td>
-        <td class="record" id="<?php echo $item['Item']['id'] . "-content";?>"><?php echo $item['Item']['content']; ?></td>
+        <td class="record id_row" id="<?php echo $item['Item']['id'] . "-id";?>"><?php echo $item['Item']['id']; ?></td>
+        <td class="record category_row" id="<?php echo $item['Item']['id'] . "-category";?>"><?php echo $item['Item']['category']; ?></td>
+        <td class="record division_row" id="<?php echo $item['Item']['id'] . "-division";?>"><?php echo $item['Item']['division']; ?></td>
+        <td class="record content_row" id="<?php echo $item['Item']['id'] . "-content";?>"><?php echo $item['Item']['content']; ?></td>
     </tr>
     <?php endforeach; ?>
     <tr class="input_part">
@@ -44,25 +44,25 @@ error_reporting(E_ALL);
 <div id='view_part_data'>
     <table id="data_table" class="table_view_part">
         <tr class="table_titles">
-            <th>chatwork URL</th>
-            <th>github URL</th>
-            <th>個別検証環境URL</th>
+            <th class="url_row">chatwork URL</th>
+            <th class="url_row">github URL</th>
+            <th class="url_row">個別検証環境URL</th>
             <th>確認優先度<br>（必須リリース日）</th>
-            <th>プルリク</th>
-            <th>プルリク<br>更新日</th>
+            <th class="date_row">プルリク</th>
+            <th class="date_row">プルリク<br>更新日</th>
             <th>ステータス</th>
-            <th>技術リリース<br>OK判断日</th>
-            <th>サポートリリース<br>OK判断日</th>
-            <th>営業リリース<br>OK判断日</th>
-            <th>経過日数</th>
-            <th>リリース<br>予定日</th>
-            <th>検証完了<br>猶予日数</th>
-            <th>master<br>マージ完了日</th>
-            <th>確認ポイント</th>
-            <th>確認コメント</th>
-            <th>確認コメント対応</th>
-            <th>作成日時</th>
-            <th>最終更新日時</th>
+            <th class="date_row">技術リリース<br>OK判断日</th>
+            <th class="date_row">サポートリリース<br>OK判断日</th>
+            <th class="date_row">営業リリース<br>OK判断日</th>
+            <th class="day_count_row">経過日数</th>
+            <th class="date_row">リリース<br>予定日</th>
+            <th class="day_count_row">検証完了<br>猶予日数</th>
+            <th class="date_row">master<br>マージ完了日</th>
+            <th class="comment_row">確認ポイント</th>
+            <th class="comment_row">確認コメント</th>
+            <th class="comment_row">確認コメント対応</th>
+            <th class="date_row">作成日時</th>
+            <th class="date_row">最終更新日時</th>
             <th></th>
         </tr>
 
