@@ -14,7 +14,7 @@ table th,td{
 }
 
 #view_part {
-    width: 1600px;
+    width: 99%;
     top: 0px;
     position: relative;
     left: 1%;
@@ -28,14 +28,14 @@ table th,td{
 
 #view_part_data {
     position: absolute;
-    left:25%;
+    left:400px;
     top:0px;
-    width: 93%;
+    width: calc(99% - 400px);
     overflow-x:scroll;
 }
 
 #view_part_data table{
-    width: 200%;
+    width: 2000px;
 }
 
 #page_selecter {
