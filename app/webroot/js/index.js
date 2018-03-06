@@ -179,6 +179,8 @@ $(function(){
             var item_data_tr_id = '#item_' + item_id + '-data';
             $(item_head_tr_id).fadeOut(600).queue(function() {
                 $(item_head_tr_id).remove();
+            });
+            $(item_data_tr_id).fadeOut(600).queue(function() {
                 $(item_data_tr_id).remove();
             });
         },
