@@ -26,7 +26,7 @@ error_reporting(E_ALL);
     <?php endforeach; ?>
     <tr class="input_part">
         <td></td>
-        <td><?php echo $this->Form->input('category', array('label' => false, 'style' => 'width:80px; height:40px;'));?></td>
+        <td><?php echo $this->Form->input('category', array('label' => false));?></td>
         <td><?php echo $this->Form->input('division', array(
                 'label' => false,
                 'style' => 'width:60px;',

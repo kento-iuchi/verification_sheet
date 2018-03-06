@@ -31,7 +31,7 @@ $(function(){
         recordId    = $(this).attr('id').split('-')[0]// 要素idは 'レコードid_カラム名'という形式
         columnName  = $(this).attr('id').split('-')[1];
         initialText = $(selectedTd).html();
-        // 経過日数と猶予日数を編集できないようにする
+        // いくつかの項目を編集できないようにする
         if(columnName == 'id'
            ||columnName == 'elapsed'
            || columnName == 'grace_days_of_verification_complete'
