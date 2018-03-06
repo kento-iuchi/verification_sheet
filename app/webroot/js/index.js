@@ -32,7 +32,12 @@ $(function(){
         columnName  = $(this).attr('id').split('-')[1];
         initialText = $(selectedTd).html();
         // 経過日数と猶予日数を編集できないようにする
-        if(columnName == 'elapsed' || columnName == 'grace_days_of_verification_complete'){
+        if(columnName == 'id'
+           ||columnName == 'elapsed'
+           || columnName == 'grace_days_of_verification_complete'
+           || columnName == 'created'
+           || columnName == 'modified'
+       ){
             selectedTd = '';
             isFirstClick = true;
             return;
@@ -58,7 +63,11 @@ $(function(){
                        "<option value='サポート・営業確認中' id = 'debug'>サポート・営業確認中</option>" +
                        "</select>";
         }else{
-            var form = "<textarea rows= '3' " + "id ='" + formId + "'>" + initialText + "</textarea>";
+            var fontsize_div = $('<div style="display:none;font-size:1em;margin:0;padding:0;height:auto;line-height:1;border:0;">&nbsp;</div>');
+            var fontsize = fontsize_div.appendTo(selectedTd).height();
+            var folm_cols = Math.floor(0.012 * fontsize * $(selectedTd).width());
+            fontsize_div.remove();
+            var form = "<textarea rows= '3' cols='" + folm_cols + "' " + "id ='" + formId + "'>" + initialText + "</textarea>";
         }
 
         $(selectedTd).html(form);
