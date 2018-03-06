@@ -31,6 +31,12 @@ $(function(){
         recordId    = $(this).attr('id').split('-')[0]// 要素idは 'レコードid_カラム名'という形式
         columnName  = $(this).attr('id').split('-')[1];
         initialText = $(selectedTd).html();
+        // 経過日数と猶予日数を編集できないようにする
+        if(columnName == 'elapsed' || columnName == 'grace_days_of_verification_complete'){
+            selectedTd = '';
+            isFirstClick = true;
+            return;
+        }
 
         initialText = initialText.replace(/<br>|<\/br>/g, '&&NEWLINE&&');
         initialText = initialText.replace(/<.+?>/g, '');
@@ -56,6 +62,7 @@ $(function(){
         }
 
         $(selectedTd).html(form);
+        synchronizeTwoTablesHeight();
         // セレクトボックスの初期値設定
         if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'コードレビュー中', '改修中', '技術二重チェック中', 'サポート・営業確認中']) != -1){
             $('#' + formId).val(initialText);
