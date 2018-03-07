@@ -18,10 +18,18 @@ error_reporting(E_ALL);
     </tr>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item">
-        <td class="record id_row" id="<?php echo $item['Item']['id'] . "-id";?>"><?php echo $item['Item']['id']; ?></td>
-        <td class="record category_row" id="<?php echo $item['Item']['id'] . "-category";?>"><?php echo $item['Item']['category']; ?></td>
-        <td class="record division_row" id="<?php echo $item['Item']['id'] . "-division";?>"><?php echo $item['Item']['division']; ?></td>
-        <td class="record content_row" id="<?php echo $item['Item']['id'] . "-content";?>"><?php echo $item['Item']['content']; ?></td>
+        <td class="record id_row" id="<?php echo $item['Item']['id'] . "-id";?>">
+            <span class="record_text"><?php echo $item['Item']['id']; ?></span>
+        </td>
+        <td class="record category_row" id="<?php echo $item['Item']['id'] . "-category";?>">
+            <span class="record_text"><?php echo $item['Item']['category']; ?></span>
+        </td>
+        <td class="record division_row" id="<?php echo $item['Item']['id'] . "-division";?>">
+            <span class="record_text"><?php echo $item['Item']['division']; ?></span>
+        </td>
+        <td class="record content_row" id="<?php echo $item['Item']['id'] . "-content";?>">
+            <span class="record_text"><?php echo $item['Item']['content']; ?></span>
+        </td>
     </tr>
     <?php endforeach; ?>
     <tr class="input_part">
@@ -29,7 +37,6 @@ error_reporting(E_ALL);
         <td><?php echo $this->Form->input('category', array('label' => false));?></td>
         <td><?php echo $this->Form->input('division', array(
                 'label' => false,
-                'style' => 'width:60px;',
                 'options' => array(
                     '改善' => '改善',
                     '機能追加' => '機能追加',
@@ -71,59 +78,79 @@ error_reporting(E_ALL);
         <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
             <td class = "record" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>">
                 <a href = "<?php echo $item['Item']['chatwork_url']; ?>">
-                    <span><?php echo $item['Item']['chatwork_url']; ?></span>
+                    <span class="record_text"><?php echo $item['Item']['chatwork_url']; ?></span>
                 </a>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-github_url";?>">
                 <a href="<?php echo $item['Item']['github_url']; ?>">
-                    <span><?php echo $item['Item']['github_url']; ?></span>
+                    <span class="record_text"><?php echo $item['Item']['github_url']; ?></span>
                 </a>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-verification_enviroment_url";?>">
                 <a href="<?php echo $item['Item']['verification_enviroment_url']; ?>">
-                    <span><?php echo $item['Item']['verification_enviroment_url']; ?></span>
+                    <span class="record_text"><?php echo $item['Item']['verification_enviroment_url']; ?></span>
                 </a>
             </td>
             <td class = "record <?php if($item['Item']['confirm_priority'] == "高"){ echo "high_priority";} ?>" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
                 <?php echo $item['Item']['confirm_priority']; ?>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest";?>"><?php echo $item['Item']['pullrequest']; ?></td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>"><?php echo $item['Item']['pullrequest_update']; ?></td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-status";?>"><?php echo $item['Item']['status']; ?></td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-tech_release_judgement";?>"><?php echo $item['Item']['tech_release_judgement']; ?></td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>"><?php echo $item['Item']['supp_release_judgement']; ?></td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>"><?php echo $item['Item']['sale_release_judgement']; ?></td>
+            <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest";?>">
+                <span class="record_text"><?php echo $item['Item']['pullrequest']; ?></span>
+            </td>
+            <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>">
+                <span class="record_text"><?php echo $item['Item']['pullrequest_update']; ?></span>
+            </td>
+            <td class = "record" id="<?php echo $item['Item']['id'] . "-status";?>">
+                <span class="record_text"><?php echo $item['Item']['status']; ?></span>
+            </td>
+            <td class = "record" id="<?php echo $item['Item']['id'] . "-tech_release_judgement";?>">
+                <span class="record_text"><?php echo $item['Item']['tech_release_judgement']; ?></span>
+            </td>
+            <td class = "record" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>">
+                <span class="record_text"><?php echo $item['Item']['supp_release_judgement']; ?></span>
+            </td>
+            <td class = "record" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>">
+                <span class="record_text"><?php echo $item['Item']['sale_release_judgement']; ?></span>
+            </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-elapsed";?>">
-                <?php
+                <span class="record_text"><?php
                     $pullrequest_date = new Datetime($item['Item']['pullrequest']);
                     echo $today_date->diff($pullrequest_date)->format('%a');;
-                ?>
+                ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-scheduled_release_date";?>"><?php echo $item['Item']['scheduled_release_date']; ?></td>
+            <td class = "record" id="<?php echo $item['Item']['id'] . "-scheduled_release_date";?>">
+                <span class="record_text"><?php echo $item['Item']['scheduled_release_date']; ?></span>
+            </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
-                <?php
+                <span class="record_text"><?php
                     $scheduled_release_date = new Datetime($item['Item']['scheduled_release_date']);
                     echo str_replace('+', '', $today_date->diff($scheduled_release_date)->format('%R%a'));
-                ?>
+                ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-merge_finish_date_to_master";?>"><?php echo $item['Item']['merge_finish_date_to_master']; ?></td>
+            <td class = "record" id="<?php echo $item['Item']['id'] . "-merge_finish_date_to_master";?>">
+                <span class="record_text"><?php echo $item['Item']['merge_finish_date_to_master']; ?></span>
+            </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_points";?>">
-                <?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?>
+                <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
-                <?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_comment']); ?>
+                <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_comment']); ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
-                <?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?>
+                <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></span>
             </td>
-            <td><?php echo $item['Item']['created']; ?></td>
-            <td><?php echo $item['Item']['modified']; ?></td>
+            <td>
+                <span class="record_text"><?php echo $item['Item']['created']; ?></span>
+            </td>
+            <td>
+                <span class="record_text"><?php echo $item['Item']['modified']; ?></span>
+            </td>
             <td><button type="button" class = "complete_button" id="<?php echo $item['Item']['id'] . "-complete_button";?>">完了</button></td>
         </tr>
         <?php endforeach; ?>
 
         <tr class="input_part">
-            <td><?php echo $this->Form->input('chatwork_url', array('label' => false, 'style' => 'width:160px;'));?></td>
+            <td><?php echo $this->Form->input('chatwork_url', array('label' => false));?></td>
             <td><?php echo $this->Form->input('github_url', array('label' => false));?></td>
             <td><?php echo $this->Form->input('verification_enviroment_url', array('label' => false));?></td>
             <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
@@ -132,7 +159,6 @@ error_reporting(E_ALL);
             <td>
                 <?php echo $this->Form->input('status',array(
                       'label' => false,
-                      'style' => 'width:160px;',
                       'options' => array(
                           'コードレビュー中' => 'コードレビュー中',
                           '改修中' => '改修中',

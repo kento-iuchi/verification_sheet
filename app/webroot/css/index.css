@@ -89,20 +89,29 @@ tr.table_titles {
     width: 300px;
 }
 
+.record_text {
+    padding-left: 4px;
+}
+
 .input_part textarea,input {
     width: 95%;
     height: 40px;
     font-size: 12px;
 }
 
+.input {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.submit {
+    text-align: center;
+}
+
 .high_priority {
     color: red;
     font-weight: bold;
     font-size: 16px;
-}
-
-.container {
-    margin: 0 auto;
 }
 
 ul > li {

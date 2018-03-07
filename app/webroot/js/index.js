@@ -82,7 +82,7 @@ $(function(){
             var fontsize = fontsize_div.appendTo(selectedTd).height();
             var folm_cols = Math.floor(0.012 * fontsize * $(selectedTd).width());
             fontsize_div.remove();
-            var form = "<textarea rows= '3' cols='" + folm_cols + "' " + "id ='" + formId + "'>" + initialText + "</textarea>";
+            var form = "<div style='text-align: center;'><textarea rows= '3' cols='" + folm_cols + "' " + "id ='" + formId + "'>" + initialText + "</textarea></div>";
             $(selectedTd).html(form);
         }
 
