@@ -6,7 +6,6 @@ class ItemsController extends AppController
     public $helpers = array('Html', 'Form', 'Flash', 'js', 'DatePicker');
 
     public $paginate =  array(
-        'conditions' => array('is_completed' => 0),
         'limit'      => 20,
         'sort'       => 'id',
     );
@@ -14,7 +13,7 @@ class ItemsController extends AppController
     public function index()
     {
         $this->layout = 'IndexLayout';
-        $this->set('items', $this->paginate());
+        $this->set('items', $this->paginate('Item', array('is_completed' => 0)));
     }
 
     public function add()
@@ -45,13 +44,13 @@ class ItemsController extends AppController
         }
     }
 
-    public function complete($id = null)
+    public function toggle_complete_state($id = null)
     {
         $this->autoRender = false;
 
         $this->Item->id = $id;
         $this->request->data = $this->Item->read();
-        $this->request->data['Item']['is_completed'] = 1;
+        $this->request->data['Item']['is_completed'] = $this->request->data['Item']['is_completed'] == 0 ? 1 : 0;
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
                 echo '"完了"状態にしました';
@@ -60,5 +59,27 @@ class ItemsController extends AppController
             }
         }
     }
+
+    public function show_completed()
+    {
+        $this->layout = 'IndexLayout';
+        $this->set('items', $this->paginate('Item', array('is_completed' => 1)));
+    }
+
+    // public function complete($id = null)// completeとほぼ同じだし統合したい
+    // {
+    //     $this->autoRender = false;
+    //
+    //     $this->Item->id = $id;
+    //     $this->request->data = $this->Item->read();
+    //     $this->request->data['Item']['is_completed'] = 1;
+    //     if ($this->request->is(['ajax'])) {
+    //         if ($this->Item->save($this->request->data)) {
+    //             echo '"完了"状態にしました';
+    //         } else {
+    //             echo '"完了"状態にできませんでした';
+    //         }
+    //     }
+    // }
 
 }

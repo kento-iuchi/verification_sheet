@@ -185,7 +185,6 @@ $(function(){
         $("#page_selecter").offset({top : tableHeight + 20});
     };
 
-
     // 完了ボタンを押した際の処理
     $('.complete_button').click(function()
     {
@@ -198,10 +197,9 @@ $(function(){
         }
     })
 
-
     function turnItemCompleted(item_id)
     {
-        var completeActionURL = WEBROOT + 'items/complete/' + item_id;
+        var completeActionURL = WEBROOT + 'items/toggle_complete_state/' + item_id;
         $.ajax({
         url: completeActionURL,
         type: "POST",
@@ -210,6 +208,44 @@ $(function(){
         success : function(response){
             //通信成功時
             alert("'完了'にしました");
+            var item_head_tr_id = '#item_' + item_id + '-head';
+            var item_data_tr_id = '#item_' + item_id + '-data';
+            $(item_head_tr_id).fadeOut(600).queue(function() {
+                $(item_head_tr_id).remove();
+            });
+            $(item_data_tr_id).fadeOut(600).queue(function() {
+                $(item_data_tr_id).remove();
+            });
+        },
+        error: function(){
+            //通信失敗時の処理
+            alert('通信失敗');
+        }
+        });
+    }
+
+    $('.incomplete_button').click(function()
+    {
+        var button_id = $(this).attr('id');
+        var item_id = button_id.split('-')[0];
+        if(!confirm('id = ' + item_id + '未完了に戻しますか？')){
+            return false;
+        }else{
+            turnItemIncompleted(item_id);
+        }
+    })
+
+    function turnItemIncompleted(item_id)
+    {
+        var inCompleteActionURL = WEBROOT + 'items/toggle_complete_state/' + item_id;
+        $.ajax({
+        url: inCompleteActionURL,
+        type: "POST",
+        data: { id : item_id },
+        dataType: "text",
+        success : function(response){
+            //通信成功時
+            alert("'未完了'に戻しました");
             var item_head_tr_id = '#item_' + item_id + '-head';
             var item_data_tr_id = '#item_' + item_id + '-data';
             $(item_head_tr_id).fadeOut(600).queue(function() {
