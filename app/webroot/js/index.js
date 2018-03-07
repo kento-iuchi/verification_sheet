@@ -189,11 +189,11 @@ $(function(){
     // 完了ボタンを押した際の処理
     $('.complete_button').click(function()
     {
-        if(!confirm('完了してよろしいですか？')){
+        var button_id = $(this).attr('id');
+        var item_id = button_id.split('-')[0];
+        if(!confirm('id = ' + item_id + ' 完了してよろしいですか？')){
             return false;
         }else{
-            var button_id = $(this).attr('id');
-            var item_id = button_id.split('-')[0];
             turnItemCompleted(item_id);
         }
     })
