@@ -3,7 +3,7 @@ ini_set('display_errors',1);
 
 class ItemsController extends AppController
 {
-    public $helpers = array('Html', 'Form', 'Flash', 'js', 'DatePicker');
+    public $helpers = array('Html', 'Form', 'Flash', 'Js', 'DatePicker');
 
     public $paginate =  array(
         'limit'      => 20,
