@@ -17,52 +17,55 @@ error_reporting(E_ALL);
 <table id="view_part_header">
     <tr class="table_titles">
         <th class="id_row">番号</th>
-        <th class="category_row">カテゴリ</th>
-        <th class="division_row">区分</th>
         <th class="content_row">内容</th>
+        <th>確認優先度<br>（必須リリース日）</th>
+        <th>ステータス</th>
     </tr>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item">
         <td class="record id_row" id="<?php echo $item['Item']['id'] . "-id";?>">
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
         </td>
-        <td class="record category_row" id="<?php echo $item['Item']['id'] . "-category";?>">
-            <span class="record_text"><?php echo $item['Item']['category']; ?></span>
-        </td>
-        <td class="record division_row" id="<?php echo $item['Item']['id'] . "-division";?>">
-            <span class="record_text"><?php echo $item['Item']['division']; ?></span>
-        </td>
         <td class="record content_row" id="<?php echo $item['Item']['id'] . "-content";?>">
             <span class="record_text"><?php echo $item['Item']['content']; ?></span>
+        </td>
+        <td class = "record <?php if($item['Item']['confirm_priority'] == "高"){ echo "high_priority";} ?>" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
+            <?php echo $item['Item']['confirm_priority']; ?>
+        </td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-status";?>">
+            <span class="record_text"><?php echo $item['Item']['status']; ?></span>
         </td>
     </tr>
     <?php endforeach; ?>
     <tr class="input_part">
         <td></td>
-        <td><?php echo $this->Form->input('category', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('division', array(
-                'label' => false,
-                'options' => array(
-                    '改善' => '改善',
-                    '機能追加' => '機能追加',
-                    'バグ' => 'バグ',
-                    )
-                ));
-            ?></td>
         <td><?php echo $this->Form->input('content', array('label' => false));?></td>
+        <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
+        <td>
+            <?php echo $this->Form->input('status',array(
+                  'label' => false,
+                  'options' => array(
+                      'コードレビュー中' => 'コードレビュー中',
+                      '改修中' => '改修中',
+                      '技術二重チェック中' => '技術二重チェック中',
+                      'サポート・営業確認中' => 'サポート・営業確認中',
+                  )
+              ));
+            ?>
+        </td>
     </tr>
 </table>
 
 <div id='view_part_data'>
     <table id="data_table" class="table_view_part">
         <tr class="table_titles">
+            <th class="category_row">カテゴリ</th>
+            <th class="division_row">区分</th>
             <th class="url_row">chatwork URL</th>
             <th class="url_row">github URL</th>
             <th class="url_row">個別検証環境URL</th>
-            <th>確認優先度<br>（必須リリース日）</th>
             <th class="date_row">プルリク</th>
             <th class="date_row">プルリク<br>更新日</th>
-            <th>ステータス</th>
             <th class="date_row">技術リリース<br>OK判断日</th>
             <th class="date_row">サポートリリース<br>OK判断日</th>
             <th class="date_row">営業リリース<br>OK判断日</th>
@@ -81,6 +84,12 @@ error_reporting(E_ALL);
         <?php $today_date = new Datetime(date("y-m-d")); //経過日数、猶予日数の計算に使用?>
         <?php foreach ($items as $item): ?>
         <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
+            <td class="record category_row" id="<?php echo $item['Item']['id'] . "-category";?>">
+                <span class="record_text"><?php echo $item['Item']['category']; ?></span>
+            </td>
+            <td class="record division_row" id="<?php echo $item['Item']['id'] . "-division";?>">
+                <span class="record_text"><?php echo $item['Item']['division']; ?></span>
+            </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>">
                 <a href = "<?php echo $item['Item']['chatwork_url']; ?>">
                     <span class="record_text"><?php echo $item['Item']['chatwork_url']; ?></span>
@@ -96,17 +105,11 @@ error_reporting(E_ALL);
                     <span class="record_text"><?php echo $item['Item']['verification_enviroment_url']; ?></span>
                 </a>
             </td>
-            <td class = "record <?php if($item['Item']['confirm_priority'] == "高"){ echo "high_priority";} ?>" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
-                <?php echo $item['Item']['confirm_priority']; ?>
-            </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest";?>">
                 <span class="record_text"><?php echo $item['Item']['pullrequest']; ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>">
                 <span class="record_text"><?php echo $item['Item']['pullrequest_update']; ?></span>
-            </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-status";?>">
-                <span class="record_text"><?php echo $item['Item']['status']; ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-tech_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['tech_release_judgement']; ?></span>
@@ -150,29 +153,27 @@ error_reporting(E_ALL);
             <td>
                 <span class="record_text"><?php echo $item['Item']['modified']; ?></span>
             </td>
-            <td><button type="button" class = "complete_button" id="<?php echo $item['Item']['id'] . "-complete_button";?>">完了</button></td>
+            <td><div class="complete"><button type="button" class="complete_button" id="<?php echo $item['Item']['id'] . "-complete_button";?>">完了</button></div></td>
         </tr>
         <?php endforeach; ?>
 
         <tr class="input_part">
+            <td><?php echo $this->Form->input('category', array('label' => false));?></td>
+            <td><?php echo $this->Form->input('division', array(
+                    'label' => false,
+                    'options' => array(
+                        '改善' => '改善',
+                        '機能追加' => '機能追加',
+                        'バグ' => 'バグ',
+                        )
+                    ));
+                ?>
+            </td>
             <td><?php echo $this->Form->input('chatwork_url', array('label' => false));?></td>
             <td><?php echo $this->Form->input('github_url', array('label' => false));?></td>
             <td><?php echo $this->Form->input('verification_enviroment_url', array('label' => false));?></td>
-            <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
             <td><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
             <td><?php echo $this->Datepicker->datepicker('pullrequest_update', array('type' => 'text', 'label' => false));?></td>
-            <td>
-                <?php echo $this->Form->input('status',array(
-                      'label' => false,
-                      'options' => array(
-                          'コードレビュー中' => 'コードレビュー中',
-                          '改修中' => '改修中',
-                          '技術二重チェック中' => '技術二重チェック中',
-                          'サポート・営業確認中' => 'サポート・営業確認中',
-                      )
-                  ));
-                ?>
-            </td>
             <td><?php echo $this->Datepicker->datepicker('tech_release_judgement', array('type' => 'text', 'label' => false));?></td>
             <td><?php echo $this->Datepicker->datepicker('supp_release_judgement', array('type' => 'text', 'label' => false));?></td>
             <td><?php echo $this->Datepicker->datepicker('sale_release_judgement', array('type' => 'text', 'label' => false));?></td>

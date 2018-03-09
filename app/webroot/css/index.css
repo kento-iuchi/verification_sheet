@@ -1,3 +1,7 @@
+:root {
+    --header-width: 550px;
+}
+
 .container {
     margin: 0 auto;
 }
@@ -22,22 +26,22 @@ table th,td {
 
 #view_part_header {
     position: absolute;
-    width: 400px;
+    width: var(--header-width);
     left: 0px;
     table-layout: fixed;
 }
 
 #view_part_data {
     position: absolute;
-    left: 400px;
+    left: var(--header-width);
     top: 0px;
-    width: calc(99% - 400px);
+    width: calc(99% - var(--header-width));
     overflow-x: scroll;
     table-layout: fixed;
 }
 
 #view_part_data table {
-    width: 3000px;
+    width: 2800px;
 }
 
 #page_selecter {
@@ -69,6 +73,10 @@ tr.table_titles {
     width: 25px;
 }
 
+.category_row {
+    width: 80px;
+}
+
 .division_row {
     width: 80px;
 }
@@ -87,6 +95,10 @@ tr.table_titles {
 
 .comment_row {
     width: 300px;
+}
+
+.complete {
+    text-align: center;
 }
 
 .record_text {
