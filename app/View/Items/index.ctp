@@ -219,10 +219,10 @@ error_reporting(E_ALL);
             <td class = "record" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></span>
             </td>
-            <td>
+            <td class = "record" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['created']; ?></span>
             </td>
-            <td>
+            <td class = "record" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['modified']; ?></span>
             </td>
             <td><div class="complete"><button type="button" class="complete_button" id="<?php echo $item['Item']['id'] . "-complete_button";?>">完了</button></div></td>

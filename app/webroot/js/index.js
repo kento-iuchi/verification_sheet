@@ -41,6 +41,8 @@ $(function(){
         isEditing = true;
     });
 
+    
+
     function createEditForm(editCellId)
     {
         var editCellSelector  = '#' + editCellId;
@@ -97,7 +99,6 @@ $(function(){
             var folm_cols = Math.floor(0.012 * fontsize * $(editCellSelector).width());
             fontsize_div.remove();
             var form = "<div style='text-align: center;'><textarea rows= '3' cols='" + folm_cols + "' " + "id ='" + formId + "'>" + initialText + "</textarea></div>";
-            console.log(form);
             $(editCellSelector).html(form);
         }
 
