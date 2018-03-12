@@ -16,10 +16,20 @@ error_reporting(E_ALL);
 <div id="view_part">
 <table id="view_part_header">
     <tr class="table_titles">
-        <th class="id_row">番号</th>
+        <th class="id_row">
+            番号</br>
+            <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+            <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+        </th>
         <th class="content_row">内容</th>
-        <th>確認優先度<br>（必須リリース日）</th>
-        <th>ステータス</th>
+        <th>確認優先度<br>
+            （必須リリース日)</br>
+            <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+            <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
+        <th>ステータス</br>
+            <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+            <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+        </th>
     </tr>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item">
@@ -59,25 +69,87 @@ error_reporting(E_ALL);
 <div id='view_part_data'>
     <table id="data_table" class="table_view_part">
         <tr class="table_titles">
-            <th class="category_row">カテゴリ</th>
-            <th class="division_row">区分</th>
-            <th class="url_row">chatwork URL</th>
-            <th class="url_row">github URL</th>
-            <th class="url_row">個別検証環境URL</th>
-            <th class="date_row">プルリク</th>
-            <th class="date_row">プルリク<br>更新日</th>
-            <th class="date_row">技術リリース<br>OK判断日</th>
-            <th class="date_row">サポートリリース<br>OK判断日</th>
-            <th class="date_row">営業リリース<br>OK判断日</th>
-            <th class="day_count_row">経過日数</th>
-            <th class="date_row">リリース<br>予定日</th>
-            <th class="day_count_row">検証完了<br>猶予日数</th>
-            <th class="date_row">master<br>マージ完了日</th>
-            <th class="comment_row">確認ポイント</th>
-            <th class="comment_row">確認コメント</th>
-            <th class="comment_row">確認コメント対応</th>
-            <th class="date_row">作成日時</th>
-            <th class="date_row">最終更新日時</th>
+            <th class="category_row">
+                カテゴリ</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="division_row">
+                区分</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="url_row">
+                chatwork URL
+            </th>
+            <th class="url_row">
+                github URL
+            </th>
+            <th class="url_row">
+                個別検証環境URL
+            </th>
+            <th class="date_row">プルリク</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="date_row">
+                プルリク<br>更新日</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="date_row">
+                技術リリース<br>OK判断日</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="date_row">
+                サポートリリース<br>OK判断日</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
+            <th class="date_row">
+                営業リリース<br>OK判断日</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="day_count_row">
+                経過日数</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="date_row">
+                リリース<br>予定日</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="day_count_row">
+                検証完了<br>猶予日数</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="date_row">
+                master<br>マージ完了日</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="comment_row">
+                確認ポイント
+            </th>
+            <th class="comment_row">
+                確認コメント
+            </th>
+            <th class="comment_row">
+                確認コメント対応
+            </th>
+            <th class="date_row">
+                作成日時</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
+            <th class="date_row">
+                最終更新日時</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
             <th></th>
         </tr>
 

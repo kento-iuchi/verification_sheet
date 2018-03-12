@@ -6,41 +6,55 @@ $(function(){
     $('#page_selecter').css('display', 'block');
     synchronizeTwoTablesHeight();
 
-    var currrentTd;
+
+    // ダブルクリックでその場変種
+    var editCellId;
     var selectedTd;
-    var initialText;
     var recordId;
     var columnName;
     var formId;
     var currentText;
-    var isFirstClick = true;
+    var isEditing = false;
     $('#view_part td.record').dblclick(function()
     {
-        if (!isFirstClick){
+        if (isEditing){
+            var recordId   = editCellId.split('-')[0];
+            var columnName = editCellId.split('-')[1];
             currentText = $('#' + formId).val();
-            postToEdit(selectedTd, recordId, columnName, currentText);
+            postToEdit('#' + editCellId, recordId, columnName, currentText);
         }
 
-        currrentTd = '#' + $(this).attr('id');
-        if(currrentTd == selectedTd){// 選択中のセルをもう一度ダブルクリックしたなら、何も選択していない状態に
-            selectedTd = '';
-            isFirstClick = true;
+        if($(this).attr('id') == editCellId){// 編集中のセルをもう一度ダブルクリックしたなら、何も編集していない状態に
+            editCellId = '';
+            isEditing = false;
             return;
         }
-        selectedTd  = '#' + $(this).attr('id');
-        recordId    = $(this).attr('id').split('-')[0]// 要素idは 'レコードid_カラム名'という形式
-        columnName  = $(this).attr('id').split('-')[1];
-        initialText = $(selectedTd).html();
+        editCellId = $(this).attr('id');
+
+        formId = createEditForm(editCellId);
+        if (formId == 'uneditable_cell'){
+            editCellId = '';
+            isEditing = false;
+            return;
+        }
+
+        isEditing = true;
+    });
+
+    function createEditForm(editCellId)
+    {
+        var editCellSelector  = '#' + editCellId;
+        var recordId    = editCellId.split('-')[0]// 要素idは 'レコードid_カラム名'という形式
+        var columnName  = editCellId.split('-')[1];
+        var initialText = String($(editCellSelector).html());
         // いくつかの項目を編集できないようにする
         if(columnName == 'id'
-           ||columnName == 'elapsed'
+           || columnName == 'elapsed'
            || columnName == 'grace_days_of_verification_complete'
            || columnName == 'created'
            || columnName == 'modified'
        ){
-            selectedTd = '';
-            isFirstClick = true;
-            return;
+            return 'uneditable_cell';
         }
 
         initialText = initialText.replace(/<br>|<\/br>/g, '&&NEWLINE&&');
@@ -48,14 +62,14 @@ $(function(){
         initialText = initialText.replace(/&&NEWLINE&&/g, '\n');
         initialText = initialText.trim();
 
-        formId = $(this).attr('id') + '_form';
+        formId = editCellId + '_form';
         if (columnName == 'division') {
             var form = "<select id = '" + formId + "'>" +
                        "<option value='改善' id='improvement'>改善</option>" +
                        "<option value='機能追加' id='adding_function'>機能追加</option>" +
                        "<option value='バグ' id = 'debug'>バグ</option>" +
                        "</select>";
-            $(selectedTd).html(form);
+            $(editCellSelector).html(form);
         } else if (columnName == 'status') {
             var form = "<select id = '" + formId + "'>" +
                        "<option value='コードレビュー中' id='improvement'>コードレビュー中</option>" +
@@ -63,7 +77,7 @@ $(function(){
                        "<option value='技術二重チェック中' id = 'debug'>技術二重チェック中</option>" +
                        "<option value='サポート・営業確認中' id = 'debug'>サポート・営業確認中</option>" +
                        "</select>";
-            $(selectedTd).html(form);
+            $(editCellSelector).html(form);
         } else if (columnName == "pullrequest"
                  ||columnName == "pullrequest_update"
                  ||columnName == "tech_release_judgement"
@@ -73,28 +87,28 @@ $(function(){
                  ||columnName == "merge_finish_date_to_master"
         ){
             var form = '<input type="text" id="' + formId + '" size="10" />';// textareaではダメっぽい
-            $(selectedTd).html(form);
+            $(editCellSelector).html(form);
             $('#'+formId).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, defaultDate: 0});
             $('#'+formId).datepicker('setDate', initialText);
             $('#'+formId).datepicker('show');
         } else {
             var fontsize_div = $('<div style="display:none;font-size:1em;margin:0;padding:0;height:auto;line-height:1;border:0;">&nbsp;</div>');
-            var fontsize = fontsize_div.appendTo(selectedTd).height();
-            var folm_cols = Math.floor(0.012 * fontsize * $(selectedTd).width());
+            var fontsize = fontsize_div.appendTo(editCellSelector).height();
+            var folm_cols = Math.floor(0.012 * fontsize * $(editCellSelector).width());
             fontsize_div.remove();
             var form = "<div style='text-align: center;'><textarea rows= '3' cols='" + folm_cols + "' " + "id ='" + formId + "'>" + initialText + "</textarea></div>";
-            $(selectedTd).html(form);
+            console.log(form);
+            $(editCellSelector).html(form);
         }
 
-        // $(selectedTd).html(form);
         synchronizeTwoTablesHeight();
         // セレクトボックスの初期値設定
         if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'コードレビュー中', '改修中', '技術二重チェック中', 'サポート・営業確認中']) != -1){
             $('#' + formId).val(initialText);
         }
 
-        isFirstClick = false;
-    });
+        return formId;
+    }
 
     function postToEdit(selectedTd, id, columnName, currentText)
     {

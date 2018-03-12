@@ -69,8 +69,16 @@ tr.table_titles {
     background-color: #838b0d;
 }
 
+.sort_button {
+    width: 16px;
+    height: 16px;
+    bottom: 0px;
+    padding: 0px;
+    font-size: 8px;
+}
+
 .id_row {
-    width: 25px;
+    width: 38px;
 }
 
 .category_row {
