@@ -39,8 +39,10 @@ error_reporting(E_ALL);
         <td class="record content_row" id="<?php echo $item['Item']['id'] . "-content";?>">
             <span class="record_text"><?php echo $item['Item']['content']; ?></span>
         </td>
-        <td class = "record <?php if($item['Item']['confirm_priority'] == "高"){ echo "high_priority";} ?>" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
-            <?php echo $item['Item']['confirm_priority']; ?>
+        <td class = "record <?php if($item['Item']['confirm_priority'] == 3){ echo "high_priority";} ?>" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
+            <?php
+                $confirm_priority_array = array('不要', '低', '中', '高');
+                echo $confirm_priority_array[$item['Item']['confirm_priority']]; ?>
         </td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-status";?>">
             <span class="record_text"><?php echo $item['Item']['status']; ?></span>
@@ -50,7 +52,11 @@ error_reporting(E_ALL);
     <tr class="input_part">
         <td></td>
         <td><?php echo $this->Form->input('content', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('confirm_priority', array('label' => false));?></td>
+        <td><?php echo $this->Form->input('confirm_priority',array(
+              'label' => false,
+              'options' => array('不要', '低', '中', '高')
+          ));
+        ?></td>
         <td>
             <?php echo $this->Form->input('status',array(
                   'label' => false,

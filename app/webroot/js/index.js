@@ -107,6 +107,16 @@ $(function(){
                        "<option value='サポート・営業確認中' id = 'debug'>サポート・営業確認中</option>" +
                        "</select>";
             $(editCellSelector).html(form);
+        } else if (columnName == 'confirm_priority') {
+            var form = "<select id = '" + formId + "'>" +
+                       "<option value='0' id='improvement'>不要</option>" +
+                       "<option value='1' id='adding function'>低</option>" +
+                       "<option value='2' id = 'debug'>中</option>" +
+                       "<option value='3' id = 'debug'>高</option>" +
+                       "</select>";
+            var priority = {'不要':0, '低':1, '中':2, '高':3};
+            $(editCellSelector).html(form);
+            $('#' + formId).val(priority[initialText]);
         } else if (columnName == "pullrequest"
                  ||columnName == "pullrequest_update"
                  ||columnName == "tech_release_judgement"
@@ -131,7 +141,8 @@ $(function(){
         synchronizeTwoTablesHeight();
         $('#'+formId).focus();
         // セレクトボックスの初期値設定
-        if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'コードレビュー中', '改修中', '技術二重チェック中', 'サポート・営業確認中']) != -1){
+        if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'コードレビュー中',
+                                    '改修中', '技術二重チェック中', 'サポート・営業確認中',]) != -1){
             $('#' + formId).val(initialText);
         }
 
@@ -177,6 +188,10 @@ $(function(){
                 $('#' + id + '-elapsed').text(Math.round((todayDate - pullrequestDate)/86400000));
                 $('#' + id + '-grace_days_of_verification_complete').text(Math.round((scheduledReleaseDate - todayDate)/86400000));
             }
+            if (columnName == 'confirm_priority') {
+                var priority = ['不要', '低', '中', '高'];
+                $(selectedTd).html(priority[textEdited]);
+            }
             synchronizeTwoTablesHeight();
         },
         error: function(){
@@ -211,11 +226,13 @@ $(function(){
 
     $('div.input').click(function()
     {
-        var recordId   = editCellId.split('-')[0];
-        var columnName = editCellId.split('-')[1];
-        currentText = $('#' + formId).val();
-        postToEdit('#' + editCellId, recordId, columnName, currentText);
-        finishEdit();
+        if (isEditing) {
+            var recordId   = editCellId.split('-')[0];
+            var columnName = editCellId.split('-')[1];
+            currentText = $('#' + formId).val();
+            postToEdit('#' + editCellId, recordId, columnName, currentText);
+            finishEdit();
+        }
     })
 
     function synchronizeTwoTablesHeight()
