@@ -6,8 +6,8 @@ $(function(){
     $('#page_selecter').css('display', 'block');
     synchronizeTwoTablesHeight();
 
-
     // ダブルクリックでその場変種
+    var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified'];
     var editCellId;
     var selectedTd;
     var recordId;
@@ -25,23 +25,55 @@ $(function(){
         }
 
         if($(this).attr('id') == editCellId){// 編集中のセルをもう一度ダブルクリックしたなら、何も編集していない状態に
-            editCellId = '';
-            isEditing = false;
+            finishEdit();
             return;
         }
         editCellId = $(this).attr('id');
 
         formId = createEditForm(editCellId);
         if (formId == 'uneditable_cell'){
-            editCellId = '';
-            isEditing = false;
+            finishEdit();
             return;
         }
 
         isEditing = true;
     });
 
-    
+    // tabキーでその場編集
+    $(window).keydown(function(e)
+    {
+        if(e.keyCode == 9){
+            if(isEditing){
+                var recordId   = editCellId.split('-')[0];
+                var columnName = editCellId.split('-')[1];
+                currentText = $('#' + formId).val();
+                postToEdit('#' + editCellId, recordId, columnName, currentText);
+
+                if (columnName == 'status' && !event.shiftKey){
+                    var nextId = recordId + '-' + 'category';
+                } else if (columnName == 'category' && event.shiftKey){
+                    var nextId = recordId + '-' + 'status';
+                } else {
+                    var nextId = event.shiftKey ? $('#' + editCellId).prev().attr('id') : $('#' + editCellId).next().attr('id');
+                }
+                var nextColumnName = nextId.split('-')[1];
+                if ($.inArray(nextColumnName, uneditableColumnNames) != -1){
+                    if (nextColumnName == 'created' || nextColumnName == 'id'){
+                        finishEdit();
+                        return;
+                    }
+                    var nextId = event.shiftKey ? $('#' + nextId).prev().attr('id') : $('#' + nextId).next().attr('id');
+                    nextColumnName = nextId.split('-')[1];
+                }
+                formId = createEditForm(nextId);
+                editCellId = nextId;
+                return false;
+            } else if ($(':focus').attr('id') == 'ItemStatus'){
+                $('#ItemCategory').focus();
+                return false;
+            }
+        }
+    })
 
     function createEditForm(editCellId)
     {
@@ -50,12 +82,7 @@ $(function(){
         var columnName  = editCellId.split('-')[1];
         var initialText = String($(editCellSelector).html());
         // いくつかの項目を編集できないようにする
-        if(columnName == 'id'
-           || columnName == 'elapsed'
-           || columnName == 'grace_days_of_verification_complete'
-           || columnName == 'created'
-           || columnName == 'modified'
-       ){
+        if($.inArray(columnName, uneditableColumnNames) != -1){
             return 'uneditable_cell';
         }
 
@@ -101,8 +128,8 @@ $(function(){
             var form = "<div style='text-align: center;'><textarea rows= '3' cols='" + folm_cols + "' " + "id ='" + formId + "'>" + initialText + "</textarea></div>";
             $(editCellSelector).html(form);
         }
-
         synchronizeTwoTablesHeight();
+        $('#'+formId).focus();
         // セレクトボックスの初期値設定
         if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'コードレビュー中', '改修中', '技術二重チェック中', 'サポート・営業確認中']) != -1){
             $('#' + formId).val(initialText);
@@ -168,7 +195,6 @@ $(function(){
         return textAfterReplacement;
     };
 
-
     function restoreSlashAndColon(textAfterReplacement)
     {
         var originText = textAfterReplacement;
@@ -177,6 +203,20 @@ $(function(){
         return originText;
     }
 
+    function finishEdit(){
+        editCellId = '';
+        isEditing = false;
+        return;
+    }
+
+    $('div.input').click(function()
+    {
+        var recordId   = editCellId.split('-')[0];
+        var columnName = editCellId.split('-')[1];
+        currentText = $('#' + formId).val();
+        postToEdit('#' + editCellId, recordId, columnName, currentText);
+        finishEdit();
+    })
 
     function synchronizeTwoTablesHeight()
     {
