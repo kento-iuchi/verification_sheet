@@ -128,12 +128,6 @@ tr.table_titles {
     text-align: center;
 }
 
-.high_priority {
-    color: red;
-    font-weight: bold;
-    font-size: 16px;
-}
-
 ul > li {
     padding: 3px 0;
 }

@@ -22,7 +22,7 @@ error_reporting(E_ALL);
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
         <th class="content_row">内容</th>
-        <th>確認優先度<br>
+        <th class="priority-row">確認優先度<br>
             （必須リリース日)</br>
             <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
@@ -39,7 +39,7 @@ error_reporting(E_ALL);
         <td class="record content_row" id="<?php echo $item['Item']['id'] . "-content";?>">
             <span class="record_text"><?php echo $item['Item']['content']; ?></span>
         </td>
-        <td class = "record <?php if($item['Item']['confirm_priority'] == 3){ echo "high_priority";} ?>" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
+        <td class = "record priority-row <?php if($item['Item']['confirm_priority'] == 3){ echo "high_priority";} ?>" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
             <?php
                 $confirm_priority_array = array('不要', '低', '中', '高');
                 echo $confirm_priority_array[$item['Item']['confirm_priority']]; ?>

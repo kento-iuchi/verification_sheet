@@ -5,6 +5,7 @@ $(function(){
     $('#page_selecter').css('top', viewPartHeight + 'px');
     $('#page_selecter').css('display', 'block');
     synchronizeTwoTablesHeight();
+    changePriorityHighlight();
 
     // ダブルクリックでその場変種
     var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified'];
@@ -43,6 +44,7 @@ $(function(){
     $(window).keydown(function(e)
     {
         if(e.keyCode == 9){
+            console.log(e);
             if(isEditing){
                 var recordId   = editCellId.split('-')[0];
                 var columnName = editCellId.split('-')[1];
@@ -191,8 +193,14 @@ $(function(){
             if (columnName == 'confirm_priority') {
                 var priority = ['不要', '低', '中', '高'];
                 $(selectedTd).html(priority[textEdited]);
+                if (textEdited == '3'){
+                    $(selectedTd).addClass('high_priority');
+                } else {
+                    $(selectedTd).removeClass('high_priority');
+                }
             }
             synchronizeTwoTablesHeight();
+            changePriorityHighlight();
         },
         error: function(){
             //通信失敗時の処理
@@ -200,7 +208,6 @@ $(function(){
         }
         });
     };
-
 
     function replaceSlashAndColon(originText)
     {
@@ -256,6 +263,17 @@ $(function(){
         var tableHeight = $("#view_part_header").height();
         $("#page_selecter").offset({top : tableHeight + 20});
     };
+
+    function changePriorityHighlight()
+    {
+        $('td.priority-row').each(function(){
+            if($(this).hasClass('high_priority')){
+                $(this).css({'color': 'red', 'font-weight': 'bold', 'font-size': '16px'});
+            } else {
+                $(this).css({'color': 'black', 'font-weight': 'normal', 'font-size': '12px'});
+            }
+        })
+    }
 
     // 完了ボタンを押した際の処理
     $('.complete_button').click(function()
