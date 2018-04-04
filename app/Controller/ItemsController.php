@@ -23,6 +23,8 @@ class ItemsController extends AppController
             $this->log($this->request->data);
             if ($this->Item->save($this->request->data)) {
                 return $this->redirect(array('action' => 'index'));
+            } else {
+                $this->log("validationErrors=" . var_export($this->Item->validationErrors, true));
             }
         }
         return $this->redirect(array('action' => 'index'));

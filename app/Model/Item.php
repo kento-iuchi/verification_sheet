@@ -21,6 +21,10 @@ class Item extends AppModel
         'confirm_points' => array(
             'rule' => 'notBlank',
         ),
+        'author' => array(
+            'rule' => 'notBlank',
+            'allowEmpty' => false,
+        ),
     );
 
     public function beforeSave($options = array())

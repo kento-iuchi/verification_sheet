@@ -146,6 +146,9 @@ error_reporting(E_ALL);
             <th class="comment_row">
                 確認コメント対応
             </th>
+            <th>
+                作成者
+            </th>
             <th class="date_row">
                 作成日時</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('created', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
@@ -262,6 +265,17 @@ error_reporting(E_ALL);
             <td><?php echo $this->Form->input('confirm_points', array('label' => false));?></td>
             <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
             <td><!--確認コメント対応 --></td>
+            <td><?php echo $this->Form->input('author', array(
+                    'label' => false,
+                    'options' => array(
+                        '開発部A' => '開発部A',
+                        '開発部B' => '開発部B',
+                        '開発部C' => '開発部C',
+                    ),
+                    'empty' => '選択してください',
+                    ));
+                ?>
+            </td>
             <td><?php echo $this->Form->end('送信');?></td>
         </tr>
 
