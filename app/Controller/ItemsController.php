@@ -41,6 +41,7 @@ class ItemsController extends AppController
             if ($this->Item->save($this->request->data)) {
                 echo $content;
             } else {
+                $this->log("validationErrors=" . var_export($this->Item->validationErrors, true));
                 echo '失敗です';
             }
         }

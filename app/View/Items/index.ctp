@@ -36,15 +36,15 @@ error_reporting(E_ALL);
         <td class="record id_row" id="<?php echo $item['Item']['id'] . "-id";?>">
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
         </td>
-        <td class="record content_row" id="<?php echo $item['Item']['id'] . "-content";?>">
-            <span class="record_text"><?php echo $item['Item']['content']; ?></span>
+        <td class="record content_row editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>">
+            <span class="record_text editable-cell"><?php echo $item['Item']['content']; ?></span>
         </td>
-        <td class = "record priority-row <?php if($item['Item']['confirm_priority'] == 3){ echo "high_priority";} ?>" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
+        <td class = "record priority-row <?php if($item['Item']['confirm_priority'] == 3){ echo "high_priority";} ?> editable-cell" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
             <?php
                 $confirm_priority_array = array('不要', '低', '中', '高');
                 echo $confirm_priority_array[$item['Item']['confirm_priority']]; ?>
         </td>
-        <td class = "record" id="<?php echo $item['Item']['id'] . "-status";?>">
+        <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
         </td>
     </tr>
@@ -165,40 +165,40 @@ error_reporting(E_ALL);
         <?php $today_date = new Datetime(date("y-m-d")); //経過日数、猶予日数の計算に使用?>
         <?php foreach ($items as $item): ?>
         <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
-            <td class="record category_row" id="<?php echo $item['Item']['id'] . "-category";?>">
+            <td class="record category_row editable-cell" id="<?php echo $item['Item']['id'] . "-category";?>">
                 <span class="record_text"><?php echo $item['Item']['category']; ?></span>
             </td>
-            <td class="record division_row" id="<?php echo $item['Item']['id'] . "-division";?>">
+            <td class="record division_row editable-cell" id="<?php echo $item['Item']['id'] . "-division";?>">
                 <span class="record_text"><?php echo $item['Item']['division']; ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>">
                 <a href = "<?php echo $item['Item']['chatwork_url']; ?>">
                     <span class="record_text"><?php echo $item['Item']['chatwork_url']; ?></span>
                 </a>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-github_url";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-github_url";?>">
                 <a href="<?php echo $item['Item']['github_url']; ?>">
                     <span class="record_text"><?php echo $item['Item']['github_url']; ?></span>
                 </a>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-verification_enviroment_url";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-verification_enviroment_url";?>">
                 <a href="<?php echo $item['Item']['verification_enviroment_url']; ?>">
                     <span class="record_text"><?php echo $item['Item']['verification_enviroment_url']; ?></span>
                 </a>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-pullrequest";?>">
                 <span class="record_text"><?php echo $item['Item']['pullrequest']; ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>">
                 <span class="record_text"><?php echo $item['Item']['pullrequest_update']; ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-tech_release_judgement";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-tech_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['tech_release_judgement']; ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['supp_release_judgement']; ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['sale_release_judgement']; ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-elapsed";?>">
@@ -207,7 +207,7 @@ error_reporting(E_ALL);
                     echo $today_date->diff($pullrequest_date)->format('%a');;
                 ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-scheduled_release_date";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-scheduled_release_date";?>">
                 <span class="record_text"><?php echo $item['Item']['scheduled_release_date']; ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
@@ -216,20 +216,20 @@ error_reporting(E_ALL);
                     echo str_replace('+', '', $today_date->diff($scheduled_release_date)->format('%R%a'));
                 ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-merge_finish_date_to_master";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-merge_finish_date_to_master";?>">
                 <span class="record_text"><?php echo $item['Item']['merge_finish_date_to_master']; ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_points";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-confirm_points";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></div>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_comment']); ?></div>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></div>
             </td>
             <td>
-                <span class="record_text"><?php echo $item['Item']['author']; ?></span>
+                <span class="record_text editable-cell"><?php echo $item['Item']['author']; ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['created']; ?></span>

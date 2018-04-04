@@ -84,7 +84,7 @@ $(function(){
         var columnName  = editCellId.split('-')[1];
         var initialText = String($(editCellSelector).html());
         // いくつかの項目を編集できないようにする
-        if($.inArray(columnName, uneditableColumnNames) != -1){
+        if(!$(editCellSelector).hasClass('editable-cell')){
             return 'uneditable_cell';
         }
 
@@ -201,6 +201,7 @@ $(function(){
             }
             synchronizeTwoTablesHeight();
             changePriorityHighlight();
+            console.log(response);
         },
         error: function(){
             //通信失敗時の処理

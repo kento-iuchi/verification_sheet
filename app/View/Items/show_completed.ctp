@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 ?>
 
 <?php echo $this->Html->script('index.js');?>
-<?php echo $this->Html->css('index.css');?>
+<?php echo $this->Html->css('index.css');?>         
 <?php echo $this->Form->create('Item', array('url' => 'add'));?>
 
 <div id="view_part">
