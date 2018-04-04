@@ -251,17 +251,17 @@ error_reporting(E_ALL);
             <td><?php echo $this->Form->input('github_url', array('label' => false));?></td>
             <td><?php echo $this->Form->input('verification_enviroment_url', array('label' => false));?></td>
             <td><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
-            <td><?php echo $this->Datepicker->datepicker('pullrequest_update', array('type' => 'text', 'label' => false));?></td>
-            <td><?php echo $this->Datepicker->datepicker('tech_release_judgement', array('type' => 'text', 'label' => false));?></td>
-            <td><?php echo $this->Datepicker->datepicker('supp_release_judgement', array('type' => 'text', 'label' => false));?></td>
-            <td><?php echo $this->Datepicker->datepicker('sale_release_judgement', array('type' => 'text', 'label' => false));?></td>
+            <td><!-- プルリク更新日 --></td>
+            <td><!-- 技術リリースOK判断日 --></td>
+            <td><!-- サポートリリースOK判断日 --></td>
+            <td><!-- 営業リリースOK判断日 --></td>
             <td><!-- 経過日数 --></td>
             <td><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
             <td><!-- 検証完了猶予日数 --></td>
-            <td><?php echo $this->Datepicker->datepicker('merge_finish_date_to_master', array('type' => 'text', 'label' => false));?></td>
+            <td><!-- masterマージ完了日 --></td>
             <td><?php echo $this->Form->input('confirm_points', array('label' => false));?></td>
             <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
-            <td><?php echo $this->Form->input('response_to_confirm_comment', array('label' => false));?></td>
+            <td><!--確認コメント対応 --></td>
             <td><?php echo $this->Form->end('送信');?></td>
         </tr>
 
