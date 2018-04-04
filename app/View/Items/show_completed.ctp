@@ -54,6 +54,9 @@ error_reporting(E_ALL);
             <th class="comment_row">確認ポイント</th>
             <th class="comment_row">確認コメント</th>
             <th class="comment_row">確認コメント対応</th>
+            <th>
+                作成者
+            </th>
             <th class="date_row">作成日時</th>
             <th class="date_row">最終更新日時</th>
             <th></th>
@@ -124,6 +127,9 @@ error_reporting(E_ALL);
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></span>
+            </td>
+            <td>
+                <span class="record_text"><?php echo $item['Item']['author']; ?></span>
             </td>
             <td>
                 <span class="record_text"><?php echo $item['Item']['created']; ?></span>

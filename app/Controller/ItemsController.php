@@ -68,20 +68,4 @@ class ItemsController extends AppController
         $this->set('items', $this->paginate('Item', array('is_completed' => 1)));
     }
 
-    // public function complete($id = null)// completeとほぼ同じだし統合したい
-    // {
-    //     $this->autoRender = false;
-    //
-    //     $this->Item->id = $id;
-    //     $this->request->data = $this->Item->read();
-    //     $this->request->data['Item']['is_completed'] = 1;
-    //     if ($this->request->is(['ajax'])) {
-    //         if ($this->Item->save($this->request->data)) {
-    //             echo '"完了"状態にしました';
-    //         } else {
-    //             echo '"完了"状態にできませんでした';
-    //         }
-    //     }
-    // }
-
 }
