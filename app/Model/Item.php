@@ -18,7 +18,7 @@ class Item extends AppModel
         'pullrequest' => array(
             'rule' => array('date', 'ymd'),
         ),
-        'confirm_comment' => array(
+        'confirm_points' => array(
             'rule' => 'notBlank',
         ),
     );
