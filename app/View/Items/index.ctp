@@ -22,10 +22,10 @@ error_reporting(E_ALL);
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
         <th class="content_row">内容</th>
-        <th class="priority-row">確認優先度<br>
-            （必須リリース日)</br>
+        <th class="priority-row">確認優先度
             <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
-            <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
+            <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+        </th>
         <th>ステータス</br>
             <button class="sort_button"><?php echo $this->Paginator->sort('status', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('status', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
@@ -45,7 +45,7 @@ error_reporting(E_ALL);
                 echo $confirm_priority_array[$item['Item']['confirm_priority']]; ?>
         </td>
         <td class = "record" id="<?php echo $item['Item']['id'] . "-status";?>">
-            <span class="record_text"><?php echo $item['Item']['status']; ?></span>
+            <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
         </td>
     </tr>
     <?php endforeach; ?>
@@ -220,13 +220,16 @@ error_reporting(E_ALL);
                 <span class="record_text"><?php echo $item['Item']['merge_finish_date_to_master']; ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_points";?>">
-                <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></span>
+                <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></div>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
-                <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_comment']); ?></span>
+                <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_comment']); ?></div>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
-                <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></span>
+                <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></div>
+            </td>
+            <td>
+                <span class="record_text"><?php echo $item['Item']['author']; ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['created']; ?></span>

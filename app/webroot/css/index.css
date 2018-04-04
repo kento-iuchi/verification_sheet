@@ -1,5 +1,5 @@
 :root {
-    --header-width: 550px;
+    --header-width: 350px;
 }
 
 .container {
@@ -79,6 +79,11 @@ tr.table_titles {
 
 .id_row {
     width: 38px;
+}
+
+.priority-row {
+    width:  70px;
+    text-align: center;
 }
 
 .category_row {
