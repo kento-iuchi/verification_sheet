@@ -395,7 +395,7 @@ $(function(){
         $.ajax({
         url: editActionUrl,
         type: "POST",
-        data: { id : item_id, verifier_name: verifierName, comment: comment },
+        data: { item_id : item_id, verifier_name: verifierName, comment: comment },
         dataType: "text",
         success : function(response)
         {

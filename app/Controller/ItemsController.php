@@ -69,7 +69,7 @@ class ItemsController extends AppController
         $this->set('items', $this->paginate('Item', array('is_completed' => 1)));
     }
 
-    public function save_verification_history($item_id = null, $verifier_name, $comment)
+    public function save_verification_history()
     {
         $this->log($this->request->data);
         $this->autoRender = false;
