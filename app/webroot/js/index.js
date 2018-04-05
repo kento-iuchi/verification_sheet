@@ -373,34 +373,35 @@ $(function(){
             name_selector += '<option value="' + name + '">' + name + '</option>';
         });
         name_selector += '</select>';
-        $('#' + cell_id).append(name_selector);
+        $('#' + item_id + '-verification-history-input-area').append(name_selector);
 
         var comment_form = '<textarea rows = 5 id = "' + item_id + '-comment_form"></textarea>';
-        $('#' + cell_id).append(comment_form);
+        $('#' + item_id + '-verification-history-input-area').append(comment_form);
 
         var submit_button = '<button type = "button" class = "add-history-button">保存</button>'
-        $('#' + cell_id).append($(submit_button).click(function(){saveHistory(item_id);}));
+        $('#' + item_id + '-verification-history-input-area').append($(submit_button).click(function(){saveHistory(item_id);}));
 
-        $('#' + cell_id).focus();
+        $('#' + name_selector).focus();
     }
 
     // 保存ボタンが押されたときの処理
-    function saveHistory(item_id)
+    function saveHistory(itemId)
     {
-        var verifierName = $('#' + item_id + '-name-selector').val();
-        var comment = $('#' + item_id + '-comment_form').val();
-        var editActionUrl = WEBROOT + 'items/save_verification_history/' + item_id + '/' + verifierName + '/' + comment;
+        var verifierName = $('#' + itemId + '-name-selector').val();
+        var comment = $('#' + itemId + '-comment_form').val();
+        var editActionUrl = WEBROOT + 'items/save_verification_history/' + itemId + '/' + verifierName + '/' + comment;
 
-        console.log(item_id, verifierName, comment);
+        console.log(itemId, verifierName, comment);
         $.ajax({
         url: editActionUrl,
         type: "POST",
-        data: { item_id : item_id, verifier_name: verifierName, comment: comment },
+        data: { item_id : itemId, verifier_name: verifierName, comment: comment },
         dataType: "text",
         success : function(response)
         {
+            $('#' + itemId + '-add-verification-history').show();
+            $('#' + itemId + '-verification-history-input-area').empty();
             synchronizeTwoTablesHeight();
-            console.log(response);
         },
         error: function()
         {

@@ -227,6 +227,7 @@ error_reporting(E_ALL);
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-verification_history";?>">
                 <button type="button" class="add-verification-history" id="<?php echo $item['Item']['id'] . '-add-verification-history';?>">新規作成</button>
+                <div id="<?php echo $item['Item']['id'];?>-verification-history-input-area"></div>
             </td>
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_comment']); ?></div>

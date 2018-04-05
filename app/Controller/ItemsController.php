@@ -78,7 +78,7 @@ class ItemsController extends AppController
         if ($VerificationHistory->save($this->request->data)) {
             echo 'save success';
         } else {
-            $this->log("validationErrors=" . var_export($this->Item->validationErrors, true));
+            echo 'save failed';
         }
     }
 
