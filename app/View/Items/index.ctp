@@ -140,6 +140,9 @@ error_reporting(E_ALL);
             <th class="comment_row">
                 確認ポイント
             </th>
+            <th>
+                検証履歴
+            </th>
             <th class="comment_row">
                 確認コメント
             </th>
@@ -222,6 +225,8 @@ error_reporting(E_ALL);
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-confirm_points";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></div>
             </td>
+            <td>
+            </td>
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_comment']); ?></div>
             </td>
@@ -266,6 +271,7 @@ error_reporting(E_ALL);
             <td><!-- 検証完了猶予日数 --></td>
             <td><!-- masterマージ完了日 --></td>
             <td><?php echo $this->Form->input('confirm_points', array('label' => false));?></td>
+            <td></td>
             <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
             <td><!--確認コメント対応 --></td>
             <td><?php echo $this->Form->input('author', array(

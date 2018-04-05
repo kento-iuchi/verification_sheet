@@ -3,28 +3,28 @@ class Item extends AppModel
 {
     public $validate = array
     (
-        'content' => array(
-            'rule' => 'notBlank',
-        ),
-        'category' => array(
-            'rule' => 'notBlank',
-        ),
-        'chatwork_url' => array(
-            'rule' => 'notBlank',
-        ),
-        'github_url' => array(
-            'rule' => 'notBlank',
-        ),
-        'pullrequest' => array(
-            'rule' => array('date', 'ymd'),
-        ),
-        'confirm_points' => array(
-            'rule' => 'notBlank',
-        ),
-        'author' => array(
-            'rule' => 'notBlank',
-            'allowEmpty' => false,
-        ),
+        // 'content' => array(
+        //     'rule' => 'notBlank',
+        // ),
+        // 'category' => array(
+        //     'rule' => 'notBlank',
+        // ),
+        // 'chatwork_url' => array(
+        //     'rule' => 'notBlank',
+        // ),
+        // 'github_url' => array(
+        //     'rule' => 'notBlank',
+        // ),
+        // 'pullrequest' => array(
+        //     'rule' => array('date', 'ymd'),
+        // ),
+        // 'confirm_points' => array(
+        //     'rule' => 'notBlank',
+        // ),
+        // 'author' => array(
+        //     'rule' => 'notBlank',
+        //     'allowEmpty' => false,
+        // ),
     );
 
     public function beforeSave($options = array())
