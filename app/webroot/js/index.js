@@ -8,7 +8,7 @@ $(function(){
     changePriorityHighlight();
 
     // ダブルクリックでその場変種
-    var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified'];
+    var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'verification_history'];
     var editCellId;
     var selectedTd;
     var recordId;
@@ -103,18 +103,18 @@ $(function(){
             $(editCellSelector).html(form);
         } else if (columnName == 'status') {
             var form = "<select id = '" + formId + "'>" +
-                       "<option value='コードレビュー中' id='improvement'>コードレビュー中</option>" +
-                       "<option value='改修中' id='adding function'>改修中</option>" +
-                       "<option value='技術二重チェック中' id = 'debug'>技術二重チェック中</option>" +
-                       "<option value='サポート・営業確認中' id = 'debug'>サポート・営業確認中</option>" +
+                       "<option value='コードレビュー中'>コードレビュー中</option>" +
+                       "<option value='改修中'>改修中</option>" +
+                       "<option value='技術二重チェック中'>技術二重チェック中</option>" +
+                       "<option value='サポート・営業確認中'>サポート・営業確認中</option>" +
                        "</select>";
             $(editCellSelector).html(form);
         } else if (columnName == 'confirm_priority') {
             var form = "<select id = '" + formId + "'>" +
-                       "<option value='0' id='improvement'>不要</option>" +
-                       "<option value='1' id='adding function'>低</option>" +
-                       "<option value='2' id = 'debug'>中</option>" +
-                       "<option value='3' id = 'debug'>高</option>" +
+                       "<option value='0'>不要</option>" +
+                       "<option value='1'>低</option>" +
+                       "<option value='2'>中</option>" +
+                       "<option value='3'>高</option>" +
                        "</select>";
             var priority = {'不要':0, '低':1, '中':2, '高':3};
             $(editCellSelector).html(form);
@@ -348,6 +348,62 @@ $(function(){
         },
         error: function(){
             //通信失敗時の処理
+            alert('通信失敗');
+        }
+        });
+    }
+
+    // 検証履歴新規作成
+    $('.add-verification-history').click(function()
+    {
+        var button_id = $(this).attr('id');
+        var item_id = button_id.split('-')[0];
+        createAddVerifivationHistoryForm($(this).parent().attr('id'));
+        $('#' + button_id).hide();
+        synchronizeTwoTablesHeight();
+    })
+
+    // 検証履歴新規作成フォーム生成
+    var verifier_list = ['A', 'B', 'C'];
+    function createAddVerifivationHistoryForm(cell_id)
+    {
+        var item_id = cell_id.split('-')[0];
+        var name_selector =  '<br><select id = "' + item_id + '-name-selector">';
+        $.each(verifier_list, function(index, name){
+            name_selector += '<option value="' + name + '">' + name + '</option>';
+        });
+        name_selector += '</select>';
+        $('#' + cell_id).append(name_selector);
+
+        var comment_form = '<textarea rows = 5 id = "' + item_id + '-comment_form"></textarea>';
+        $('#' + cell_id).append(comment_form);
+
+        var submit_button = '<button type = "button" class = "add-history-button">保存</button>'
+        $('#' + cell_id).append($(submit_button).click(function(){saveHistory(item_id);}));
+
+        $('#' + cell_id).focus();
+    }
+
+    // 保存ボタンが押されたときの処理
+    function saveHistory(item_id)
+    {
+        var verifierName = $('#' + item_id + '-name-selector').val();
+        var comment = $('#' + item_id + '-comment_form').val();
+        var editActionUrl = WEBROOT + 'items/save_verification_history/' + item_id + '/' + verifierName + '/' + comment;
+
+        console.log(item_id, verifierName, comment);
+        $.ajax({
+        url: editActionUrl,
+        type: "POST",
+        data: { id : item_id, verifier_name: verifierName, comment: comment },
+        dataType: "text",
+        success : function(response)
+        {
+            synchronizeTwoTablesHeight();
+            console.log(response);
+        },
+        error: function()
+        {
             alert('通信失敗');
         }
         });

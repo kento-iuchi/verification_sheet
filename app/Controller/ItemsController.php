@@ -69,4 +69,17 @@ class ItemsController extends AppController
         $this->set('items', $this->paginate('Item', array('is_completed' => 1)));
     }
 
+    public function save_verification_history($item_id = null, $verifier_name, $comment)
+    {
+        $this->log($this->request->data);
+        $this->autoRender = false;
+        $VerificationHistory = ClassRegistry::init('VerificationHistory');
+        $VerificationHistory->create();
+        if ($VerificationHistory->save($this->request->data)) {
+            echo 'save success';
+        } else {
+            $this->log("validationErrors=" . var_export($this->Item->validationErrors, true));
+        }
+    }
+
 }
