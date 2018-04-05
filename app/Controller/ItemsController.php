@@ -13,7 +13,10 @@ class ItemsController extends AppController
     public function index()
     {
         $this->layout = 'IndexLayout';
+        $this->loadModel('VerificationHistory');
+        $this->loadModel('Verifier');
         $this->set('items', $this->paginate('Item', array('is_completed' => 0)));
+        $this->set('verifier', $this->Verifier->find('all'));
     }
 
     public function add()
@@ -73,9 +76,9 @@ class ItemsController extends AppController
     {
         $this->log($this->request->data);
         $this->autoRender = false;
-        $VerificationHistory = ClassRegistry::init('VerificationHistory');
-        $VerificationHistory->create();
-        if ($VerificationHistory->save($this->request->data)) {
+        $this->loadModel('VerificationHistory');
+        $this->VerificationHistory->create();
+        if ($this->VerificationHistory->save($this->request->data)) {
             echo 'save success';
         } else {
             echo 'save failed';

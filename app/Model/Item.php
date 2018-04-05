@@ -1,6 +1,12 @@
 <?php
 class Item extends AppModel
 {
+    public $hasMany = array(
+        'verification_history' => array(
+            'className' => 'verification_history',
+        )
+    );
+
     public $validate = array
     (
         // 'content' => array(
