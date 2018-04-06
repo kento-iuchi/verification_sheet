@@ -4,6 +4,15 @@ ini_set("display_errors", 'On');
 error_reporting(E_ALL);
 ?>
 
+<?php
+// jsonとしてindex.jsに与える要
+$verifier_names = array();
+$verifiers_count = count($verifier);
+for ($vi=0; $vi < $verifiers_count; $vi++) {
+    $verifier_names[$vi] = $verifier[$vi]['Verifier']['name'];
+}
+?>
+
 <?php echo $this->Html->script('index.js');?>
 <?php echo $this->Html->css('index.css');?>
 <?php echo $this->Form->create('Item', array('url' => 'add'));?>
@@ -140,7 +149,7 @@ error_reporting(E_ALL);
             <th class="comment_row">
                 確認ポイント
             </th>
-            <th>
+            <th class="verification-history-row" data-options='<?php echo json_encode($verifier_names)?>'>
                 検証履歴
             </th>
             <th class="comment_row">
@@ -228,7 +237,7 @@ error_reporting(E_ALL);
             <td class = "record" id="<?php echo $item['Item']['id'] . "-verification_history";?>">
                 <?php if(!empty($item['verification_history'])):?>
                     <?php foreach ($item['verification_history'] as $verification_history): ?>
-                        <?php echo $verifier[$verification_history['verifier_id']-1]['Verifier']['name'];?>
+                        <?php echo $verifier_names[$verification_history['verifier_id']-1];?>
                         <?php echo $verification_history['created'];?><br>
                     <?php endforeach; ?>
                 <?php endif?>

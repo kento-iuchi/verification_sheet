@@ -12,10 +12,10 @@ class ItemsController extends AppController
 
     public function index()
     {
+        $this->header("Content-type: text/html; charset=utf-8");
         $this->layout = 'IndexLayout';
         $this->loadModel('VerificationHistory');
         $this->loadModel('Verifier');
-        $this->log($this->Verifier->find('all'));
         $this->set('items', $this->paginate('Item', array('is_completed' => 0)));
         $this->set('verifier', $this->Verifier->find('all'));
     }

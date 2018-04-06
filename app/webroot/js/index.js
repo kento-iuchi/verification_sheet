@@ -367,10 +367,13 @@ $(function(){
     var verifier_list = ['A', 'B', 'C'];
     function createAddVerifivationHistoryForm(cell_id)
     {
+        var options = $('th.verification-history-row').attr('data-options');
+        options = JSON.parse(options);
         var item_id = cell_id.split('-')[0];
         var name_selector =  '<br><select id = "' + item_id + '-name-selector">';
-        $.each(verifier_list, function(index, name){
-            name_selector += '<option value="' + name + '">' + name + '</option>';
+        $.each(options, function(index, name){
+            index += 1;
+            name_selector += '<option value="' + index + '">' + name + '</option>';
         });
         name_selector += '</select>';
         $('#' + item_id + '-verification-history-input-area').append(name_selector);
@@ -387,15 +390,15 @@ $(function(){
     // 保存ボタンが押されたときの処理
     function saveHistory(itemId)
     {
-        var verifierName = $('#' + itemId + '-name-selector').val();
+        var verifierId = $('#' + itemId + '-name-selector').val();
         var comment = $('#' + itemId + '-comment_form').val();
-        var editActionUrl = WEBROOT + 'items/save_verification_history/' + itemId + '/' + verifierName + '/' + comment;
+        var editActionUrl = WEBROOT + 'items/save_verification_history/' + itemId + '/' + verifierId + '/' + comment;
 
-        console.log(itemId, verifierName, comment);
+        console.log(itemId, verifierId, comment);
         $.ajax({
         url: editActionUrl,
         type: "POST",
-        data: { item_id : itemId, verifier_name: verifierName, comment: comment },
+        data: { item_id : itemId, verifier_id: verifierId, comment: comment },
         dataType: "text",
         success : function(response)
         {
