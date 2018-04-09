@@ -44,7 +44,6 @@ $(function(){
     $(window).keydown(function(e)
     {
         if(e.keyCode == 9){
-            console.log(e);
             if(isEditing){
                 var recordId   = editCellId.split('-')[0];
                 var columnName = editCellId.split('-')[1];
@@ -186,7 +185,7 @@ $(function(){
                 var pullrequestDate = new Date($('#' + id + '-pullrequest_update').text());
                 var scheduledReleaseDate = new Date($('#' + id + '-scheduled_release_date').text());
                 var todayDate = new Date();
-                // console.log(Math.round((todayDate - pullrequestDate)/86400000));
+
                 $('#' + id + '-elapsed').text(Math.round((todayDate - pullrequestDate)/86400000));
                 $('#' + id + '-grace_days_of_verification_complete').text(Math.round((scheduledReleaseDate - todayDate)/86400000));
             }
@@ -201,7 +200,6 @@ $(function(){
             }
             synchronizeTwoTablesHeight();
             changePriorityHighlight();
-            console.log(response);
         },
         error: function(){
             //通信失敗時の処理
@@ -245,14 +243,16 @@ $(function(){
 
     function synchronizeTwoTablesHeight()
     {
-        var header_tr = $("#view_part_header tr");
-        var data_tr = $("#data_table tr");
+        var header_tr = $("#view_part_header tr.view_part_item");
+        var data_tr = $("#data_table tr.view_part_item");
+
         for(var i=0, l=header_tr.length; i<l;i++ ){
             var header_cells = header_tr.eq(i);
             var data_cells = data_tr.eq(i);
 
             var header_cells_height = header_cells.height();
             var data_cells_height = data_cells.height();
+
             if(header_cells_height > data_cells_height){
                 data_cells.height(header_cells_height);
             } else if(data_cells_height > header_cells_height){
@@ -262,7 +262,7 @@ $(function(){
         }
 
         var tableHeight = $("#view_part_header").height();
-        $("#page_selecter").offset({top : tableHeight + 20});
+        $("#page_selecter").offset({top : tableHeight + 60});
     };
 
     function changePriorityHighlight()
@@ -381,7 +381,7 @@ $(function(){
         var comment_form = '<textarea rows = 5 id = "' + item_id + '-comment_form"></textarea>';
         $('#' + item_id + '-verification-history-input-area').append(comment_form);
 
-        var submit_button = '<button type = "button" class = "add-history-button">保存</button>'
+        var submit_button = '<button type = "button" class = "add-history-button">保存</button>';
         $('#' + item_id + '-verification-history-input-area').append($(submit_button).click(function(){saveHistory(item_id);}));
 
         $('#' + name_selector).focus();
@@ -394,7 +394,6 @@ $(function(){
         var comment = $('#' + itemId + '-comment_form').val();
         var editActionUrl = WEBROOT + 'items/save_verification_history/' + itemId + '/' + verifierId + '/' + comment;
 
-        console.log(itemId, verifierId, comment);
         $.ajax({
         url: editActionUrl,
         type: "POST",
@@ -402,6 +401,20 @@ $(function(){
         dataType: "text",
         success : function(response)
         {
+            if($('#' + itemId + '-verification_history table').length == 0){
+                $('#' + itemId + '-verification_history').append('<table></table>');
+            }
+            var verifierName = $('#' + itemId + '-name-selector option:selected').text();
+            var today = new Date();
+            console.log(todayDate);
+            var todayMonth = ('0' + (today.getMonth() + 1)).slice(-2);
+            var todayDate = ('0' + today.getDate()).slice(-2);
+            var newHistory =   '<tr>'
+                             + '<td>' + verifierName + '</td>'
+                             + '<td>' + today.getFullYear() + '-' + todayMonth + '-' + todayDate + '</td>'
+                             + '<td>' + '<span class="verification-history-detail-link" data-comment = "' + comment + '" data-id = "' + response + '">詳細</span>' + '</td>'
+                             + '</tr>';
+            $('#' + itemId + '-verification_history table').append(newHistory);
             $('#' + itemId + '-add-verification-history').show();
             $('#' + itemId + '-verification-history-input-area').empty();
             synchronizeTwoTablesHeight();
@@ -412,5 +425,30 @@ $(function(){
         }
         });
     }
+
+    // 検証履歴詳細ボタンの処理
+    var appearingHistoryIds = []
+    $(document).on('click', '.verification-history-detail-link', function()
+    {
+        var verificationHistoryComment = $(this).attr('data-comment')
+        var verificationHistoryId = $(this).attr('data-id');
+
+        if ($.inArray(verificationHistoryId, appearingHistoryIds) == -1) {
+            appearingHistoryIds.push(verificationHistoryId);
+            var commentTd = '<tr><td id = "verification-history-comment_' + verificationHistoryId + '" colspan = "3">' +  verificationHistoryComment +'</td></tr>';
+            $(this).parent().parent().after(commentTd);
+        } else {
+            appearingHistoryIds.some(function(v, i){
+                if (v == verificationHistoryId) appearingHistoryIds.splice(i,1);
+            });
+            $('#verification-history-comment_' + verificationHistoryId).parent().remove();
+            $('#verification-history-comment_' + verificationHistoryId).remove();
+
+            // 非表示
+        }
+        synchronizeTwoTablesHeight();
+        console.log(appearingHistoryIds);
+
+    });
 
 });

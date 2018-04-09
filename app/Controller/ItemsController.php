@@ -24,11 +24,10 @@ class ItemsController extends AppController
     {
         if ($this->request->is('post')) {
             $this->Item->create();
-            $this->log($this->request->data);
             if ($this->Item->save($this->request->data)) {
                 return $this->redirect(array('action' => 'index'));
             } else {
-                $this->log("validationErrors=" . var_export($this->Item->validationErrors, true));
+                echo "add errot";
             }
         }
         return $this->redirect(array('action' => 'index'));
@@ -45,7 +44,6 @@ class ItemsController extends AppController
             if ($this->Item->save($this->request->data)) {
                 echo $content;
             } else {
-                $this->log("validationErrors=" . var_export($this->Item->validationErrors, true));
                 echo '失敗です';
             }
         }
@@ -75,12 +73,11 @@ class ItemsController extends AppController
 
     public function save_verification_history()
     {
-        $this->log($this->request->data);
         $this->autoRender = false;
         $this->loadModel('VerificationHistory');
         $this->VerificationHistory->create();
         if ($this->VerificationHistory->save($this->request->data)) {
-            echo 'save success';
+            echo $this->VerificationHistory->id;
         } else {
             echo 'save failed';
         }
