@@ -70,7 +70,12 @@ class ItemsController extends AppController
     public function show_completed()
     {
         $this->layout = 'IndexLayout';
+        $this->loadModel('VerificationHistory');
+        $this->loadModel('Verifier');
+        $this->loadModel('Author');
         $this->set('items', $this->paginate('Item', array('is_completed' => 1)));
+        $this->set('verifier', $this->Verifier->find('all'));
+        $this->set('author', $this->Author->find('all'));
     }
 
     public function save_verification_history()
