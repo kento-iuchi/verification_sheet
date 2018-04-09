@@ -16,8 +16,10 @@ class ItemsController extends AppController
         $this->layout = 'IndexLayout';
         $this->loadModel('VerificationHistory');
         $this->loadModel('Verifier');
+        $this->loadModel('Author');
         $this->set('items', $this->paginate('Item', array('is_completed' => 0)));
         $this->set('verifier', $this->Verifier->find('all'));
+        $this->set('author', $this->Author->find('all'));
     }
 
     public function add()

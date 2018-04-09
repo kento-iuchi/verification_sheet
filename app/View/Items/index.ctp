@@ -13,6 +13,13 @@ for ($vi=0; $vi < $verifiers_count; $vi++) {
 }
 ?>
 
+<?php
+$author_names = array();
+foreach($author as $author_array){
+    $author_names[$author_array['Author']['id']] = $author_array['Author']['name'];
+}
+?>
+
 <?php echo $this->Html->script('index.js');?>
 <?php echo $this->Html->css('index.css');?>
 <?php echo $this->Form->create('Item', array('url' => 'add'));?>
@@ -256,7 +263,7 @@ for ($vi=0; $vi < $verifiers_count; $vi++) {
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></div>
             </td>
             <td>
-                <span class="record_text editable-cell"><?php echo $item['Item']['author']; ?></span>
+                <span class="record_text editable-cell"><?php echo $author_names[$item['Item']['author_id']]; ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['created']; ?></span>
@@ -296,13 +303,10 @@ for ($vi=0; $vi < $verifiers_count; $vi++) {
             <td></td>
             <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
             <td><!--確認コメント対応 --></td>
-            <td><?php echo $this->Form->input('author', array(
+            <td>
+                <?php echo $this->Form->input('author_id', array(
                     'label' => false,
-                    'options' => array(
-                        '開発部A' => '開発部A',
-                        '開発部B' => '開発部B',
-                        '開発部C' => '開発部C',
-                    ),
+                    'options' => $author_names,
                     'empty' => '選択してください',
                     ));
                 ?>
