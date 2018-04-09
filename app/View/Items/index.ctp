@@ -191,17 +191,17 @@ foreach($author as $author_array){
                 <span class="record_text"><?php echo $item['Item']['division']; ?></span>
             </td>
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>">
-                <a href = "<?php echo $item['Item']['chatwork_url']; ?>">
+                <a href = "<?php echo $item['Item']['chatwork_url']; ?>" target="_blank">
                     <span class="record_text"><?php echo $item['Item']['chatwork_url']; ?></span>
                 </a>
             </td>
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-github_url";?>">
-                <a href="<?php echo $item['Item']['github_url']; ?>">
+                <a href="<?php echo $item['Item']['github_url']; ?>" target="_blank">
                     <span class="record_text"><?php echo $item['Item']['github_url']; ?></span>
                 </a>
             </td>
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-verification_enviroment_url";?>">
-                <a href="<?php echo $item['Item']['verification_enviroment_url']; ?>">
+                <a href="<?php echo $item['Item']['verification_enviroment_url']; ?>" target="_blank">
                     <span class="record_text"><?php echo $item['Item']['verification_enviroment_url']; ?></span>
                 </a>
             </td>
