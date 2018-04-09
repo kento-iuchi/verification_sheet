@@ -165,7 +165,7 @@ foreach($author as $author_array){
             <th class="comment_row">
                 確認コメント対応
             </th>
-            <th>
+            <th class="author-row" data-options='<?php echo json_encode($author_names)?>'>
                 作成者
             </th>
             <th class="date_row">
@@ -262,8 +262,8 @@ foreach($author as $author_array){
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></div>
             </td>
-            <td>
-                <span class="record_text editable-cell"><?php echo $author_names[$item['Item']['author_id']]; ?></span>
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-author_id";?>">
+                <span class="record_text"><?php echo $author_names[$item['Item']['author_id']]; ?></span>
             </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['created']; ?></span>

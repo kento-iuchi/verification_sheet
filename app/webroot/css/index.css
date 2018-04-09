@@ -41,7 +41,7 @@ table th,td {
 }
 
 #view_part_data table.data-part-main-table {
-    width: 3500px;
+    width: 3100px;
 }
 
 #page_selecter {
@@ -113,6 +113,10 @@ tr.table_titles {
 
 .verification-history-row {
     width : 200px;
+}
+
+.author-row {
+    width: 150px;
 }
 
 .complete {

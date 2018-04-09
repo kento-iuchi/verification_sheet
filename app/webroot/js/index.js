@@ -131,7 +131,22 @@ $(function(){
             $('#'+formId).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, defaultDate: 0});
             $('#'+formId).datepicker('setDate', initialText);
             $('#'+formId).datepicker('show');
-        } else {
+        } else if (columnName == "author_id"){
+            var authorNames = $('th.author-row').attr('data-options');
+            authorNames = JSON.parse(authorNames);
+            var form = "<select id = '" + formId + "'>";
+            var defaultValue = 1
+            $.each(authorNames, function(index, name){
+                if(name == initialText){
+                    defaultValue = index;
+                }
+                var option = '<option value="' + (index) + '">' + name + '</option>';
+                form += option
+            });
+            form += '</select>';
+            $(editCellSelector).html(form);
+            $('#' + formId).val(defaultValue);
+        }else {
             var fontsize_div = $('<div style="display:none;font-size:1em;margin:0;padding:0;height:auto;line-height:1;border:0;">&nbsp;</div>');
             var fontsize = fontsize_div.appendTo(editCellSelector).height();
             var folm_cols = Math.floor(0.012 * fontsize * $(editCellSelector).width());
@@ -197,6 +212,11 @@ $(function(){
                 } else {
                     $(selectedTd).removeClass('high_priority');
                 }
+            }
+            if (columnName == "author_id"){
+                var authorNames = $('th.author-row').attr('data-options');
+                authorNames = JSON.parse(authorNames);
+                $(selectedTd).html(authorNames[currentText]);
             }
             synchronizeTwoTablesHeight();
             changePriorityHighlight();
