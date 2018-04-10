@@ -111,4 +111,4 @@ CakeLog::config('error', array(
 ));
 
 CakePlugin::load('DebugKit');
-CakePlugin::load(array('Migrations', 'TwitterBootstrap'));
+CakePlugin::load(array('Migrations', 'TwitterBootstrap', 'Search',));
