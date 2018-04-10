@@ -11,7 +11,12 @@ class ItemsController extends AppController
     );
 
     public $components = array(
-        'Search.Prg',
+        'Search.Prg' => array(
+            'commonProcess' => array(
+                'paramType' => 'querystring',
+                // 'filterEmpty' =>  true,
+            ),
+        ),
     );
     public $presetVars = true;
 
@@ -74,12 +79,11 @@ class ItemsController extends AppController
 
     public function show_completed()
     {
-        // $this->Prg->commonProcess();
         $conditions = array(
             'is_completed' => 1,
         );
-        if(!empty($this->request->data)){
-            $conditions = array_merge($conditions, $this->Item->parseCriteria($this->request->data));
+        if(!empty($this->request->query)){
+            $conditions = array_merge($conditions, $this->Item->parseCriteria($this->request->query['data']));
         }
         $this->layout = 'IndexLayout';
         $this->loadModel('VerificationHistory');

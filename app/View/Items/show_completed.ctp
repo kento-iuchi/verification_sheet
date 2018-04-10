@@ -29,28 +29,67 @@ echo $this->Html->link(
 );
 ?>
 <div id="search-form">
+    <?php
+        echo $this->form->create('Item', array(
+            'url' => '/items/show_completed',
+            'type'  => 'GET',
+        ));
+    ?>
     <table>
-    <tr><span><h2>作成日</h2></tr>
-    <?php echo $this->form->create('GET', array('url' => '/items/show_completed'))?>
-        <?php echo $this->Datepicker->datepicker(
-            'from_created',
-            array(
-                'div' => false,
-                'label' => false,
-                )
-            );
-        ?>
-        <span>～</span>
-        <?php echo $this->Datepicker->datepicker(
-            'to_created',
-            array(
-                'div' => false,
-                'label' => false,
-                )
-            );
-        ?>
+        <tr>
+            <td>
+                <label>作成日</label>
+            </td>
+            <td>
+                    <?php echo $this->Datepicker->datepicker(
+                        'from_created',
+                        array(
+                            'div' => false,
+                            'label' => false,
+                            )
+                        );
+                    ?>
+            </td>
+            <td>
+                    <?php echo $this->Datepicker->datepicker(
+                        'to_created',
+                        array(
+                            'div' => false,
+                            'label' => false,
+                            )
+                        );
+                    ?>
+            </td>
+            <td>
+                <label>masterマージ完了日</label>
+            </td>
+            <td>
+                    <?php echo $this->Datepicker->datepicker(
+                        'from_merge_finish_date_to_master',
+                        array(
+                            'div' => false,
+                            'label' => false,
+                            )
+                        );
+                    ?>
+            </td>
+            <td>
+                    <?php echo $this->Datepicker->datepicker(
+                        'to_merge_finish_date_to_master',
+                        array(
+                            'div' => false,
+                            'label' => false,
+                            )
+                        );
+                    ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo $this->form->submit('検索')?>
+            </td>
+        </tr>
     </table>
-    <?php echo $this->form->submit('検索')?>
     <?php echo $this->form->end();?>
 </div>
 <div id="view_part">

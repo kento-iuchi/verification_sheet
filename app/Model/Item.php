@@ -16,6 +16,14 @@ class Item extends AppModel
             'field' => 'Item.created <=',
             'type' => 'value',
         ),
+        'from_merge_finish_date_to_master' => array(
+            'field' => 'Item.merge_finish_date_to_master >=',
+            'type' => 'value',
+        ),
+        'to_merge_finish_date_to_master' => array(
+            'field' => 'Item.merge_finish_date_to_master <=',
+            'type' => 'value',
+        ),
     );
 
     public $validate = array
