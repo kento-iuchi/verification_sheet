@@ -89,6 +89,7 @@ class ItemsController extends AppController
         $this->loadModel('VerificationHistory');
         $this->loadModel('Verifier');
         $this->loadModel('Author');
+        $this->set('query', $this->request->query['data']);
         $this->set('items', $this->paginate('Item', $conditions));
         $this->set('verifier', $this->Verifier->find('all'));
         $this->set('author', $this->Author->find('all'));

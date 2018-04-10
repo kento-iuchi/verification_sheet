@@ -46,6 +46,7 @@ echo $this->Html->link(
                         array(
                             'div' => false,
                             'label' => false,
+                            'default' => $query['from_created']
                             )
                         );
                     ?>
@@ -56,6 +57,7 @@ echo $this->Html->link(
                         array(
                             'div' => false,
                             'label' => false,
+                            'default' => $query['to_created']
                             )
                         );
                     ?>
@@ -69,6 +71,7 @@ echo $this->Html->link(
                         array(
                             'div' => false,
                             'label' => false,
+                            'default' => $query['from_merge_finish_date_to_master']
                             )
                         );
                     ?>
@@ -79,6 +82,7 @@ echo $this->Html->link(
                         array(
                             'div' => false,
                             'label' => false,
+                            'default' => $query['to_merge_finish_date_to_master']
                             )
                         );
                     ?>
