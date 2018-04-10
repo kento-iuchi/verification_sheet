@@ -10,6 +10,11 @@ class ItemsController extends AppController
         'sort'       => 'id',
     );
 
+    public $components = array(
+        'Search.Prg',
+    );
+    public $presetVars = true;
+
     public function index()
     {
         $this->header("Content-type: text/html; charset=utf-8");
@@ -69,11 +74,18 @@ class ItemsController extends AppController
 
     public function show_completed()
     {
+        // $this->Prg->commonProcess();
+        $conditions = array(
+            'is_completed' => 1,
+        );
+        if(!empty($this->request->data)){
+            $conditions = array_merge($conditions, $this->Item->parseCriteria($this->request->data));
+        }
         $this->layout = 'IndexLayout';
         $this->loadModel('VerificationHistory');
         $this->loadModel('Verifier');
         $this->loadModel('Author');
-        $this->set('items', $this->paginate('Item', array('is_completed' => 1)));
+        $this->set('items', $this->paginate('Item', $conditions));
         $this->set('verifier', $this->Verifier->find('all'));
         $this->set('author', $this->Author->find('all'));
     }

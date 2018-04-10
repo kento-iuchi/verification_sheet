@@ -4,7 +4,18 @@ class Item extends AppModel
     public $hasMany = array(
         'verification_history' => array(
             'className' => 'verification_history',
-        )
+        ),
+    );
+    public $actsAs = array('Search.Searchable');
+    public $filterArgs = array(
+        'from_created' => array(
+            'field' => 'Item.created >=',
+            'type' => 'value',
+        ),
+        'to_created' => array(
+            'field' => 'Item.created <=',
+            'type' => 'value',
+        ),
     );
 
     public $validate = array

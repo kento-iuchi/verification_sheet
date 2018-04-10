@@ -1,3 +1,11 @@
+#search-form {
+    width: 50%;
+}
+
+.input.text {
+    display: inline;
+}
+
 tr:nth-child(odd) {
     background: #E0E6F8;
 }

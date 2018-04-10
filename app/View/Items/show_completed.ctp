@@ -7,7 +7,6 @@ error_reporting(E_ALL);
 <?php echo $this->Html->script('index.js');?>
 <?php echo $this->Html->css('index.css');?>
 <?php echo $this->Html->css('show_completed.css');?>
-<?php echo $this->Form->create('Item', array('url' => 'add'));?>
 
 <?php
 $verifier_names = array();
@@ -29,9 +28,30 @@ echo $this->Html->link(
     array('class' => 'button',)
 );
 ?>
-<div>
-    <span><h2>期間</h2></span>
-
+<div id="search-form">
+    <table>
+    <tr><span><h2>作成日</h2></tr>
+    <?php echo $this->form->create('GET', array('url' => '/items/show_completed'))?>
+        <?php echo $this->Datepicker->datepicker(
+            'from_created',
+            array(
+                'div' => false,
+                'label' => false,
+                )
+            );
+        ?>
+        <span>～</span>
+        <?php echo $this->Datepicker->datepicker(
+            'to_created',
+            array(
+                'div' => false,
+                'label' => false,
+                )
+            );
+        ?>
+    </table>
+    <?php echo $this->form->submit('検索')?>
+    <?php echo $this->form->end();?>
 </div>
 <div id="view_part">
 <table id="view_part_header">
