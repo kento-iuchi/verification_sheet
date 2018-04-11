@@ -218,6 +218,9 @@ echo $this->Html->link(
             <th class="author-row" data-options='<?php echo json_encode($author_names)?>'>
                 作成者
             </th>
+            <th>
+                pivotal<br>ポイント
+            </th>
             <th class="date_row">
                 作成日時</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('created', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
@@ -314,6 +317,9 @@ echo $this->Html->link(
             </td>
             <td class = "record">
                 <span class="record_text"><?php echo $author_names[$item['Item']['author_id']]; ?></span>
+            </td>
+            <td class = "record">
+                <span class="record_text"><?php echo $item['Item']['pivotal_point']; ?></span>
             </td>
             <td class = "record">
                 <span class="record_text"><?php echo $item['Item']['created']; ?></span>

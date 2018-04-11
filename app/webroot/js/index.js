@@ -146,7 +146,11 @@ $(function(){
             form += '</select>';
             $(editCellSelector).html(form);
             $('#' + formId).val(defaultValue);
-        }else {
+        }  else if (columnName == 'pivotal_point') {
+            var form = '<input type="number" id="' + formId + '">';
+            $(editCellSelector).html(form);
+            $('#' + formId).val(parseInt(initialText, 10));
+        } else {
             var fontsize_div = $('<div style="display:none;font-size:1em;margin:0;padding:0;height:auto;line-height:1;border:0;">&nbsp;</div>');
             var fontsize = fontsize_div.appendTo(editCellSelector).height();
             var folm_cols = Math.floor(0.012 * fontsize * $(editCellSelector).width());

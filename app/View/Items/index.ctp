@@ -176,6 +176,9 @@ foreach($author as $author_array){
             <th class="author-row" data-options='<?php echo json_encode($author_names)?>'>
                 作成者
             </th>
+            <th>
+                pivotal<br>ポイント
+            </th>
             <th class="date_row">
                 作成日時</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('created', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
@@ -266,6 +269,9 @@ foreach($author as $author_array){
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-author_id";?>">
                 <span class="record_text"><?php echo $author_names[$item['Item']['author_id']]; ?></span>
             </td>
+            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-pivotal_point";?>">
+                <span class="record_text"><?php echo $item['Item']['pivotal_point']; ?></span>
+            </td>
             <td class = "record" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['created']; ?></span>
             </td>
@@ -311,6 +317,7 @@ foreach($author as $author_array){
                     ));
                 ?>
             </td>
+            <td><?php echo $this->Form->input('フィールド名', array('type'=>'number', 'label' => false));?></td>
             <td><?php echo $this->Form->end('送信');?></td>
         </tr>
 
