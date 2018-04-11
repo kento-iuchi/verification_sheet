@@ -72,9 +72,9 @@ class ItemsController extends AppController
         $this->request->data['Item']['is_completed'] = $this->request->data['Item']['is_completed'] == 0 ? 1 : 0;
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
-                echo '"完了"状態にしました';
+                echo '変更しました';
             } else {
-                echo '"完了"状態にできませんでした';
+                echo '変更できませんでした';
             }
         }
     }
