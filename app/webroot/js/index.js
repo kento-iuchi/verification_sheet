@@ -174,12 +174,12 @@ $(function(){
         if(currentText.length == 0){
             currentText = '*EMPTY*';
         }
-        var editActionUrl = WEBROOT + 'items/edit/' + id + '/' + columnName + '/' + currentText;
+        var editActionUrl = WEBROOT + 'items/edit/';
 
         $.ajax({
         url: editActionUrl,
         type: "POST",
-        data: { id : id, columnName: columnName, content: currentText },
+        data: { id : id, column_name: columnName, content: currentText },
         dataType: "text",
         success : function(response){
             //通信成功時
@@ -307,7 +307,6 @@ $(function(){
         }
 
         var graceDays = parseInt($('#' + itemId + '-grace_days_of_verification_complete').text(), 10);
-        console.log(graceDays);
         var tdColor = $('#item_' + itemId + '-head').css('background');
         var fontColor = '#000000';
         if(graceDays <= -1){

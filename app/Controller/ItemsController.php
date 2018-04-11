@@ -47,11 +47,14 @@ class ItemsController extends AppController
         return $this->redirect(array('action' => 'index'));
     }
 
-    public function edit($id = null, $column_name, $content)
+    public function edit()
     {
         $this->autoRender = false;
 
-        $this->Item->id = $id;
+        $this->Item->id = $this->request->data['id'];
+        $column_name = $this->request->data['column_name'];
+        $content = $this->request->data['content'];
+
         $this->request->data = $this->Item->read();
         $this->request->data['Item'][$column_name] = $content;
         if ($this->request->is(['ajax'])) {
