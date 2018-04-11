@@ -503,8 +503,6 @@ $(function(){
             // 非表示
         }
         synchronizeTwoTablesHeight();
-        console.log(appearingHistoryIds);
-
     });
 
 });
