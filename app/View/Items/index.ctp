@@ -97,6 +97,7 @@ foreach($author as $author_array){
               ));
             ?>
         </td>
+        <td><!-- 検証完了猶予日数 --></td>
     </tr>
 </table>
 
@@ -297,7 +298,6 @@ foreach($author as $author_array){
             <td><!-- 営業リリースOK判断日 --></td>
             <td><!-- 経過日数 --></td>
             <td><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
-            <td><!-- 検証完了猶予日数 --></td>
             <td><!-- masterマージ完了日 --></td>
             <td><?php echo $this->Form->input('confirm_points', array('label' => false));?></td>
             <td></td>
