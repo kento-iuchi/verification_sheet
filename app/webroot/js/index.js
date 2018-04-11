@@ -195,7 +195,7 @@ $(function(){
                 textEdited = '<a href="' + textEdited + '">' + textEdited + '</a>';
             }
 
-            $(selectedTd).html(textEdited);
+            $(selectedTd).html('<span class="record_text">' + textEdited + '</span>');
             if (columnName == 'pullrequest_update' || columnName == 'scheduled_release_date'){
                 var pullrequestDate = new Date($('#' + id + '-pullrequest_update').text());
                 var scheduledReleaseDate = new Date($('#' + id + '-scheduled_release_date').text());
