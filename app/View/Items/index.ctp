@@ -46,7 +46,13 @@ foreach($author as $author_array){
             <button class="sort_button"><?php echo $this->Paginator->sort('status', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('status', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
+        <th class="day_count_row">
+            検証完了<br>猶予日数</br>
+            <button class="sort_button"><?php echo $this->Paginator->sort('grace_days_of_verification_complete', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+            <button class="sort_button"><?php echo $this->Paginator->sort('grace_days_of_verification_complete', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+        </th>
     </tr>
+    <?php $today_date = new Datetime(date("y-m-d")); //経過日数、猶予日数の計算に使用?>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item">
         <td class="record id_row" id="<?php echo $item['Item']['id'] . "-id";?>">
@@ -62,6 +68,12 @@ foreach($author as $author_array){
         </td>
         <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
+        </td>
+        <td class = "record" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
+            <span class="record_text"><?php
+                $scheduled_release_date = new Datetime($item['Item']['scheduled_release_date']);
+                echo str_replace('+', '', $today_date->diff($scheduled_release_date)->format('%R%a'));
+            ?></span>
         </td>
     </tr>
     <?php endforeach; ?>
@@ -143,11 +155,6 @@ foreach($author as $author_array){
                 <button class="sort_button"><?php echo $this->Paginator->sort('scheduled_release_date', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('scheduled_release_date', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="day_count_row">
-                検証完了<br>猶予日数</br>
-                <button class="sort_button"><?php echo $this->Paginator->sort('grace_days_of_verification_complete', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
-                <button class="sort_button"><?php echo $this->Paginator->sort('grace_days_of_verification_complete', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
-            </th>
             <th class="date_row">
                 master<br>マージ完了日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('merge_finish_date_to_master', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
@@ -181,7 +188,6 @@ foreach($author as $author_array){
             <th></th>
         </tr>
 
-        <?php $today_date = new Datetime(date("y-m-d")); //経過日数、猶予日数の計算に使用?>
         <?php foreach ($items as $item): ?>
         <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
             <td class="record category_row editable-cell" id="<?php echo $item['Item']['id'] . "-category";?>">
@@ -228,12 +234,6 @@ foreach($author as $author_array){
             </td>
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-scheduled_release_date";?>">
                 <span class="record_text"><?php echo $item['Item']['scheduled_release_date']; ?></span>
-            </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
-                <span class="record_text"><?php
-                    $scheduled_release_date = new Datetime($item['Item']['scheduled_release_date']);
-                    echo str_replace('+', '', $today_date->diff($scheduled_release_date)->format('%R%a'));
-                ?></span>
             </td>
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-merge_finish_date_to_master";?>">
                 <span class="record_text"><?php echo $item['Item']['merge_finish_date_to_master']; ?></span>
