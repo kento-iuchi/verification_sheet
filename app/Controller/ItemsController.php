@@ -84,17 +84,25 @@ class ItemsController extends AppController
         $conditions = array(
             'is_completed' => 1,
         );
+
+        $query_data = array(
+            'from_created' => '',
+            'to_created' => '',
+            'from_merge_finish_date_to_master' => '',
+            'to_merge_finish_date_to_master' => '',
+        );
         if(!empty($this->request->query)){
-            $conditions = array_merge($conditions, $this->Item->parseCriteria($this->request->query['data']));
+            $query_data = $this->request->query['data'];
+            $conditions = array_merge($conditions, $this->Item->parseCriteria($query_data));
         }
         $this->layout = 'IndexLayout';
         $this->loadModel('VerificationHistory');
         $this->loadModel('Verifier');
         $this->loadModel('Author');
-        $this->set('query', $this->request->query['data']);
         $this->set('items', $this->paginate('Item', $conditions));
         $this->set('verifier', $this->Verifier->find('all'));
         $this->set('author', $this->Author->find('all'));
+        $this->set('query', $query_data);
     }
 
     public function save_verification_history()

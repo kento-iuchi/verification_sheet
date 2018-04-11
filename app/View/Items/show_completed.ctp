@@ -46,7 +46,8 @@ echo $this->Html->link(
                         array(
                             'div' => false,
                             'label' => false,
-                            'default' => $query['from_created']
+                            'default' => $query['from_created'],
+                            'class' => 'search-input',
                             )
                         );
                     ?>
@@ -57,7 +58,8 @@ echo $this->Html->link(
                         array(
                             'div' => false,
                             'label' => false,
-                            'default' => $query['to_created']
+                            'default' => $query['to_created'],
+                            'class' => 'search-input',
                             )
                         );
                     ?>
@@ -71,7 +73,8 @@ echo $this->Html->link(
                         array(
                             'div' => false,
                             'label' => false,
-                            'default' => $query['from_merge_finish_date_to_master']
+                            'default' => $query['from_merge_finish_date_to_master'],
+                            'class' => 'search-input',
                             )
                         );
                     ?>
@@ -82,7 +85,8 @@ echo $this->Html->link(
                         array(
                             'div' => false,
                             'label' => false,
-                            'default' => $query['to_merge_finish_date_to_master']
+                            'default' => $query['to_merge_finish_date_to_master'],
+                            'class' => 'search-input',
                             )
                         );
                     ?>
