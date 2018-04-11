@@ -309,8 +309,10 @@ $(function(){
         var graceDays = parseInt($('#' + itemId + '-grace_days_of_verification_complete').text(), 10);
         console.log(graceDays);
         var tdColor = $('#item_' + itemId + '-head').css('background');
+        var fontColor = '#000000';
         if(graceDays <= -1){
-            tdColor = '#9F81F7';
+            tdColor = '#000000';
+            fontColor = '#FFFFFF';
         } else if(graceDays <= 1){
             tdColor = '#F78181';
         } else if(graceDays <= 3){
@@ -321,9 +323,11 @@ $(function(){
 
         $('#item_' + itemId + '-head td.record').each(function(){
             $(this).css('background', tdColor);
+            $(this).children('span').css('color', fontColor);
         });
         $('#item_' + itemId + '-data td.record').each(function(){
             $(this).css('background', tdColor);
+            $(this).children('span').css('color', fontColor);
         });
 
 
