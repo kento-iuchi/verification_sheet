@@ -5,7 +5,7 @@ $(function(){
     $('#page_selecter').css('top', viewPartHeight + 'px');
     $('#page_selecter').css('display', 'block');
     synchronizeTwoTablesHeight();
-    changePriorityHighlight();
+    updateStyles();
 
     // ダブルクリックでその場変種
     var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'verification_history'];
@@ -219,7 +219,7 @@ $(function(){
                 $(selectedTd).html(authorNames[currentText]);
             }
             synchronizeTwoTablesHeight();
-            changePriorityHighlight();
+            updateStyles(id);
         },
         error: function(){
             //通信失敗時の処理
@@ -285,15 +285,47 @@ $(function(){
         $("#page_selecter").offset({top : tableHeight + 60});
     };
 
-    function changePriorityHighlight()
+    function updateStyles(itemId = null)
     {
-        $('td.priority-row').each(function(){
-            if($(this).hasClass('high_priority')){
-                $(this).css({'color': 'red', 'font-weight': 'bold', 'font-size': '16px'});
-            } else {
-                $(this).css({'color': 'black', 'font-weight': 'normal', 'font-size': '12px'});
-            }
-        })
+        if (!itemId){
+            $('td.record.id-row').each(function(){
+                var targetItemId = $(this).attr('data-id');
+                updateItemLineStyle(targetItemId);
+            });
+        } else {
+            updateItemLineStyle(itemId);
+        }
+    }
+
+    function updateItemLineStyle(itemId = null)
+    {
+        var priorityTdSelecter = '#' + itemId + '-confirm_priority';
+        if($(priorityTdSelecter).hasClass('high_priority')){
+            $(priorityTdSelecter).css({'color': 'red', 'font-weight': 'bold', 'font-size': '16px'});
+        } else {
+            $(priorityTdSelecter).css({'color': 'black', 'font-weight': 'normal', 'font-size': '12px'});
+        }
+
+        var graceDays = parseInt($('#' + itemId + '-grace_days_of_verification_complete').text(), 10);
+        console.log(graceDays);
+        var tdColor = $('#item_' + itemId + '-head').css('background');
+        if(graceDays <= 1){
+            tdColor = '#F78181';
+        }else if(graceDays <= 3){
+            tdColor = '#FAAC58';
+        }
+        else if(graceDays <= 5){
+            tdColor = '#F4FA58';
+        }
+
+        $('#item_' + itemId + '-head td.record').each(function(){
+            $(this).css('background', tdColor);
+        });
+        $('#item_' + itemId + '-data td.record').each(function(){
+            $(this).css('background', tdColor);
+        });
+
+
     }
 
     // 完了ボタンを押した際の処理

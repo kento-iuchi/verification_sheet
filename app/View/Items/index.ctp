@@ -54,8 +54,8 @@ foreach($author as $author_array){
     </tr>
     <?php $today_date = new Datetime(date("y-m-d")); //経過日数、猶予日数の計算に使用?>
     <?php foreach ($items as $item): ?>
-    <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item">
-        <td class="record id_row" id="<?php echo $item['Item']['id'] . "-id";?>">
+    <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item" >
+        <td class="record id-row" id="<?php echo $item['Item']['id'] . "-id";?>" data-id="<?php echo h($item['Item']['id']); ?>">
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
         </td>
         <td class="record content_row editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>">
@@ -69,7 +69,7 @@ foreach($author as $author_array){
         <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
         </td>
-        <td class = "record" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
+        <td class = "record grace_days_row" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
             <span class="record_text"><?php
                 $scheduled_release_date = new Datetime($item['Item']['scheduled_release_date']);
                 echo str_replace('+', '', $today_date->diff($scheduled_release_date)->format('%R%a'));
