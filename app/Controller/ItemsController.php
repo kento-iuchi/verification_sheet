@@ -171,7 +171,7 @@ class ItemsController extends AppController
 
     public function retrieve_github_push()
     {
-        $this->log('pushてすと11');
+        $this->log('pushてすと13');
         echo 'post successed';
 
         $this->autoRender = false;
@@ -194,11 +194,11 @@ class ItemsController extends AppController
                 )
             );
 
-            if ($this->Item->save($this->request->data)) {
-                return $this->redirect(array('action' => 'index'));
-            } else {
-                echo "add errot";
-            }
+            // if ($this->Item->save($this->request->data)) {
+            //     return $this->redirect(array('action' => 'index'));
+            // } else {
+            //     echo "add errot";
+            // }
         }
     }
 
