@@ -171,7 +171,7 @@ class ItemsController extends AppController
 
     public function retrieve_github_push()
     {
-        $this->log('pushてすと13');
+        $this->log('pushてすと14');
         echo 'post successed';
 
         $this->autoRender = false;
