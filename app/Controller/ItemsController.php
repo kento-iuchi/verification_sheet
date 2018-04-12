@@ -164,7 +164,8 @@ class ItemsController extends AppController
     }
 
     public function retrieve_github_push(){
-        $test = 'pushてすと4';
+        $this->log('pushてすと5');
+        echo 'post successed'
         $this->autoRender = false;
         include(__DIR__.'/../Config/webhook_key.php');
         $this->log($this->request->data);
