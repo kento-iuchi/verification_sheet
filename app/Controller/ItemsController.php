@@ -3,6 +3,7 @@ ini_set('display_errors',1);
 
 App::uses('AppController', 'Controller');
 
+
 class ItemsController extends AppController
 {
     public $helpers = array('Html', 'Form', 'Flash', 'Js', 'DatePicker');
@@ -160,6 +161,12 @@ class ItemsController extends AppController
         curl_close($ch);
         $result = json_decode($response);
 
+    }
+
+    public function retrieve_github_push(){
+        include(__DIR__.'/../Config/webhook_key.php');
+        $this->log($this->request);
+        $this->log($GITHUB_WEBHOOK_KEY);
     }
 
 }
