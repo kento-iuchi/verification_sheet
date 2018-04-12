@@ -121,25 +121,8 @@ class ItemsController extends AppController
         }
     }
 
-    public function send_grace_days_alert()
+    public function send_message_to_chatwork($message, $url)
     {
-        $message = '[info][title]おしらせ[/title]';
-        $today_date = new Datetime(date("y-m-d"));
-        $contents = Hash::extract($this->Item->find('all'), '{n}.Item[is_completed=0].content');
-        $scheduled_release_dates = Hash::extract($this->Item->find('all'), '{n}.Item[is_completed=0].scheduled_release_date');
-        foreach ($scheduled_release_dates as $i => $schedled_release_date) {
-            $scheduled_release_date = new Datetime($schedled_release_date);
-            $grace_days = $today_date->diff($scheduled_release_date)->format('%r%a');
-            if($grace_days <= 7){
-                $message .=  '■'. $contents[$i] . "\n";
-                $message .=  "　リリース予定日まで {$grace_days} 日です\n";
-            }
-        }
-        $message.= '[/info]';
-
-        $room_id = 99451000;
-        $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
-        debug($url);
         $api_key = "20c9d2043b146718a2ba9352179bc10e";
 
         $params = array(
@@ -160,20 +143,62 @@ class ItemsController extends AppController
         $response = curl_exec($ch);
         curl_close($ch);
         $result = json_decode($response);
-
     }
 
-    public function retrieve_github_push(){
-        $this->log('pushてすと9');
+    public function send_grace_days_alert()
+    {
+        $message = '[info][title]おしらせ[/title]';
+        $today_date = new Datetime(date("y-m-d"));
+        $contents = Hash::extract($this->Item->find('all'), '{n}.Item[is_completed=0].content');
+        $scheduled_release_dates = Hash::extract($this->Item->find('all'), '{n}.Item[is_completed=0].scheduled_release_date');
+        foreach ($scheduled_release_dates as $i => $schedled_release_date) {
+            $scheduled_release_date = new Datetime($schedled_release_date);
+            $grace_days = $today_date->diff($scheduled_release_date)->format('%r%a');
+            if($grace_days <= 7){
+                $message .=  '■'. $contents[$i] . "\n";
+                $message .=  "　リリース予定日まで {$grace_days} 日です\n";
+            }
+        }
+
+        $message.= '[/info]';
+
+        $room_id = 99451000;
+        $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
+        debug($url);
+
+        $this->send_message_to_chatwork($message, $url);
+    }
+
+    public function retrieve_github_push()
+    {
+        $this->log('pushてすと10');
         echo 'post successed';
+
         $this->autoRender = false;
+
         include(__DIR__.'/../Config/webhook_key.php');
         $this->log($this->request->data);
         $this->log($this->request->query['key']);
 
         $key = $this->request->query['key'];
         if($key == $GITHUB_WEBHOOK_KEY){
-            $this->log('successd');
+            $this->log('activation successd');
+        }
+
+        if ($this->request->is('post')) {
+            $this->Item->create();
+
+            $new_item = array(
+                'Item' => array(
+                    'content' => $this->request->data['commits']['message']
+                )
+            );
+
+            if ($this->Item->save($this->request->data)) {
+                return $this->redirect(array('action' => 'index'));
+            } else {
+                echo "add errot";
+            }
         }
     }
 
