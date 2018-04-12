@@ -171,14 +171,12 @@ class ItemsController extends AppController
 
     public function retrieve_github_push()
     {
-        $this->log('pushてすと14');
-        echo 'post successed';
+        $this->log('post successed');
 
         $this->autoRender = false;
 
         include(__DIR__.'/../Config/webhook_key.php');
-        $this->log($this->request->data);
-        $this->log($this->request->query['key']);
+        $this->log($this->request->data['payload']);
 
         $key = $this->request->query['key'];
         if($key == $GITHUB_WEBHOOK_KEY){
