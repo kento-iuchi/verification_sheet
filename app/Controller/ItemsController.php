@@ -176,22 +176,34 @@ class ItemsController extends AppController
         $this->autoRender = false;
 
         include(__DIR__.'/../Config/webhook_key.php');
-        $this->log($this->request->data['payload']);
+        $this->log(json_decode($this->request->data['payload']));
 
+        $payload = json_decode($this->request->data['payload']);
         $key = $this->request->query['key'];
         if($key == $GITHUB_WEBHOOK_KEY){
             $this->log('activation successd');
         }
 
         if ($this->request->is('post')) {
-            $this->Item->create();
+            if($key == $GITHUB_WEBHOOK_KEY){
+                $this->log('activation successd');
+                $this->Item->create();
 
-            $new_item = array(
-                'Item' => array(
-                    'content' => $this->request->data['commits']['message']
-                )
-            );
+                if($payload['action']=='opened'){
+                    $new_item = array(
+                        'Item' => array(
+                            'content' => $payload['pullrequest']['title'],
+                            'github_url' => $payload['pullrequest']['html_url'],
+                            'status' => 'コードレビュー中',
+                            'verification_enviroment_url' => '',
+                            'pullrequest' => explode('T', $payload['pullrequest']['users']['created_at'])[0], // payloadの中身をformatする
+                            'scheduled_release_date' => '',
+                            'confirm_comment' => $payload['pullrequest']['users']['body'],
+                        )
+                    );
+                }
 
+            }
             // if ($this->Item->save($this->request->data)) {
             //     return $this->redirect(array('action' => 'index'));
             // } else {
