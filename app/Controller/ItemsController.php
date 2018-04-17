@@ -190,7 +190,7 @@ class ItemsController extends AppController
 
                     $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]\n";
                     $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
-                    $message .= 'by' . $payload['user']['login'];
+                    $message .= 'by' . $payload['pull_request']['user']['login'];
                     $message .= '[/info]';
 
                     $room_id = 99451000;
@@ -205,10 +205,13 @@ class ItemsController extends AppController
                             'github_url' => $payload['pull_request']['html_url'],
                             'chatwork_url' => '',
                             'status' => 'コードレビュー中',
+                            'category' => '未設定',
+                            'division' => '改善'
                             'verification_enviroment_url' => '',
                             'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
                             'scheduled_release_date' => '',
                             'confirm_comment' => $payload['pull_request']['body'],
+                            'author_id' => 1,
                             'pivotal_point' => 1,
                         )
                     );
