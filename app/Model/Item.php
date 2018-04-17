@@ -78,7 +78,11 @@ class Item extends AppModel
         return parent::save($this->data, $validate, $fieldList);
     }
 
-
+    /*
+        datepickerのフォーマットの仕方がよくわかってない頃
+        自前で日付をフォーマットする用に作ったものなので
+        今後使わない可能性大
+    */
     public function formatDate($date)
     {
         if (preg_match('/\d{2}\/\d{2}\/\d{4}/', $date, $matches) === 1) {
