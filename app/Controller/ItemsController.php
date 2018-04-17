@@ -206,7 +206,7 @@ class ItemsController extends AppController
                             'chatwork_url' => '',
                             'status' => 'コードレビュー中',
                             'category' => '未設定',
-                            'division' => '改善'
+                            'division' => '改善',
                             'verification_enviroment_url' => '',
                             'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
                             'scheduled_release_date' => '',
