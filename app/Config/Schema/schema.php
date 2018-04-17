@@ -11,6 +11,7 @@ class AppSchema extends CakeSchema {
 	public $authors = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
 		'name' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'github_account_name' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
@@ -19,16 +20,16 @@ class AppSchema extends CakeSchema {
 
 	public $items = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
-		'category' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'division' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'content' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'chatwork_url' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'github_url' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'verification_enviroment_url' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'confirm_priority' => array('type' => 'tinyinteger', 'null' => false, 'default' => null, 'unsigned' => false),
-		'pullrequest' => array('type' => 'date', 'null' => false, 'default' => null),
+		'category' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'division' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'content' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'chatwork_url' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'github_url' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'verification_enviroment_url' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'confirm_priority' => array('type' => 'tinyinteger', 'null' => true, 'default' => null, 'unsigned' => false),
+		'pullrequest' => array('type' => 'date', 'null' => true, 'default' => null),
 		'pullrequest_update' => array('type' => 'date', 'null' => true, 'default' => null),
-		'status' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'status' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'tech_release_judgement' => array('type' => 'date', 'null' => true, 'default' => null),
 		'supp_release_judgement' => array('type' => 'date', 'null' => true, 'default' => null),
 		'sale_release_judgement' => array('type' => 'date', 'null' => true, 'default' => null),
@@ -36,13 +37,13 @@ class AppSchema extends CakeSchema {
 		'scheduled_release_date' => array('type' => 'date', 'null' => true, 'default' => null),
 		'grace_days_of_verification_complete' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'merge_finish_date_to_master' => array('type' => 'date', 'null' => true, 'default' => null),
-		'confirm_points' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'confirm_points' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'confirm_comment' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'response_to_confirm_comment' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'author_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
+		'author_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'pivotal_point' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-		'created' => array('type' => 'date', 'null' => false, 'default' => null),
-		'modified' => array('type' => 'date', 'null' => false, 'default' => null),
+		'created' => array('type' => 'date', 'null' => true, 'default' => null),
+		'modified' => array('type' => 'date', 'null' => true, 'default' => null),
 		'is_completed' => array('type' => 'boolean', 'null' => true, 'default' => '0'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)

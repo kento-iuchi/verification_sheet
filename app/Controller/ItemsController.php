@@ -210,6 +210,7 @@ class ItemsController extends AppController
                             'division' => '改善',
                             'verification_enviroment_url' => '',
                             'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
+                            'confirm_priority' => 1,
                             'scheduled_release_date' => '',
                             'confirm_comment' => $payload['pull_request']['body'],
                             'author_id' => 1,
