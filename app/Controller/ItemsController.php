@@ -186,10 +186,10 @@ class ItemsController extends AppController
                 $this->log('activation successd');
                 $this->Item->create();
 
-                if($payload['action']=='opened'){
+                if($payload['action'] == 'opened' || $payload['action'] == 'review_requested'){
 
-                    $message = '[info][title]'.  $payload['number'] . $payload['pullrequest']['title']. '[/title]';
-                    $message .= '[code]'.  $payload['pullrequest']['body']. '[/code]';
+                    $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]\n";
+                    $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
                     $message .= 'by' . $payload['user']['login'];
                     $message .= '[/info]';
 
@@ -201,14 +201,14 @@ class ItemsController extends AppController
 
                     $new_item = array(
                         'Item' => array(
-                            'content' => $payload['number'] . $payload['pullrequest']['title'],
-                            'github_url' => $payload['pullrequest']['html_url'],
+                            'content' => $payload['number'] . $payload['pull_request']['title'],
+                            'github_url' => $payload['pull_request']['html_url'],
                             'chatwork_url' => '',
                             'status' => 'コードレビュー中',
                             'verification_enviroment_url' => '',
-                            'pullrequest' => explode('T', $payload['pullrequest']['created_at'])[0], // payloadの中身をformatする
+                            'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
                             'scheduled_release_date' => '',
-                            'confirm_comment' => $payload['pullrequest']['body'],
+                            'confirm_comment' => $payload['pull_request']['body'],
                             'pivotal_point' => 1,
                         )
                     );
