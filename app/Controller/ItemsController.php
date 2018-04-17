@@ -184,11 +184,11 @@ class ItemsController extends AppController
         if ($this->request->is('post')) {
             if($key == $GITHUB_WEBHOOK_KEY){
                 $this->log('activation successd');
-                $this->Item->create();
 
                 if($payload['action'] == 'opened' || $payload['action'] == 'review_requested'){
 
                     $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]\n";
+                    $message .=  $payload['pull_request']['html_url'];
                     $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
                     $message .= 'by' . $payload['pull_request']['user']['login'];
                     $message .= '[/info]';
@@ -199,6 +199,7 @@ class ItemsController extends AppController
 
                     $this->send_message_to_chatwork($message, $url);
 
+                    $this->Item->create();
                     $new_item = array(
                         'Item' => array(
                             'content' => $payload['number'] . $payload['pull_request']['title'],
