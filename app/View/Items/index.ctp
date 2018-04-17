@@ -31,6 +31,7 @@ foreach($author as $author_array){
 );?>
 <div id="view_part">
 <table id="view_part_header">
+    <thead class="scrollHead">
     <tr class="table_titles">
         <th class="id_row">
             番号</br>
@@ -52,6 +53,8 @@ foreach($author as $author_array){
             <button class="sort_button"><?php echo $this->Paginator->sort('grace_days_of_verification_complete', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
     </tr>
+    </thead>
+    <tbody class="scrollBody">
     <?php $today_date = new Datetime(date("y-m-d")); //経過日数、猶予日数の計算に使用?>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item" >
@@ -99,10 +102,12 @@ foreach($author as $author_array){
         </td>
         <td><!-- 検証完了猶予日数 --></td>
     </tr>
+    </tbody>
 </table>
 
 <div id='view_part_data'>
     <table id="data_table" class="data-part-main-table">
+        <thead class="scrollHead">
         <tr class="table_titles">
             <th class="category_row">
                 カテゴリ</br>
@@ -191,7 +196,9 @@ foreach($author as $author_array){
             </th>
             <th></th>
         </tr>
+        </thead>
 
+        <tbody class="scrollBody">
         <?php foreach ($items as $item): ?>
         <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
             <td class="record category_row editable-cell" id="<?php echo $item['Item']['id'] . "-category";?>">
@@ -321,6 +328,7 @@ foreach($author as $author_array){
             <td><?php echo $this->Form->end('送信');?></td>
         </tr>
 
+    </tbody>
     </table>
 </div>
 </div>
