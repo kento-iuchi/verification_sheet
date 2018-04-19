@@ -42,7 +42,7 @@ class ItemsController extends AppController
             if ($this->Item->save($this->request->data)) {
                 return $this->redirect(array('action' => 'index'));
             } else {
-                echo "add errot";
+                echo "add error";
             }
         }
         return $this->redirect(array('action' => 'index'));
@@ -171,8 +171,6 @@ class ItemsController extends AppController
 
     public function retrieve_github_push()
     {
-        $this->log('post successed 16');
-
         $this->autoRender = false;
 
         include(__DIR__.'/../Config/webhook_key.php');
@@ -190,7 +188,7 @@ class ItemsController extends AppController
                     $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]\n";
                     $message .=  $payload['pull_request']['html_url'];
                     $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
-                    $message .= 'by' . $payload['pull_request']['user']['login'];
+                    $message .= 'by ' . $payload['pull_request']['user']['login'];
                     $message .= '[/info]';
 
                     $room_id = 99451000;
@@ -200,6 +198,19 @@ class ItemsController extends AppController
                     $this->send_message_to_chatwork($message, $url);
 
                     $this->Item->create();
+
+                    $author_github_name = $payload['pull_request']['user']['login'];
+                    $this->loadModel('Author');
+                    $authors = $this->Author->find('all');
+                    $author_id = 1;
+                    foreach ($authors as $data_id => $author_info) {
+                        if ($author_info['Author']['github_account_name'] == $author_github_name) {
+                            $author_id = $author_info['Author']['id'];
+                            break;
+                        }
+                    }
+
+
                     $new_item = array(
                         'Item' => array(
                             'content' => $payload['number'] . $payload['pull_request']['title'],
@@ -211,9 +222,9 @@ class ItemsController extends AppController
                             'verification_enviroment_url' => '',
                             'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
                             'confirm_priority' => 1,
-                            'scheduled_release_date' => '',
+                            'scheduled_release_date' => '2099-12-31',
                             'confirm_comment' => $payload['pull_request']['body'],
-                            'author_id' => 1,
+                            'author_id' => $author_id,
                             'pivotal_point' => 1,
                         )
                     );
