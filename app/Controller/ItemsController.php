@@ -162,7 +162,7 @@ class ItemsController extends AppController
 
         $message.= '[/info]';
 
-        $room_id = 99451000;
+        $room_id = 103474903;
         $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
         debug($url);
 
