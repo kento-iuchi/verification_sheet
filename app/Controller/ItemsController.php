@@ -185,7 +185,7 @@ class ItemsController extends AppController
 
                 if($payload['action'] == 'opened' || $payload['action'] == 'review_requested'){
 
-                    $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]\n";
+                    $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]";
                     $message .=  $payload['pull_request']['html_url'];
 
                     $author_github_name = $payload['pull_request']['user']['login'];
@@ -236,7 +236,7 @@ class ItemsController extends AppController
                                 'pullrequest_update' => explode('T', $payload['pull_request']['updated_at'])[0], // payloadの中身をformatする
                             )
                         );
-                        $message .= "プルリクが更新されました\n";
+                        $message .= "\nプルリクが更新されました\n";
                     }
 
                     if ($this->Item->save($new_item)) {
