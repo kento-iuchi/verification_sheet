@@ -27,6 +27,7 @@ class AppSchema extends CakeSchema {
 		'github_url' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'verification_enviroment_url' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'confirm_priority' => array('type' => 'tinyinteger', 'null' => true, 'default' => null, 'unsigned' => false),
+		'pullrequest_id' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
 		'pullrequest' => array('type' => 'date', 'null' => true, 'default' => null),
 		'pullrequest_update' => array('type' => 'date', 'null' => true, 'default' => null),
 		'status' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),

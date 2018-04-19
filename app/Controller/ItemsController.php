@@ -187,17 +187,6 @@ class ItemsController extends AppController
 
                     $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]\n";
                     $message .=  $payload['pull_request']['html_url'];
-                    $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
-                    $message .= 'by ' . $payload['pull_request']['user']['login'];
-                    $message .= '[/info]';
-
-                    $room_id = 99451000;
-                    $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
-                    debug($url);
-
-                    $this->send_message_to_chatwork($message, $url);
-
-                    $this->Item->create();
 
                     $author_github_name = $payload['pull_request']['user']['login'];
                     $this->loadModel('Author');
@@ -210,29 +199,61 @@ class ItemsController extends AppController
                         }
                     }
 
+                    $pullrequest_id = $payload['pull_request']['id'];
 
-                    $new_item = array(
-                        'Item' => array(
-                            'content' => $payload['number'] . $payload['pull_request']['title'],
-                            'github_url' => $payload['pull_request']['html_url'],
-                            'chatwork_url' => '',
-                            'status' => 'コードレビュー中',
-                            'category' => '未設定',
-                            'division' => '改善',
-                            'verification_enviroment_url' => '',
-                            'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
-                            'confirm_priority' => 1,
-                            'scheduled_release_date' => '2099-12-31',
-                            'confirm_comment' => $payload['pull_request']['body'],
-                            'author_id' => $author_id,
-                            'pivotal_point' => 1,
-                        )
-                    );
+                    if ($payload['action'] == 'opened') {
+                        $this->Item->create();
+                        $new_item = array(
+                            'Item' => array(
+                                'content' => $payload['number'] . $payload['pull_request']['title'],
+                                'github_url' => $payload['pull_request']['html_url'],
+                                'chatwork_url' => '',
+                                'status' => 'コードレビュー中',
+                                'category' => '未設定',
+                                'division' => '改善',
+                                'verification_enviroment_url' => '',
+                                'pullrequest_id' => $pullrequest_id,
+                                'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
+                                'confirm_priority' => 1,
+                                'scheduled_release_date' => '2099-12-31',
+                                'confirm_comment' => $payload['pull_request']['body'],
+                                'author_id' => $author_id,
+                                'pivotal_point' => 1,
+                            )
+                        );
+                        $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
+                    } else {
+                        $items = $this->Author->find('all');
+                        foreach ($items as $item_number => $item_info) {
+                            if ($item_info['pullrequest_id'] == $pullrequest_id){
+                                $update_item_id = $item_info['id'];
+                                break;
+                            }
+                        }
+                        $new_item = array(
+                            'Item' => array(
+                                'id' => $update_item_id,
+                                'pullrequest_update' => explode('T', $payload['pull_request']['updated_at'])[0], // payloadの中身をformatする
+                            )
+                        );
+                        $message .= "プルリクが更新されました\n";
+                    }
+
                     if ($this->Item->save($new_item)) {
                         $this->log('save from github: successed');
                     } else {
                         $this->log('save from github: failed');
                     }
+
+                    $message .= 'by ' . $payload['pull_request']['user']['login'];
+                    $message .= '[/info]';
+
+                    $room_id = 99451000;
+                    $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
+                    debug($url);
+
+                    $this->send_message_to_chatwork($message, $url);
+
                 }
 
             }
