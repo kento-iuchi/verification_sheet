@@ -30,24 +30,25 @@ foreach($author as $author_array){
     array('class' => 'button',)
 );?>
 <div id="view_part">
-<table id="view_part_header">
+<div>
+<table id="header_table">
     <thead class="scrollHead">
     <tr class="table_titles">
-        <th class="id_row">
+        <th class="id-row">
             番号</br>
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
-        <th class="content_row">内容</th>
-        <th class="priority-row">確認優先度
+        <th class="content-row">内容</th>
+        <th class="priority-row">確認優先度<br>
             <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
-        <th>ステータス</br>
+        <th class="status-row">ステータス</br>
             <button class="sort_button"><?php echo $this->Paginator->sort('status', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('status', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
-        <th class="day_count_row">
+        <th class="grace-row">
             検証完了<br>猶予日数</br>
             <button class="sort_button"><?php echo $this->Paginator->sort('grace_days_of_verification_complete', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('grace_days_of_verification_complete', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
@@ -61,7 +62,7 @@ foreach($author as $author_array){
         <td class="record id-row" id="<?php echo $item['Item']['id'] . "-id";?>" data-id="<?php echo h($item['Item']['id']); ?>">
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
         </td>
-        <td class="record content_row editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>">
+        <td class="record content-row editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>">
             <span class="record_text editable-cell"><?php echo $item['Item']['content']; ?></span>
         </td>
         <td class = "record priority-row <?php if($item['Item']['confirm_priority'] == 3){ echo "high_priority";} ?> editable-cell" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
@@ -69,10 +70,10 @@ foreach($author as $author_array){
                 $confirm_priority_array = array('不要', '低', '中', '高');
                 echo $confirm_priority_array[$item['Item']['confirm_priority']]; ?>
         </td>
-        <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>">
+        <td class = "record status-row editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
         </td>
-        <td class = "record grace_days_row" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
+        <td class = "record grace-row" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
             <span class="record_text"><?php
                 $scheduled_release_date = new Datetime($item['Item']['scheduled_release_date']);
                 echo str_replace('+', '', $today_date->diff($scheduled_release_date)->format('%R%a'));
@@ -81,14 +82,14 @@ foreach($author as $author_array){
     </tr>
     <?php endforeach; ?>
     <tr class="input_part">
-        <td></td>
-        <td><?php echo $this->Form->input('content', array('label' => false));?></td>
-        <td><?php echo $this->Form->input('confirm_priority',array(
+        <td class="id-row"></td>
+        <td class="content-row"><?php echo $this->Form->input('content', array('label' => false));?></td>
+        <td class="priority-row"><?php echo $this->Form->input('confirm_priority',array(
               'label' => false,
               'options' => array('不要', '低', '中', '高')
           ));
         ?></td>
-        <td>
+        <td class="status-row">
             <?php echo $this->Form->input('status',array(
                   'label' => false,
                   'options' => array(
@@ -100,10 +101,11 @@ foreach($author as $author_array){
               ));
             ?>
         </td>
-        <td><!-- 検証完了猶予日数 --></td>
+        <td class="grace-row"><!-- 検証完了猶予日数 --></td>
     </tr>
     </tbody>
 </table>
+</div>
 
 <div id='view_part_data'>
     <table id="data_table" class="data-part-main-table">

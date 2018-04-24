@@ -1,5 +1,5 @@
 :root {
-    --header-width: 350px;
+    --header-width: 470px;
 }
 
 .container {
@@ -17,6 +17,13 @@ table th,td {
     font-size: 12px;
 }
 
+#header_table thead tr {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 25px;
+    z-index: 2;
+}
+
 #view_part {
     width: 99%;
     top: 0px;
@@ -24,7 +31,7 @@ table th,td {
     left: 1%;
 }
 
-#view_part_header {
+#header_table {
     position: absolute;
     width: var(--header-width);
     left: 0px;
@@ -48,6 +55,19 @@ table th,td {
     width: 500px;
     position: absolute;
     display: none;
+}
+
+#header_table tbody.scrollBody::-webkit-scrollbar{
+    display: none;
+    height: 100%;
+}
+
+thead.scrollHead,tbody.scrollBody{
+  display:block;
+}
+tbody.scrollBody{
+  overflow-y:scroll;
+  height:700px;
 }
 
 .view_part_item {
@@ -78,13 +98,25 @@ tr.table_titles {
     font-size: 8px;
 }
 
-.id_row {
+.id-row {
     width: 38px;
+}
+
+.content-row {
+    width: 140px;
+}
+
+.status-row {
+    width: 160px;
 }
 
 .priority-row {
     width:  70px;
     text-align: center;
+}
+
+.grace-row {
+    width: 50px;
 }
 
 .category_row {
