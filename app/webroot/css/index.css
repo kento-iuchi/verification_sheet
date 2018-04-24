@@ -26,9 +26,10 @@ table th,td {
 
 #view_part {
     width: 99%;
+    height: 700px;
     top: 0px;
-    position: relative;
     left: 1%;
+    position: relative;
 }
 
 #header_table {
@@ -47,7 +48,8 @@ table th,td {
     table-layout: fixed;
 }
 
-#view_part_data table.data-part-main-table {
+#data_table {
+    height: 90%;
     width: 3100px;
 }
 
@@ -67,7 +69,7 @@ thead.scrollHead,tbody.scrollBody{
 }
 tbody.scrollBody{
   overflow-y:scroll;
-  height:700px;
+  height:500px;
 }
 
 .view_part_item {

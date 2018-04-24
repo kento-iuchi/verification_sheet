@@ -339,6 +339,7 @@ foreach($author as $author_array){
         array (
             'before' => $this->Paginator->hasPrev() ? $this->Paginator->first('<<').' | ' : '',
             'after' => $this->Paginator->hasNext() ? ' | '.$this->Paginator->last('>>') : '',
+            'tag' => 'span',
         )
     );
     ?>

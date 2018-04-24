@@ -9,7 +9,7 @@ class ItemsController extends AppController
     public $helpers = array('Html', 'Form', 'Flash', 'Js', 'DatePicker');
 
     public $paginate =  array(
-        'limit'      => 20,
+        'limit'      => 15,
         'sort'       => 'id',
     );
 
