@@ -1,5 +1,5 @@
 :root {
-    --header-width: 470px;
+    --header-width: 485px;
 }
 
 .container {
@@ -65,7 +65,7 @@ table th,td {
 }
 
 thead.scrollHead,tbody.scrollBody{
-  display:block;
+  display:inline-block;
 }
 tbody.scrollBody{
   overflow-y:scroll;
