@@ -182,7 +182,10 @@ class ItemsController extends AppController
             if($key == $GITHUB_WEBHOOK_KEY){
                 $this->log('activation successd');
 
-                if($payload['action'] == 'opened' || $payload['action'] == 'review_requested'){
+                if ($payload['action'] == 'opened' ||
+                    $payload['action'] == 'review_requested' ||
+                    $payload['action'] == 'synchronize')
+                   {
 
                     $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]";
                     $message .=  $payload['pull_request']['html_url'];
