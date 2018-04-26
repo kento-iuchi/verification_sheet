@@ -183,7 +183,6 @@ class ItemsController extends AppController
                 $this->log('activation successd');
 
                 if ($payload['action'] == 'opened' ||
-                    $payload['action'] == 'review_requested' ||
                     $payload['action'] == 'synchronize')
                    {
 
