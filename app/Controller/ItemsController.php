@@ -143,6 +143,7 @@ class ItemsController extends AppController
         $response = curl_exec($ch);
         curl_close($ch);
         $result = json_decode($response);
+        $this->log($response);
     }
 
     public function send_grace_days_alert()
@@ -173,14 +174,12 @@ class ItemsController extends AppController
         $this->autoRender = false;
 
         include(__DIR__.'/../Config/webhook_key.php');
-        $this->log(json_decode($this->request->data['payload'], true));
 
         $payload = json_decode($this->request->data['payload'], true);
         $key = $this->request->query['key'];
 
         if ($this->request->is('post')) {
             if($key == $GITHUB_WEBHOOK_KEY){
-                $this->log('activation successd');
 
                 if ($payload['action'] == 'opened' ||
                     $payload['action'] == 'synchronize')
@@ -251,18 +250,10 @@ class ItemsController extends AppController
 
                     $room_id = 103474903;
                     $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
-                    debug($url);
 
                     $this->send_message_to_chatwork($message, $url);
-
                 }
-
             }
-            // if ($this->Item->save($this->request->data)) {
-            //     return $this->redirect(array('action' => 'index'));
-            // } else {
-            //     echo "add errot";
-            // }
         }
     }
 
