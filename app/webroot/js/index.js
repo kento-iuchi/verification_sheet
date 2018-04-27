@@ -132,7 +132,7 @@ $(function(){
             $('#'+formId).datepicker('setDate', initialText);
             $('#'+formId).datepicker('show');
         } else if (columnName == "author_id"){
-            var authorNames = $('th.author-row').attr('data-options');
+            var authorNames = $('th.author-column').attr('data-options');
             authorNames = JSON.parse(authorNames);
             var form = "<select id = '" + formId + "'>";
             var defaultValue = 1
@@ -218,7 +218,7 @@ $(function(){
                 }
             }
             if (columnName == "author_id"){
-                var authorNames = $('th.author-row').attr('data-options');
+                var authorNames = $('th.author-column').attr('data-options');
                 authorNames = JSON.parse(authorNames);
                 $(selectedTd).html(authorNames[currentText]);
             }
@@ -304,7 +304,7 @@ $(function(){
     function updateStyles(itemId = null)
     {
         if (!itemId){
-            $('td.record.id-row').each(function(){
+            $('td.record.id-column').each(function(){
                 var targetItemId = $(this).attr('data-id');
                 updateItemLineStyle(targetItemId);
             });
@@ -439,7 +439,7 @@ $(function(){
     var verifier_list = ['A', 'B', 'C'];
     function createAddVerifivationHistoryForm(cell_id)
     {
-        var options = $('th.verification-history-row').attr('data-options');
+        var options = $('th.verification-history-column').attr('data-options');
         options = JSON.parse(options);
         var item_id = cell_id.split('-')[0];
         var name_selector =  '<br><select id = "' + item_id + '-name-selector">';

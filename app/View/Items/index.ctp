@@ -34,21 +34,21 @@ foreach($author as $author_array){
 <table id="header_table">
     <thead class="scrollHead">
     <tr class="table_titles">
-        <th class="id-row">
+        <th class="id-column">
             番号</br>
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
-        <th class="content-row">内容</th>
-        <th class="priority-row">確認優先度<br>
+        <th class="content-column">内容</th>
+        <th class="priority-column">確認優先度<br>
             <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
-        <th class="status-row">ステータス</br>
+        <th class="status-column">ステータス</br>
             <button class="sort_button"><?php echo $this->Paginator->sort('status', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('status', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
-        <th class="grace-row">
+        <th class="grace-column">
             検証完了<br>猶予日数</br>
             <button class="sort_button"><?php echo $this->Paginator->sort('grace_days_of_verification_complete', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('grace_days_of_verification_complete', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
@@ -59,21 +59,21 @@ foreach($author as $author_array){
     <?php $today_date = new Datetime(date("y-m-d")); //経過日数、猶予日数の計算に使用?>
     <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item" >
-        <td class="record id-row" id="<?php echo $item['Item']['id'] . "-id";?>" data-id="<?php echo h($item['Item']['id']); ?>">
+        <td class="record id-column" id="<?php echo $item['Item']['id'] . "-id";?>" data-id="<?php echo h($item['Item']['id']); ?>">
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
         </td>
-        <td class="record content-row editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>">
+        <td class="record content-column editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>">
             <span class="record_text editable-cell"><?php echo $item['Item']['content']; ?></span>
         </td>
-        <td class = "record priority-row <?php if($item['Item']['confirm_priority'] == 3){ echo "high_priority";} ?> editable-cell" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
+        <td class = "record priority-column <?php if($item['Item']['confirm_priority'] == 3){ echo "high_priority";} ?> editable-cell" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
             <?php
                 $confirm_priority_array = array('不要', '低', '中', '高');
                 echo $confirm_priority_array[$item['Item']['confirm_priority']]; ?>
         </td>
-        <td class = "record status-row editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>">
+        <td class = "record status-column editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
         </td>
-        <td class = "record grace-row" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
+        <td class = "record grace-column" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
             <span class="record_text"><?php
                 $scheduled_release_date = new Datetime($item['Item']['scheduled_release_date']);
                 echo str_replace('+', '', $today_date->diff($scheduled_release_date)->format('%R%a'));
@@ -82,14 +82,14 @@ foreach($author as $author_array){
     </tr>
     <?php endforeach; ?>
     <tr class="input_part">
-        <td class="id-row"></td>
-        <td class="content-row"><?php echo $this->Form->input('content', array('label' => false));?></td>
-        <td class="priority-row"><?php echo $this->Form->input('confirm_priority',array(
+        <td class="id-column"></td>
+        <td class="content-column"><?php echo $this->Form->input('content', array('label' => false));?></td>
+        <td class="priority-column"><?php echo $this->Form->input('confirm_priority',array(
               'label' => false,
               'options' => array('不要', '低', '中', '高')
           ));
         ?></td>
-        <td class="status-row">
+        <td class="status-column">
             <?php echo $this->Form->input('status',array(
                   'label' => false,
                   'options' => array(
@@ -101,7 +101,7 @@ foreach($author as $author_array){
               ));
             ?>
         </td>
-        <td class="grace-row"><!-- 検証完了猶予日数 --></td>
+        <td class="grace-column"><!-- 検証完了猶予日数 --></td>
     </tr>
     </tbody>
 </table>
@@ -111,87 +111,87 @@ foreach($author as $author_array){
     <table id="data_table" class="data-part-main-table">
         <thead class="scrollHead">
         <tr class="table_titles">
-            <th class="category_row">
+            <th class="category-column">
                 カテゴリ</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('category', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('category', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="division_row">
+            <th class="division-column">
                 区分</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('division', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('division', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="url_row">
+            <th class="url-column">
                 chatwork URL
             </th>
-            <th class="url_row">
+            <th class="url-column">
                 github URL
             </th>
-            <th class="url_row">
+            <th class="url-column">
                 個別検証環境URL
             </th>
-            <th class="date_row">プルリク</br>
+            <th class="date-column">プルリク</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('pullrequest', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('pullrequest', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="date_row">
+            <th class="date-column">
                 プルリク<br>更新日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('pullrequest_update', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('pullrequest_update', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="date_row">
+            <th class="date-column">
                 技術リリース<br>OK判断日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('tech_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('tech_release_judgement', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="date_row">
+            <th class="date-column">
                 サポートリリース<br>OK判断日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
-            <th class="date_row">
+            <th class="date-column">
                 営業リリース<br>OK判断日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('sale_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('sale_release_judgement', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="day_count_row">
+            <th class="day_count-column">
                 経過日数</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('elapsed', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('elapsed', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="date_row">
+            <th class="date-column">
                 リリース<br>予定日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('scheduled_release_date', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('scheduled_release_date', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="date_row">
+            <th class="date-column">
                 master<br>マージ完了日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('merge_finish_date_to_master', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('merge_finish_date_to_master', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="comment_row">
+            <th class="comment-column">
                 確認ポイント
             </th>
-            <th class="verification-history-row" data-options='<?php echo json_encode($verifier_names)?>'>
+            <th class="verification-history-column" data-options='<?php echo json_encode($verifier_names)?>'>
                 検証履歴
             </th>
-            <th class="comment_row">
+            <th class="comment-column">
                 確認コメント
             </th>
-            <th class="comment_row">
+            <th class="comment-column">
                 確認コメント対応
             </th>
-            <th class="author-row" data-options='<?php echo json_encode($author_names)?>'>
+            <th class="author-column" data-options='<?php echo json_encode($author_names)?>'>
                 作成者
             </th>
             <th>
                 pivotal<br>ポイント
             </th>
-            <th class="date_row">
+            <th class="date-column">
                 作成日時</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('created', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('created', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th class="date_row">
+            <th class="date-column">
                 最終更新日時</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('modified', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('modified', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
@@ -203,10 +203,10 @@ foreach($author as $author_array){
         <tbody class="scrollBody">
         <?php foreach ($items as $item): ?>
         <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
-            <td class="record category_row editable-cell" id="<?php echo $item['Item']['id'] . "-category";?>">
+            <td class="record category-column editable-cell" id="<?php echo $item['Item']['id'] . "-category";?>">
                 <span class="record_text"><?php echo $item['Item']['category']; ?></span>
             </td>
-            <td class="record division_row editable-cell" id="<?php echo $item['Item']['id'] . "-division";?>">
+            <td class="record division-column editable-cell" id="<?php echo $item['Item']['id'] . "-division";?>">
                 <span class="record_text"><?php echo $item['Item']['division']; ?></span>
             </td>
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>">
@@ -254,7 +254,7 @@ foreach($author as $author_array){
             <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-confirm_points";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></div>
             </td>
-            <td class = "record verification-history-row" id="<?php echo $item['Item']['id'] . "-verification_history";?>">
+            <td class = "record verification-history-column" id="<?php echo $item['Item']['id'] . "-verification_history";?>">
                 <table>
                     <?php if(!empty($item['verification_history'])):?>
                         <?php foreach ($item['verification_history'] as $verification_history): ?>

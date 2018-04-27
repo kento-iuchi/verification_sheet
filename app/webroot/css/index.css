@@ -100,56 +100,56 @@ tr.table_titles {
     font-size: 8px;
 }
 
-.id-row {
+.id-column {
     width: 38px;
 }
 
-.content-row {
+.content-column {
     width: 140px;
 }
 
-.status-row {
+.status-column {
     width: 160px;
 }
 
-.priority-row {
+.priority-column {
     width:  70px;
     text-align: center;
 }
 
-.grace-row {
+.grace-column {
     width: 50px;
 }
 
-.category_row {
+.category-column {
     width: 80px;
 }
 
-.division_row {
+.division-column {
     width: 80px;
 }
 
-.url_row {
+.url-column {
     width: 224px;
 }
 
-.date_row {
+.date-column {
     width: 90px;
 }
 
-.day_count_row {
+.day_count-column {
     width: 56px;
 }
 
-.comment_row {
+.comment-column {
     width: 300px;
 }
 
-.verification-history-row {
+.verification-history-column {
     width : 200px;
 }
 
-.author-row {
+.author-column {
     width: 150px;
 }
 
