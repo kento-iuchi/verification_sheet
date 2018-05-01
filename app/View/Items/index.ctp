@@ -183,7 +183,7 @@ foreach($author as $author_array){
             <th class="author-column" data-options='<?php echo json_encode($author_names)?>'>
                 作成者
             </th>
-            <th>
+            <th class="point-column">
                 pivotal<br>ポイント
             </th>
             <th class="date-column">
@@ -196,7 +196,7 @@ foreach($author as $author_array){
                 <button class="sort_button"><?php echo $this->Paginator->sort('modified', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('modified', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
-            <th></th>
+            <th class="complete_column"></th>
         </tr>
         </thead>
 
@@ -209,49 +209,49 @@ foreach($author as $author_array){
             <td class="record division-column editable-cell" id="<?php echo $item['Item']['id'] . "-division";?>">
                 <span class="record_text"><?php echo $item['Item']['division']; ?></span>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>">
+            <td class = "record editable-cell url-column" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>">
                 <a href = "<?php echo $item['Item']['chatwork_url']; ?>" target="_blank">
                     <span class="record_text"><?php echo $item['Item']['chatwork_url']; ?></span>
                 </a>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-github_url";?>">
+            <td class = "record editable-cell url-column" id="<?php echo $item['Item']['id'] . "-github_url";?>">
                 <a href="<?php echo $item['Item']['github_url']; ?>" target="_blank">
                     <span class="record_text"><?php echo $item['Item']['github_url']; ?></span>
                 </a>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-verification_enviroment_url";?>">
+            <td class = "record editable-cell url-column" id="<?php echo $item['Item']['id'] . "-verification_enviroment_url";?>">
                 <a href="<?php echo $item['Item']['verification_enviroment_url']; ?>" target="_blank">
                     <span class="record_text"><?php echo $item['Item']['verification_enviroment_url']; ?></span>
                 </a>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-pullrequest";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-pullrequest";?>">
                 <span class="record_text"><?php echo $item['Item']['pullrequest']; ?></span>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>">
                 <span class="record_text"><?php echo $item['Item']['pullrequest_update']; ?></span>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-tech_release_judgement";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-tech_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['tech_release_judgement']; ?></span>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['supp_release_judgement']; ?></span>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['sale_release_judgement']; ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-elapsed";?>">
+            <td class = "record day_count-column" id="<?php echo $item['Item']['id'] . "-elapsed";?>">
                 <span class="record_text"><?php
                     $pullrequest_date = new Datetime($item['Item']['pullrequest']);
                     echo $today_date->diff($pullrequest_date)->format('%a');;
                 ?></span>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-scheduled_release_date";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-scheduled_release_date";?>">
                 <span class="record_text"><?php echo $item['Item']['scheduled_release_date']; ?></span>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-merge_finish_date_to_master";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-merge_finish_date_to_master";?>">
                 <span class="record_text"><?php echo $item['Item']['merge_finish_date_to_master']; ?></span>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-confirm_points";?>">
+            <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-confirm_points";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></div>
             </td>
             <td class = "record verification-history-column" id="<?php echo $item['Item']['id'] . "-verification_history";?>">
@@ -269,30 +269,30 @@ foreach($author as $author_array){
                 <button type="button" class="add-verification-history" id="<?php echo $item['Item']['id'] . '-add-verification-history';?>">新規作成</button>
                 <div id="<?php echo $item['Item']['id'];?>-verification-history-input-area"></div>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
+            <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_comment']); ?></div>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
+            <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></div>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-author_id";?>">
+            <td class = "record editable-cell author-column" id="<?php echo $item['Item']['id'] . "-author_id";?>">
                 <span class="record_text"><?php echo $author_names[$item['Item']['author_id']]; ?></span>
             </td>
-            <td class = "record editable-cell" id="<?php echo $item['Item']['id'] . "-pivotal_point";?>">
+            <td class = "record editable-cell point-column" id="<?php echo $item['Item']['id'] . "-pivotal_point";?>">
                 <span class="record_text"><?php echo $item['Item']['pivotal_point']; ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-created";?>">
+            <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['created']; ?></span>
             </td>
-            <td class = "record" id="<?php echo $item['Item']['id'] . "-created";?>">
+            <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['modified']; ?></span>
             </td>
-            <td><div class="complete"><button type="button" class="complete_button" id="<?php echo $item['Item']['id'] . "-complete_button";?>">完了</button></div></td>
+            <td class= "complete_column"><div class="complete"><button type="button" class="complete_button" id="<?php echo $item['Item']['id'] . "-complete_button";?>">完了</button></div></td>
         </tr>
         <?php endforeach; ?>
 
         <tr class="input_part">
-            <td><?php echo $this->Form->input('category', array('label' => false));?></td>
+            <td class="category-column"><?php echo $this->Form->input('category', array('label' => false));?></td>
             <td><?php echo $this->Form->input('division', array(
                     'label' => false,
                     'options' => array(
@@ -303,22 +303,22 @@ foreach($author as $author_array){
                     ));
                 ?>
             </td>
-            <td><?php echo $this->Form->input('chatwork_url', array('label' => false));?></td>
-            <td><?php echo $this->Form->input('github_url', array('label' => false));?></td>
-            <td><?php echo $this->Form->input('verification_enviroment_url', array('label' => false));?></td>
-            <td><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
-            <td><!-- プルリク更新日 --></td>
-            <td><!-- 技術リリースOK判断日 --></td>
-            <td><!-- サポートリリースOK判断日 --></td>
-            <td><!-- 営業リリースOK判断日 --></td>
-            <td><!-- 経過日数 --></td>
-            <td><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
-            <td><!-- masterマージ完了日 --></td>
-            <td><?php echo $this->Form->input('confirm_points', array('label' => false));?></td>
-            <td></td>
-            <td><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
-            <td><!--確認コメント対応 --></td>
-            <td>
+            <td class="url-column"><?php echo $this->Form->input('chatwork_url', array('label' => false));?></td>
+            <td class="url-column"><?php echo $this->Form->input('github_url', array('label' => false));?></td>
+            <td class="url-column"><?php echo $this->Form->input('verification_enviroment_url', array('label' => false));?></td>
+            <td class="date-column"><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
+            <td class="date-column"><!-- プルリク更新日 --></td>
+            <td class="date-column"><!-- 技術リリースOK判断日 --></td>
+            <td class="date-column"><!-- サポートリリースOK判断日 --></td>
+            <td class="date-column"><!-- 営業リリースOK判断日 --></td>
+            <td class="day_count-column"><!-- 経過日数 --></td>
+            <td class="date-column"><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
+            <td class="date-column"><!-- masterマージ完了日 --></td>
+            <td class="comment-column"><?php echo $this->Form->input('confirm_points', array('label' => false));?></td>
+            <td class="verification-history-column"></td>
+            <td class="comment-column"><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
+            <td class="comment-column"><!--確認コメント対応 --></td>
+            <td class="author-column">
                 <?php echo $this->Form->input('author_id', array(
                     'label' => false,
                     'options' => $author_names,
@@ -326,8 +326,8 @@ foreach($author as $author_array){
                     ));
                 ?>
             </td>
-            <td><?php echo $this->Form->input('フィールド名', array('type'=>'number', 'label' => false));?></td>
-            <td><?php echo $this->Form->end('送信');?></td>
+            <td class="point-column"><?php echo $this->Form->input('pivotal_point', array('type'=>'number', 'label' => false));?></td>
+            <td class="date-column"><?php echo $this->Form->end('送信');?></td>
         </tr>
 
     </tbody>
