@@ -101,7 +101,7 @@ echo $this->Html->link(
     <?php echo $this->form->end();?>
 </div>
 <div id="view_part">
-<table id="view_part_header">
+<table id="header_table">
     <tr class="table_titles">
         <th class="id_row">
             番号</br>
@@ -306,8 +306,6 @@ echo $this->Html->link(
                         <?php endforeach; ?>
                     <?php endif?>
                 </table>
-                <button type="button" class="add-verification-history" id="<?php echo $item['Item']['id'] . '-add-verification-history';?>">新規作成</button>
-                <div id="<?php echo $item['Item']['id'];?>-verification-history-input-area"></div>
             </td>
             <td class = "record">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_comment']); ?></div>
