@@ -46,6 +46,7 @@ class AppSchema extends CakeSchema {
 		'created' => array('type' => 'date', 'null' => true, 'default' => null),
 		'modified' => array('type' => 'date', 'null' => true, 'default' => null),
 		'is_completed' => array('type' => 'boolean', 'null' => true, 'default' => '0'),
+		'is_editing' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '編集中なら１'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
