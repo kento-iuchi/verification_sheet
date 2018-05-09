@@ -223,19 +223,23 @@ class ItemsController extends AppController
                         );
                         $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
                     } else {
+
                         $items = $this->Author->find('all');
-                        foreach ($items as $item_number => $item_info) {
+                        foreach ($items as $item_info) {
                             if ($item_info['pullrequest_id'] == $pullrequest_id){
                                 $update_item_id = $item_info['id'];
                                 break;
                             }
                         }
-                        $new_item = array(
-                            'Item' => array(
-                                'id' => $update_item_id,
-                                'pullrequest_update' => explode('T', $payload['pull_request']['updated_at'])[0], // payloadの中身をformatする
-                            )
-                        );
+                        $this->Item->id = $update_item_id;
+                        $new_item = $this->Item->read();
+                        $new_item['Item']['pullrequest_update'] = explode('T', $payload['pull_request']['updated_at'])[0]
+                        // $new_item = array(
+                        //     'Item' => array(
+                        //         'id' => $update_item_id,
+                        //         'pullrequest_update' => explode('T', $payload['pull_request']['updated_at'])[0], // payloadの中身をformatする
+                        //     )
+                        // );
                         $message .= "\nプルリクが更新されました\n";
                     }
 
