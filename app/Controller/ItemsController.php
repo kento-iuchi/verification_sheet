@@ -233,7 +233,7 @@ class ItemsController extends AppController
                         }
                         $this->Item->id = $update_item_id;
                         $new_item = $this->Item->read();
-                        $new_item['Item']['pullrequest_update'] = explode('T', $payload['pull_request']['updated_at'])[0]
+                        $new_item['Item']['pullrequest_update'] = explode('T', $payload['pull_request']['updated_at'])[0];
                         // $new_item = array(
                         //     'Item' => array(
                         //         'id' => $update_item_id,
