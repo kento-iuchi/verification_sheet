@@ -225,8 +225,9 @@ class ItemsController extends AppController
                     } else {
 
                         $items = $this->Author->find('all');
+                        $update_item_id = null;
                         foreach ($items as $item_info) {
-                            if ($item_info['pullrequest_id'] == $pullrequest_id){
+                            if ($item_info['Item']['pullrequest_id'] == $pullrequest_id){
                                 $update_item_id = $item_info['id'];
                                 break;
                             }
