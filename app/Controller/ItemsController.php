@@ -224,7 +224,7 @@ class ItemsController extends AppController
                         $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
                     } else {
 
-                        $items = $this->Author->find('all');
+                        $items = $this->Item->find('all');
                         $update_item_id = null;
                         foreach ($items as $item_info) {
                             if ($item_info['Item']['pullrequest_id'] == $pullrequest_id){
@@ -232,6 +232,7 @@ class ItemsController extends AppController
                                 break;
                             }
                         }
+                        $this->log($pullrequest_id);
                         $this->log($update_item_id);
                         $this->Item->id = $update_item_id;
                         $new_item = $this->Item->read();
