@@ -46,7 +46,7 @@ class AppSchema extends CakeSchema {
 		'created' => array('type' => 'date', 'null' => true, 'default' => null),
 		'modified' => array('type' => 'date', 'null' => true, 'default' => null),
 		'is_completed' => array('type' => 'boolean', 'null' => true, 'default' => '0'),
-		'last_updated_time' => array('type' => 'timestamp', 'null' => false, 'default' => '0000-00-00 00:00:00'),
+		'last_updated_time' => array('type' => 'timestamp', 'null' => true, 'default' => null),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
