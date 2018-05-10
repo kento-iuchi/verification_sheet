@@ -75,6 +75,7 @@ class Item extends AppModel
         if (isset($this->data[$this->alias]['modified'])) {
             unset($this->data[$this->alias]['modified']);
         }
+        $this->data[$this->alias]['last_updated_time'] = time();
         return parent::save($this->data, $validate, $fieldList);
     }
 
