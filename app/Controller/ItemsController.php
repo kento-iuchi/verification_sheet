@@ -232,6 +232,7 @@ class ItemsController extends AppController
                                 break;
                             }
                         }
+                        $this->log($update_item_id);
                         $this->Item->id = $update_item_id;
                         $new_item = $this->Item->read();
                         $new_item['Item']['pullrequest_update'] = explode('T', $payload['pull_request']['updated_at'])[0];
