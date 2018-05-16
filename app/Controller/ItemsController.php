@@ -144,6 +144,7 @@ class ItemsController extends AppController
         curl_close($ch);
         $result = json_decode($response);
         $this->log($response);
+        return $result;
     }
 
     public function send_grace_days_alert()
@@ -246,19 +247,21 @@ class ItemsController extends AppController
                         $message .= "\nプルリクが更新されました\n";
                     }
 
-                    if ($this->Item->save($new_item)) {
-                        $this->log('save from github: successed');
-                    } else {
-                        $this->log('save from github: failed');
-                    }
-
                     $message .= 'by ' . $payload['pull_request']['user']['login'];
                     $message .= '[/info]';
 
                     $room_id = 103474903;
                     $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
-                    $this->send_message_to_chatwork($message, $url);
+                    $message_id = $this->send_message_to_chatwork($message, $url)['message_id'];
+                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid103474903/#!rid{$room_id}-{$message_id}";
+
+                    if ($this->Item->save($new_item)) {
+                        $this->log('save from github: successed');
+                    } else {
+                        $this->log('save from github: failed');
+                    }
+
                 }
             }
         }
