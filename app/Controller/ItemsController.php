@@ -253,7 +253,7 @@ class ItemsController extends AppController
                     $room_id = 103474903;
                     $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
-                    $message_id = $this->send_message_to_chatwork($message, $url)['message_id'];
+                    $message_id = $this->send_message_to_chatwork($message, $url);
                     $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid103474903/#!rid{$room_id}-{$message_id}";
 
                     if ($this->Item->save($new_item)) {
