@@ -291,13 +291,11 @@ $(function(){
 
     $('#header_table tbody.scrollBody').scroll(function()
     {
-        console.log('scroll');
         $('#data_table tbody.scrollBody').scrollTop($('#header_table tbody.scrollBody').scrollTop());
     });
 
     $('#data_table tbody.scrollBody').scroll(function()
     {
-        console.log('scroll');
         $('#header_table tbody.scrollBody').scrollTop($('#data_table tbody.scrollBody').scrollTop());
     });
 
