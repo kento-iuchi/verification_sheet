@@ -76,6 +76,7 @@ $(function(){
         }
     })
 
+    var editStartingTime;
     function createEditForm(editCellId)
     {
         var editCellSelector  = '#' + editCellId;
@@ -86,6 +87,9 @@ $(function(){
         if(!$(editCellSelector).hasClass('editable-cell')){
             return 'uneditable_cell';
         }
+
+        var today = new Date();
+        editStartingTime = Math.floor(today.getTime() / 1000);
 
         initialText = initialText.replace(/<br>|<\/br>/g, '&&NEWLINE&&');
         initialText = initialText.replace(/<.+?>/g, '');
@@ -169,8 +173,45 @@ $(function(){
         return formId;
     }
 
+    function fetchLastUpdatedTime(recordId)
+    {
+        return $.ajax({
+            url: WEBROOT + 'items/fetch_last_updated_time',
+            type: "POST",
+            data: {id : recordId},
+            dataType: "text",
+            async: false,
+        })
+    }
+
     function postToEdit(selectedTd, id, columnName, currentText)
     {
+        var lastUpdatedTime
+        fetchLastUpdatedTime(id).done(function(response){
+            lastUpdatedTime = response;
+        }).fail(function(response){
+            alert('最終編集時間の取得に失敗しました');
+            return;
+        })
+        if (!lastUpdatedTime){
+            finishEdit();
+            return;
+        }
+        if (editStartingTime < lastUpdatedTime){
+            if(confirm('他のユーザーによってレコードが編集されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
+
+                $('body').append('<textarea id="temp-clipboard-field"></textarea>');
+                $('#temp-clipboard-field').val(currentText);
+                $('#temp-clipboard-field').select();
+
+                document.execCommand('copy');
+            }
+            location.reload();
+            finishEdit();
+            return;
+        }
+
+        var editActionUrl = WEBROOT + 'items/edit/';
         currentText = replaceSlashAndColon(currentText);
         currentText = currentText.replace(/\r\n/g, '&&NEWLINE&&');
         currentText = currentText.replace(/\r/g, '&&NEWLINE&&');
@@ -178,7 +219,6 @@ $(function(){
         if(currentText.length == 0){
             currentText = '*EMPTY*';
         }
-        var editActionUrl = WEBROOT + 'items/edit/';
 
         $.ajax({
         url: editActionUrl,

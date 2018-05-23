@@ -67,6 +67,15 @@ class ItemsController extends AppController
         }
     }
 
+    public function fetch_last_updated_time()
+    {
+        $this->autoRender = false;
+        $result = $this->Item->read('last_updated_time', $this->request->data['id']);
+        $last_updated_time = Hash::get($result, 'Item.last_updated_time');
+
+        return $last_updated_time;
+    }
+
     public function toggle_complete_state($id = null)
     {
         $this->autoRender = false;
