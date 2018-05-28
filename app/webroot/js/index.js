@@ -225,6 +225,7 @@ $(function(){
         type: "POST",
         data: { id : id, column_name: columnName, content: currentText },
         dataType: "text",
+        async: false,
         success : function(response){
             //通信成功時
             var textEdited = currentText;
