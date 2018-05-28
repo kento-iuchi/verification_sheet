@@ -13,4 +13,9 @@ class ItemShell extends AppShell
     {
         $this->ItemsController->send_grace_days_alert();
     }
+
+    public function elapsed_days_alert()
+    {
+        $this->ItemsController->elapsed_days_alert();
+    }
 }

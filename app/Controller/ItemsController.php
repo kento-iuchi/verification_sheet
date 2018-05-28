@@ -179,6 +179,36 @@ class ItemsController extends AppController
         $this->send_message_to_chatwork($message, $url);
     }
 
+    public function elapsed_days_alert()
+    {
+        $message = '[info][title]おしらせ[/title]';
+        $today_date = new Datetime(date("y-m-d"));
+        $column_name_text = array(
+            'tech_release_judgement' => '技術リリースOK判断日',
+            'supp_release_judgement' => 'サポートリリースOK判断日',
+            'sale_release_judgement' => '営業リリースOK判断日',
+        );
+        $titles = Hash::extract($this->Item->find('all'), '{n}.Item[is_completed=0].content');
+        foreach ($column_name_text as $column_name=> $column_name_jp) {
+            $target_column = Hash::extract($this->Item->find('all'), "{n}.Item[is_completed=0].{$column_name}");
+            foreach ($target_column as $idx => $value) {
+                $value_date = new Datetime($value);
+                $elapsed_days = $value_date->diff($today_date)->format('%r%a');
+                if($elapsed_days >= 3){
+                    $message .=  '■'. $titles[$idx] . "\n";
+                    $message .=  "　{$column_name_text[$column_name]}から {$elapsed_days} 日経過しています\n";
+                }
+            }
+        }
+
+        $message.= '[/info]';
+
+        $room_id = 103474903;
+        $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
+
+        $this->send_message_to_chatwork($message, $url);
+    }
+
     public function retrieve_github_push()
     {
         $this->autoRender = false;
