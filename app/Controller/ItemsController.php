@@ -56,7 +56,33 @@ class ItemsController extends AppController
         $column_name = $this->request->data['column_name'];
         $content = $this->request->data['content'];
 
+        // 「～～リリースOK判断日」が新たに入力されたときの処理
+        if (in_array(
+                $column_name,
+                array('tech_release_judgement', 'supp_release_judgement', 'sale_release_judgement')
+        )){
+            if ($content !== null){
+                $title = Hash::get($this->Item->read('content', $this->request->data['id']), 'Item.content');
+                $column_name_text = array(
+                    'tech_release_judgement' => '技術リリースOK判断日',
+                    'supp_release_judgement' => 'サポートリリースOK判断日',
+                    'sale_release_judgement' => '営業リリースOK判断日',
+                );
+                $message = '[info][title]'. $title.'[/title]';
+                $message .= $column_name_text[$column_name]. 'が更新されました[/info]';
+
+
+                $room_id = 103474903;
+                $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
+
+                $this->send_message_to_chatwork($message, $url);
+            }
+        }
+
         $this->request->data = $this->Item->read();
+        if ($column_name == 'tech_release_judgement'){
+            $this->request->data['Item']['status'] = 'サポート・営業確認中';
+        }
         $this->request->data['Item'][$column_name] = $content;
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
