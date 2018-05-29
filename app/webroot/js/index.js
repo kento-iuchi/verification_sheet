@@ -197,8 +197,14 @@ $(function(){
             finishEdit();
             return;
         }
-        if (editStartingTime < lastUpdatedTime){
-            if(confirm('他のユーザーによってレコードが編集されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
+        /*
+        最終更新時間　> 編集開始時間の場合、
+        ユーザが編集している最中にレコードが更新されたとみなす。
+        最終更新時間 - 編集開始時間が10000以上という条件にしているのは、１ユーザーが高速で編集セルを切り替えた際に
+        誤反応させないため
+        */
+        if ((lastUpdatedTime - editStartingTime) > 1000){
+            if(confirm('他のユーザーによってレコードが更新されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
 
                 $('body').append('<textarea id="temp-clipboard-field"></textarea>');
                 $('#temp-clipboard-field').val(currentText);
@@ -225,7 +231,6 @@ $(function(){
         type: "POST",
         data: { id : id, column_name: columnName, content: currentText },
         dataType: "text",
-        async: false,
         success : function(response){
             //通信成功時
             var textEdited = currentText;
