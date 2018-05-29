@@ -136,7 +136,8 @@ $(function(){
             $('#'+formId).datepicker('setDate', initialText);
             $('#'+formId).datepicker('show');
         } else if (columnName == "author_id"){
-            var authorNames = $('th.author-column').attr('data-options');
+            var authorNames = $('th.author-column').attr('data-author-options');
+            console.log($('th.author-column').attr('data-author-options'));
             authorNames = JSON.parse(authorNames);
             var form = "<select id = '" + formId + "'>";
             var defaultValue = 1
@@ -150,7 +151,29 @@ $(function(){
             form += '</select>';
             $(editCellSelector).html(form);
             $('#' + formId).val(defaultValue);
-        }  else if (columnName == 'pivotal_point') {
+        } else if (columnName == "verifier_id"){
+            var verifierNames = $('th.author-column').attr('data-verifier-options');
+            verifierNames = JSON.parse(verifierNames);
+            var form = "<select id = '" + formId + "'>";
+            var defaultValue = 1
+            $.each(verifierNames, function(index, name){
+                if(name == initialText){
+                    defaultValue = index;
+                }
+                var option = '<option value="' + (index) + '">' + name + '</option>';
+                form += option
+            });
+            form += '</select>';
+            $(editCellSelector).html(form);
+            $('#' + formId).val(defaultValue);
+        } else if ("verifier_id") {
+            var form = "<select id = '" + formId + "'>"
+                     + '<option value="1">◯</option>'
+                     + '<option value="0">✕</option>'
+                     + "</select>";
+            $(editCellSelector).html(form);
+            $('#' + formId).val(initialText == '◯' ? 1 : 0);
+        } else if (columnName == 'pivotal_point') {
             var form = '<input type="number" id="' + formId + '">';
             $(editCellSelector).html(form);
             $('#' + formId).val(parseInt(initialText, 10));
@@ -263,10 +286,19 @@ $(function(){
                     $(selectedTd).removeClass('high_priority');
                 }
             }
-            if (columnName == "author_id"){
-                var authorNames = $('th.author-column').attr('data-options');
+            if (columnName == "author_id") {
+                var authorNames = $('th.author-column').attr('data-author-options');
                 authorNames = JSON.parse(authorNames);
                 $(selectedTd).html(authorNames[currentText]);
+            }
+            if (columnName == "verifier_id") {
+                var verifierNames = $('th.author-column').attr('data-verifier-options');
+                verifierNames = JSON.parse(verifierNames);
+                $(selectedTd).html(verifierNames[currentText]);
+            }
+            if (columnName == "manual_exists") {
+                var manual_exists_char = currentText == 1 ? '◯' : '✕';
+                $(selectedTd).html(manual_exists_char);
             }
             synchronizeTwoTablesHeight();
             updateStyles(id);
@@ -483,7 +515,7 @@ $(function(){
     var verifier_list = ['A', 'B', 'C'];
     function createAddVerifivationHistoryForm(cell_id)
     {
-        var options = $('th.verification-history-column').attr('data-options');
+        var options = $('th.verification-history-column').attr('data-verifier-options');
         options = JSON.parse(options);
         var item_id = cell_id.split('-')[0];
         var name_selector =  '<br><select id = "' + item_id + '-name-selector">';

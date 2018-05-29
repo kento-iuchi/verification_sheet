@@ -148,10 +148,15 @@ foreach($author as $author_array){
                 サポートリリース<br>OK判断日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
-            <th class="author-column">
+            <th class="author-column" data-verifier-options='<?php echo json_encode($verifier_names)?>' data-author-options='<?php echo json_encode($author_names)?>'>
                 検証担当者</br>
-                <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
-                <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
+                <button class="sort_button"><?php echo $this->Paginator->sort('verifier_id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('verifier_id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
+            <th class="priority-column">
+                手順書有無</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('manual_exists', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('manual_exists', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            </th>
             <th class="date-column">
                 営業リリース<br>OK判断日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('sale_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
@@ -175,7 +180,7 @@ foreach($author as $author_array){
             <th class="comment-column">
                 確認ポイント
             </th>
-            <th class="verification-history-column" data-options='<?php echo json_encode($verifier_names)?>'>
+            <th class="verification-history-column">
                 検証履歴
             </th>
             <th class="comment-column">
@@ -184,7 +189,7 @@ foreach($author as $author_array){
             <th class="comment-column">
                 確認コメント対応
             </th>
-            <th class="author-column" data-options='<?php echo json_encode($author_names)?>'>
+            <th class="author-column">
                 作成者
             </th>
             <th class="point-column">
@@ -241,7 +246,10 @@ foreach($author as $author_array){
                 <span class="record_text"><?php echo $item['Item']['supp_release_judgement']; ?></span>
             </td>
             <td class = "record editable-cell author-column" id="<?php echo $item['Item']['id'] . "-verifier_id";?>">
-                <span class="record_text"><?php echo $item['Item']['verifier_id']; ?></span>
+                <span class="record_text"><?php echo $verifier_names[$item['Item']['verifier_id']]; ?></span>
+            </td>
+            <td class = "record editable-cell priority-column" id="<?php echo $item['Item']['id'] . "-manual_exists";?>">
+                <span class="record_text"><?php echo $item['Item']['manual_exists'] == 1 ? '◯' : '✕'; ?></span>
             </td>
             <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['sale_release_judgement']; ?></span>
@@ -318,6 +326,7 @@ foreach($author as $author_array){
             <td class="date-column"><!-- 技術リリースOK判断日 --></td>
             <td class="date-column"><!-- サポートリリースOK判断日 --></td>
             <td class="author-column">
+            <td class="priority-column"><!-- 手順書有無 --></td>
             <td class="date-column"><!-- 営業リリースOK判断日 --></td>
             <td class="day_count-column"><!-- 経過日数 --></td>
             <td class="date-column"><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>

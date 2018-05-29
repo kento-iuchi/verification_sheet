@@ -52,7 +52,7 @@ table th,td {
 
 #data_table {
     max-height: 120%;
-    width: 3400px;
+    width: 3500px;
     word-wrap: break-word;
     table-layout: fixed;
 }
