@@ -52,7 +52,7 @@ table th,td {
 
 #data_table {
     max-height: 120%;
-    width: 3200px;
+    width: 3400px;
     word-wrap: break-word;
     table-layout: fixed;
 }
@@ -130,7 +130,7 @@ tr.table_titles {
 }
 
 .division-column {
-    width: 80px;
+    width: 90px;
 }
 
 .url-column {

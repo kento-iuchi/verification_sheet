@@ -148,6 +148,10 @@ foreach($author as $author_array){
                 サポートリリース<br>OK判断日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
+            <th class="author-column">
+                検証担当者</br>
+                <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+                <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
             <th class="date-column">
                 営業リリース<br>OK判断日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('sale_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
@@ -236,6 +240,9 @@ foreach($author as $author_array){
             <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['supp_release_judgement']; ?></span>
             </td>
+            <td class = "record editable-cell author-column" id="<?php echo $item['Item']['id'] . "-verifier_id";?>">
+                <span class="record_text"><?php echo $item['Item']['verifier_id']; ?></span>
+            </td>
             <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['sale_release_judgement']; ?></span>
             </td>
@@ -293,7 +300,7 @@ foreach($author as $author_array){
 
         <tr class="input_part">
             <td class="category-column"><?php echo $this->Form->input('category', array('label' => false));?></td>
-            <td><?php echo $this->Form->input('division', array(
+            <td class="division-column"><?php echo $this->Form->input('division', array(
                     'label' => false,
                     'options' => array(
                         '改善' => '改善',
@@ -310,6 +317,7 @@ foreach($author as $author_array){
             <td class="date-column"><!-- プルリク更新日 --></td>
             <td class="date-column"><!-- 技術リリースOK判断日 --></td>
             <td class="date-column"><!-- サポートリリースOK判断日 --></td>
+            <td class="author-column">
             <td class="date-column"><!-- 営業リリースOK判断日 --></td>
             <td class="day_count-column"><!-- 経過日数 --></td>
             <td class="date-column"><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
