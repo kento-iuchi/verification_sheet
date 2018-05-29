@@ -40,9 +40,9 @@ foreach($author as $author_array){
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
         <th class="content-column">内容</th>
-        <th class="priority-column">確認優先度<br>
-            <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
-            <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+        <th class="date-column">必須リリース日<br>
+            <button class="sort_button"><?php echo $this->Paginator->sort('due_date_for_release', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+            <button class="sort_button"><?php echo $this->Paginator->sort('due_date_for_release', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
         <th class="status-column">ステータス</br>
             <button class="sort_button"><?php echo $this->Paginator->sort('status', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
@@ -65,10 +65,8 @@ foreach($author as $author_array){
         <td class="record content-column editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>">
             <span class="record_text editable-cell"><?php echo $item['Item']['content']; ?></span>
         </td>
-        <td class = "record priority-column <?php if($item['Item']['confirm_priority'] == 3){ echo "high_priority";} ?> editable-cell" id="<?php echo $item['Item']['id'] . '-confirm_priority';?>">
-            <?php
-                $confirm_priority_array = array('不要', '低', '中', '高');
-                echo $confirm_priority_array[$item['Item']['confirm_priority']]; ?>
+        <td class = "record date-column editable-cell" id="<?php echo $item['Item']['id'] . '-due_date_for_release';?>">
+            <?php echo $item['Item']['due_date_for_release']; ?>
         </td>
         <td class = "record status-column editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
@@ -84,11 +82,7 @@ foreach($author as $author_array){
     <tr class="input_part">
         <td class="id-column"></td>
         <td class="content-column"><?php echo $this->Form->input('content', array('label' => false));?></td>
-        <td class="priority-column"><?php echo $this->Form->input('confirm_priority',array(
-              'label' => false,
-              'options' => array('不要', '低', '中', '高')
-          ));
-        ?></td>
+        <td class="date-column"><?php echo $this->Datepicker->datepicker('due_date_for_release', array('type' => 'text', 'label' => false));?></td>
         <td class="status-column">
             <?php echo $this->Form->input('status',array(
                   'label' => false,

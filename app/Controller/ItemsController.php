@@ -278,7 +278,7 @@ class ItemsController extends AppController
                                 'verification_enviroment_url' => '',
                                 'pullrequest_id' => $pullrequest_id,
                                 'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
-                                'confirm_priority' => 1,
+                                'due_date_for_release' => 1,
                                 'scheduled_release_date' => '2099-12-31',
                                 'confirm_comment' => $payload['pull_request']['body'],
                                 'author_id' => $author_id,

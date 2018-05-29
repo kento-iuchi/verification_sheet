@@ -110,8 +110,8 @@ echo $this->Html->link(
         </th>
         <th class="content_row">内容</th>
         <th class="priority-row">確認優先度
-            <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
-            <button class="sort_button"><?php echo $this->Paginator->sort('confirm_priority', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
+            <button class="sort_button"><?php echo $this->Paginator->sort('due_date_for_release', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
+            <button class="sort_button"><?php echo $this->Paginator->sort('due_date_for_release', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
         <th>ステータス</br>
             <button class="sort_button"><?php echo $this->Paginator->sort('status', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
@@ -128,8 +128,8 @@ echo $this->Html->link(
         </td>
         <td class = "record priority-row">
             <?php
-                $confirm_priority_array = array('不要', '低', '中', '高');
-                echo $confirm_priority_array[$item['Item']['confirm_priority']]; ?>
+                $due_date_for_release_array = array('不要', '低', '中', '高');
+                echo $due_date_for_release_array[$item['Item']['due_date_for_release']]; ?>
         </td>
         <td class = "record">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
