@@ -9,15 +9,14 @@ class ItemsController extends AppController
     public $helpers = array('Html', 'Form', 'Flash', 'Js', 'DatePicker');
 
     public $paginate =  array(
-        'limit'      => 15,
-        'sort'       => 'id',
+        'limit' => 15,
+        'order' => array('Item.modified' => 'desc'),
     );
 
     public $components = array(
         'Search.Prg' => array(
             'commonProcess' => array(
                 'paramType' => 'querystring',
-                // 'filterEmpty' =>  true,
             ),
         ),
     );
@@ -178,7 +177,7 @@ class ItemsController extends AppController
         $response = curl_exec($ch);
         curl_close($ch);
         $this->log($response);
-        return $response;
+        return json_decode($response)['message_id'];
     }
 
     public function send_grace_days_alert()
