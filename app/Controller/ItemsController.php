@@ -177,7 +177,7 @@ class ItemsController extends AppController
         $response = curl_exec($ch);
         curl_close($ch);
         $this->log($response);
-        return json_decode($response)['message_id'];
+        return json_decode($response)->message_id;
     }
 
     public function send_grace_days_alert()
