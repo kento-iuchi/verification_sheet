@@ -265,6 +265,8 @@ class ItemsController extends AppController
 
                     $pullrequest_id = $payload['pull_request']['id'];
 
+                    $due_date_for_release = date('Y-m-t', strtotime(date('+1 month'));
+
                     if ($payload['action'] == 'opened') {
                         $this->Item->create();
                         $new_item = array(
@@ -278,7 +280,7 @@ class ItemsController extends AppController
                                 'verification_enviroment_url' => '',
                                 'pullrequest_id' => $pullrequest_id,
                                 'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
-                                'due_date_for_release' => 1,
+                                'due_date_for_release' => $due_date_for_release,
                                 'scheduled_release_date' => '2099-12-31',
                                 'confirm_comment' => $payload['pull_request']['body'],
                                 'author_id' => $author_id,

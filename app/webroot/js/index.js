@@ -260,13 +260,13 @@ $(function(){
             }
 
             $(selectedTd).html('<span class="record_text">' + textEdited + '</span>');
-            if (columnName == 'pullrequest_update' || columnName == 'scheduled_release_date'){
+            if (columnName == 'pullrequest_update' || columnName == 'due_date_for_release'){
                 var pullrequestDate = new Date($('#' + id + '-pullrequest_update').text());
-                var scheduledReleaseDate = new Date($('#' + id + '-scheduled_release_date').text());
+                var dueDateForRelease = new Date($('#' + id + '-due_date_for_release').text());
                 var todayDate = new Date();
 
                 $('#' + id + '-elapsed').text(Math.round((todayDate - pullrequestDate)/86400000));
-                $('#' + id + '-grace_days_of_verification_complete').text(Math.round((scheduledReleaseDate - todayDate)/86400000));
+                $('#' + id + '-grace_days_of_verification_complete').text(Math.round((dueDateForRelease - todayDate)/86400000));
             }
             if (columnName == 'due_date_for_release') {
                 var priority = ['不要', '低', '中', '高'];
