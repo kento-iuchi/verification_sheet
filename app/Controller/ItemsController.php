@@ -265,7 +265,7 @@ class ItemsController extends AppController
 
                     $pullrequest_id = $payload['pull_request']['id'];
 
-                    $due_date_for_release = date('Y-m-t', strtotime(date('+1 month'));
+                    $due_date_for_release = date('Y-m-t', strtotime(date('+1 month')));
 
                     if ($payload['action'] == 'opened') {
                         $this->Item->create();
