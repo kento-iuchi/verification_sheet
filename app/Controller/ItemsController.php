@@ -74,7 +74,7 @@ class ItemsController extends AppController
                 $room_id = 103474903;
                 $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
-                $this->send_message_to_chatwork($message, $url);
+                $this->send_message_to_chatwork($message);
             }
         }
 
@@ -155,8 +155,9 @@ class ItemsController extends AppController
         }
     }
 
-    public function send_message_to_chatwork($message, $url)
+    public function send_message_to_chatwork($message, $room_id = 103474093)
     {
+        $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API UR
         $api_key = "20c9d2043b146718a2ba9352179bc10e";
 
         $params = array(
@@ -200,7 +201,7 @@ class ItemsController extends AppController
         $room_id = 103474903;
         $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
-        $this->send_message_to_chatwork($message, $url);
+        $this->send_message_to_chatwork($message);
     }
 
     public function elapsed_days_alert()
@@ -230,7 +231,7 @@ class ItemsController extends AppController
         $room_id = 103474903;
         $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
-        $this->send_message_to_chatwork($message, $url);
+        $this->send_message_to_chatwork($message);
     }
 
     public function retrieve_github_push()
@@ -245,6 +246,16 @@ class ItemsController extends AppController
         if ($this->request->is('post')) {
             if($key == $GITHUB_WEBHOOK_KEY){
 
+                if ($payload['mergeable_state'] == 'dirty'){
+                    $unmergeable_message = $payload['pull_request']['title']. "\n";
+                    $unmergeable_message .= 'マージできません';
+                    $message_id = $this->send_message_to_chatwork($message);
+                }
+                if ($payload['mergeable_state'] == 'clean'){
+                    $mergeable_message = $payload['pull_request']['title']. "\n";
+                    $mergeable_message .= 'マージできます（テスト用メッセージ）';
+                    $message_id = $this->send_message_to_chatwork($message);
+                }
                 if ($payload['action'] == 'opened' ||
                     $payload['action'] == 'synchronize')
                    {
@@ -318,7 +329,7 @@ class ItemsController extends AppController
                     $room_id = 103474903;
                     $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
-                    $message_id = $this->send_message_to_chatwork($message, $url);
+                    $message_id = $this->send_message_to_chatwork($message);
                     $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid103474903/#!rid{$room_id}-{$message_id}";
 
                     if ($this->Item->save($new_item)) {
