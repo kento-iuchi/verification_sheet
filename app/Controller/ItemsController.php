@@ -248,21 +248,8 @@ class ItemsController extends AppController
             if($key == $GITHUB_WEBHOOK_KEY){
 
                 $pullrequest_id = $payload['pull_request']['id'];
+                $this->alert_mergeable($payload['pull_request']['number']);
 
-                // if ($payload['pull_request']['mergeable_state'] == 'dirty'){
-                //     $this->log('dirty');
-                //     $unmergeable_message = '[info][title]'. $payload['pull_request']['title']. "[/title]";
-                //     $unmergeable_message .= ':(マージできません'. '[/info]';
-                //     $message_id = $this->send_message_to_chatwork($unmergeable_message);
-                // }
-                // if ($payload['pull_request']['mergeable_state'] == 'clean'){
-                //     $this->log('clean');
-                //     $mergeable_message = '[info][title]'. $payload['pull_request']['title']. "[/title]";
-                //     $mergeable_message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
-                //     $message_id = $this->send_message_to_chatwork($mergeable_message);
-                // }
-                $this->alert_mergeable($pullrequest_id);
-                
                 if ($payload['action'] == 'opened' ||
                     $payload['action'] == 'synchronize')
                    {
@@ -346,16 +333,22 @@ class ItemsController extends AppController
         }
     }
 
-    public function alert_mergeable($pullrequest_id) {
-        sleep(1000);
+    public function alert_mergeable($pullrequest_number)
+    {
+        sleep(10);// チェックが終わるまで適当に待つ
         include(CONFIG. 'github_api_token.php');
 
-        $url = $PR_LIST_URL. '/'. $pullrequest_id. '?access_token='. $GITHUB_API_TOKEN;
-        $data = json_decode(exec("curl {$url}"));
-        $title = $data['title'];
-        $mergeable = $data['mergeable'];
+        $url = $PR_LIST_URL. $pullrequest_number. '?access_token='. $GITHUB_API_TOKEN;
 
-        if ($mergeable == true) {
+        $result = shell_exec("curl {$url}");
+        echo $result;
+        echo $result->title, $result->mergeable;
+
+        $this->log($data);
+        $title = $result->title;
+        $mergeable = $result->mergeable;
+
+        if ($mergeable) {
             $message = "[info][title]{$title}[/title]";
             $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
             $this->send_message_to_chatwork($message);
