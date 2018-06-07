@@ -157,7 +157,6 @@ class ItemsController extends AppController
 
     public function send_message_to_chatwork($message, $room_id = 103474903)
     {
-        $this->autoRender = false;
         $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API UR
         $api_key = "20c9d2043b146718a2ba9352179bc10e";
 
@@ -237,6 +236,7 @@ class ItemsController extends AppController
 
     public function retrieve_github_push()
     {
+        $this->autoRender = false;
 
         include(__DIR__.'/../Config/webhook_key.php');
 
