@@ -249,12 +249,12 @@ class ItemsController extends AppController
                 if ($payload['mergeable_state'] == 'dirty'){
                     $unmergeable_message = $payload['pull_request']['title']. "\n";
                     $unmergeable_message .= 'マージできません';
-                    $message_id = $this->send_message_to_chatwork($message);
+                    $message_id = $this->send_message_to_chatwork($unmergeable_message);
                 }
                 if ($payload['mergeable_state'] == 'clean'){
                     $mergeable_message = $payload['pull_request']['title']. "\n";
                     $mergeable_message .= 'マージできます（テスト用メッセージ）';
-                    $message_id = $this->send_message_to_chatwork($message);
+                    $message_id = $this->send_message_to_chatwork($mergeable_message);
                 }
                 if ($payload['action'] == 'opened' ||
                     $payload['action'] == 'synchronize')
