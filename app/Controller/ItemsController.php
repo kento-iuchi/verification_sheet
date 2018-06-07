@@ -344,14 +344,16 @@ class ItemsController extends AppController
 
         $result = shell_exec("curl {$url}");
         $result = json_decode($result);
-        echo gettype($result);
-        echo $result->title, $result->mergeable;
 
         $title = $result->title;
         $mergeable = $result->mergeable;
+        $url = $result->html_url;
+        $author_github_name = $result->user->login;
+
+        echo $title, $mergeable, $url, $author_github_name;
 
         //クロージャとか使ってすっきり書きたい
-        $message = "[info][title]{$title}[/title]";
+        $message = "[info][title]{$title}[/title]{$url}\n";
         if ($mergeable) {
             $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
             $this->send_message_to_chatwork($message);
@@ -361,7 +363,6 @@ class ItemsController extends AppController
         } else { // nulllの場合　一度APIを叩くと$mergeableが確定していることがあるので(closedでなければ確実？)、１回だけリトライする
             sleep(3);
             $result = json_decode(shell_exec("curl {$url}"));
-            $title = $result->title;
             $mergeable = $result->mergeable;
             if ($mergeable) {
                 $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
