@@ -344,7 +344,6 @@ class ItemsController extends AppController
 
         $result = shell_exec("curl {$url}");
         $result = json_decode($result);
-        print_r(json_decode($result));
         echo gettype($result);
         echo $result->title, $result->mergeable;
 
@@ -354,11 +353,11 @@ class ItemsController extends AppController
         if ($mergeable) {
             $message = "[info][title]{$title}[/title]";
             $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
-            // $this->send_message_to_chatwork($message);
+            $this->send_message_to_chatwork($message);
         } else {
             $message = "[info][title]{$title}[/title]";
             $message .= ':()マージできません'. '[/info]';
-            // $this->send_message_to_chatwork($message);
+            $this->send_message_to_chatwork($message);
         }
     }
 
