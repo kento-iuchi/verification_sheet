@@ -350,10 +350,20 @@ class ItemsController extends AppController
         $url = $result->html_url;
         $author_github_name = $result->user->login;
 
-        echo $title, $mergeable, $url, $author_github_name;
+        $this->loadModel('Author');
+        $authors = $this->Author->find('all');
+        foreach ($authors as $data_id => $author_info) {
+            if ($author_info['Author']['github_account_name'] == $author_github_name) {
+                $author_chatwork_id = $author_info['Author']['chatwork_id'];
+                break;
+            }
+        }
+
+
+        echo $title, $mergeable, $url, $author_chatwork_id;
 
         //クロージャとか使ってすっきり書きたい
-        $message = "[info][title]{$title}[/title]{$url}\n";
+        $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]{$url}\n";
         if ($mergeable) {
             $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
             $this->send_message_to_chatwork($message);
