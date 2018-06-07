@@ -237,7 +237,6 @@ class ItemsController extends AppController
 
     public function retrieve_github_push()
     {
-        $this->autoRender = false;
 
         include(__DIR__.'/../Config/webhook_key.php');
 
@@ -248,11 +247,13 @@ class ItemsController extends AppController
             if($key == $GITHUB_WEBHOOK_KEY){
 
                 if ($payload['mergeable_state'] == 'dirty'){
+                    $this->log('dirty');
                     $unmergeable_message = $payload['pull_request']['title']. "\n";
                     $unmergeable_message .= 'マージできません';
                     $message_id = $this->send_message_to_chatwork($unmergeable_message);
                 }
                 if ($payload['mergeable_state'] == 'clean'){
+                    $this->log('clean');
                     $mergeable_message = $payload['pull_request']['title']. "\n";
                     $mergeable_message .= 'マージできます（テスト用メッセージ）';
                     $message_id = $this->send_message_to_chatwork($mergeable_message);
