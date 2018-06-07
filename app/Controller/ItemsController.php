@@ -350,14 +350,26 @@ class ItemsController extends AppController
         $title = $result->title;
         $mergeable = $result->mergeable;
 
+        //クロージャとか使ってすっきり書きたい
+        $message = "[info][title]{$title}[/title]";
         if ($mergeable) {
-            $message = "[info][title]{$title}[/title]";
             $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
             $this->send_message_to_chatwork($message);
         } else if ($mergeable === false) {
-            $message = "[info][title]{$title}[/title]";
             $message .= ':(マージできません'. '[/info]';
             $this->send_message_to_chatwork($message);
+        } else { // nulllの場合　一度APIを叩くと$mergeableが確定していることがあるので(closedでなければ確実？)、１回だけリトライする
+            sleep(3);
+            $result = json_decode(shell_exec("curl {$url}"));
+            $title = $result->title;
+            $mergeable = $result->mergeable;
+            if ($mergeable) {
+                $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
+                $this->send_message_to_chatwork($message);
+            } else if ($mergeable === false) {
+                $message .= ':(マージできません'. '[/info]';
+                $this->send_message_to_chatwork($message);
+            }
         }
     }
 
