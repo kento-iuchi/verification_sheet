@@ -335,27 +335,29 @@ class ItemsController extends AppController
 
     public function alert_mergeable($pullrequest_number)
     {
-        sleep(10);// チェックが終わるまで適当に待つ
+        $this->autoRender = false;
+
+        sleep(1);// チェックが終わるまで適当に待つ
         include(CONFIG. 'github_api_token.php');
 
         $url = $PR_LIST_URL. $pullrequest_number. '?access_token='. $GITHUB_API_TOKEN;
 
         $result = shell_exec("curl {$url}");
         echo $result;
+        echo gettype($result);
         echo $result->title, $result->mergeable;
 
-        $this->log($data);
         $title = $result->title;
         $mergeable = $result->mergeable;
 
         if ($mergeable) {
             $message = "[info][title]{$title}[/title]";
             $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
-            $this->send_message_to_chatwork($message);
+            // $this->send_message_to_chatwork($message);
         } else {
             $message = "[info][title]{$title}[/title]";
             $message .= ':()マージできません'. '[/info]';
-            $this->send_message_to_chatwork($message);
+            // $this->send_message_to_chatwork($message);
         }
     }
 
