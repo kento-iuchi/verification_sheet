@@ -33,7 +33,7 @@ class AppSchema extends CakeSchema {
 		'status' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'tech_release_judgement' => array('type' => 'date', 'null' => true, 'default' => null),
 		'supp_release_judgement' => array('type' => 'date', 'null' => true, 'default' => null),
-		'verifier_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
+		'verifier_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'manual_exists' => array('type' => 'boolean', 'null' => true, 'default' => '0'),
 		'sale_release_judgement' => array('type' => 'date', 'null' => true, 'default' => null),
 		'elapsed' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
