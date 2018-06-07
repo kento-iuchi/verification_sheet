@@ -343,7 +343,8 @@ class ItemsController extends AppController
         $url = $PR_LIST_URL. $pullrequest_number. '?access_token='. $GITHUB_API_TOKEN;
 
         $result = shell_exec("curl {$url}");
-        echo $result;
+        $result = json_decode($result);
+        print_r(json_decode($result));
         echo gettype($result);
         echo $result->title, $result->mergeable;
 
