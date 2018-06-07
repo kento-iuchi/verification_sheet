@@ -337,7 +337,7 @@ class ItemsController extends AppController
     {
         $this->autoRender = false;
 
-        sleep(1);// チェックが終わるまで適当に待つ
+        sleep(3);// チェックが終わるまで適当に待つ
         include(CONFIG. 'github_api_token.php');
 
         $url = $PR_LIST_URL. $pullrequest_number. '?access_token='. $GITHUB_API_TOKEN;
@@ -354,9 +354,9 @@ class ItemsController extends AppController
             $message = "[info][title]{$title}[/title]";
             $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
             $this->send_message_to_chatwork($message);
-        } else {
+        } else if ($mergeable === false) {
             $message = "[info][title]{$title}[/title]";
-            $message .= ':()マージできません'. '[/info]';
+            $message .= ':(マージできません'. '[/info]';
             $this->send_message_to_chatwork($message);
         }
     }
