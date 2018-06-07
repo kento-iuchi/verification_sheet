@@ -247,18 +247,22 @@ class ItemsController extends AppController
         if ($this->request->is('post')) {
             if($key == $GITHUB_WEBHOOK_KEY){
 
-                if ($payload['pull_request']['mergeable_state'] == 'dirty'){
-                    $this->log('dirty');
-                    $unmergeable_message = '[info][title]'. $payload['pull_request']['title']. "[/title]";
-                    $unmergeable_message .= ':(マージできません'. '[/info]';
-                    $message_id = $this->send_message_to_chatwork($unmergeable_message);
-                }
-                if ($payload['pull_request']['mergeable_state'] == 'clean'){
-                    $this->log('clean');
-                    $mergeable_message = '[info][title]'. $payload['pull_request']['title']. "[/title]";
-                    $mergeable_message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
-                    $message_id = $this->send_message_to_chatwork($mergeable_message);
-                }
+                $pullrequest_id = $payload['pull_request']['id'];
+
+                // if ($payload['pull_request']['mergeable_state'] == 'dirty'){
+                //     $this->log('dirty');
+                //     $unmergeable_message = '[info][title]'. $payload['pull_request']['title']. "[/title]";
+                //     $unmergeable_message .= ':(マージできません'. '[/info]';
+                //     $message_id = $this->send_message_to_chatwork($unmergeable_message);
+                // }
+                // if ($payload['pull_request']['mergeable_state'] == 'clean'){
+                //     $this->log('clean');
+                //     $mergeable_message = '[info][title]'. $payload['pull_request']['title']. "[/title]";
+                //     $mergeable_message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
+                //     $message_id = $this->send_message_to_chatwork($mergeable_message);
+                // }
+                $this->alert_mergeable($pullrequest_id);
+                
                 if ($payload['action'] == 'opened' ||
                     $payload['action'] == 'synchronize')
                    {
@@ -276,8 +280,6 @@ class ItemsController extends AppController
                             break;
                         }
                     }
-
-                    $pullrequest_id = $payload['pull_request']['id'];
 
                     $due_date_for_release = date('Y-m-t', strtotime(date('+1 month')));
 
@@ -341,6 +343,26 @@ class ItemsController extends AppController
 
                 }
             }
+        }
+    }
+
+    public function alert_mergeable($pullrequest_id) {
+        sleep(1000);
+        include(CONFIG. 'github_api_token.php');
+
+        $url = $PR_LIST_URL. '/'. $pullrequest_id. '?access_token='. $GITHUB_API_TOKEN;
+        $data = json_decode(exec("curl {$url}"));
+        $title = $data['title'];
+        $mergeable = $data['mergeable'];
+
+        if ($mergeable == true) {
+            $message = "[info][title]{$title}[/title]";
+            $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
+            $this->send_message_to_chatwork($message);
+        } else {
+            $message = "[info][title]{$title}[/title]";
+            $message .= ':()マージできません'. '[/info]';
+            $this->send_message_to_chatwork($message);
         }
     }
 
