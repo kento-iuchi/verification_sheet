@@ -248,14 +248,14 @@ class ItemsController extends AppController
 
                 if ($payload['pull_request']['mergeable_state'] == 'dirty'){
                     $this->log('dirty');
-                    $unmergeable_message = $payload['pull_request']['title']. "\n";
-                    $unmergeable_message .= 'マージできません';
+                    $unmergeable_message = '[info][title]'. $payload['pull_request']['title']. "[/title]";
+                    $unmergeable_message .= ':(マージできません'. '[/info]';
                     $message_id = $this->send_message_to_chatwork($unmergeable_message);
                 }
                 if ($payload['pull_request']['mergeable_state'] == 'clean'){
                     $this->log('clean');
-                    $mergeable_message = $payload['pull_request']['title']. "\n";
-                    $mergeable_message .= 'マージできます（テスト用メッセージ）';
+                    $mergeable_message = '[info][title]'. $payload['pull_request']['title']. "[/title]";
+                    $mergeable_message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
                     $message_id = $this->send_message_to_chatwork($mergeable_message);
                 }
                 if ($payload['action'] == 'opened' ||
