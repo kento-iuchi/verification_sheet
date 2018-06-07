@@ -365,8 +365,8 @@ class ItemsController extends AppController
         //クロージャとか使ってすっきり書きたい
         $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]{$url}\n";
         if ($mergeable) {
-            $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
-            $this->send_message_to_chatwork($message);
+            // $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
+            // $this->send_message_to_chatwork($message);
         } else if ($mergeable === false) {
             $message .= ':(マージできません'. '[/info]';
             $this->send_message_to_chatwork($message);
@@ -375,8 +375,8 @@ class ItemsController extends AppController
             $result = json_decode(shell_exec("curl {$url}"));
             $mergeable = $result->mergeable;
             if ($mergeable) {
-                $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
-                $this->send_message_to_chatwork($message);
+                // $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
+                // $this->send_message_to_chatwork($message);
             } else if ($mergeable === false) {
                 $message .= ':(マージできません'. '[/info]';
                 $this->send_message_to_chatwork($message);
