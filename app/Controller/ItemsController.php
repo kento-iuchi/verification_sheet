@@ -177,7 +177,6 @@ class ItemsController extends AppController
         curl_setopt_array($ch, $options);
         $response = curl_exec($ch);
         curl_close($ch);
-        $this->log($response);
         return json_decode($response)->message_id;
     }
 
@@ -243,6 +242,8 @@ class ItemsController extends AppController
         $payload = json_decode($this->request->data['payload'], true);
         $key = $this->request->query['key'];
 
+        $this->log($payload['action']);
+        $this->log($payload['pull_request']['title']);
         if ($this->request->is('post')) {
             if($key == $GITHUB_WEBHOOK_KEY){
 
@@ -311,8 +312,6 @@ class ItemsController extends AppController
                                 break;
                             }
                         }
-                        $this->log($pullrequest_id);
-                        $this->log($update_item_id);
                         $this->Item->id = $update_item_id;
                         $new_item = $this->Item->read();
                         $new_item['Item']['pullrequest_update'] = explode('T', $payload['pull_request']['updated_at'])[0];
