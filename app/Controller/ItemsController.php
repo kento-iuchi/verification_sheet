@@ -3,6 +3,7 @@ ini_set('display_errors',1);
 
 App::uses('AppController', 'Controller');
 
+include(CONFIG. 'github_api_token.php');
 
 class ItemsController extends AppController
 {
@@ -248,7 +249,6 @@ class ItemsController extends AppController
             if($key == $GITHUB_WEBHOOK_KEY){
 
                 $pullrequest_id = $payload['pull_request']['id'];
-                $this->alert_mergeable($payload['pull_request']['number']);
 
                 if ($payload['action'] == 'opened' ||
                     $payload['action'] == 'synchronize')
@@ -304,12 +304,7 @@ class ItemsController extends AppController
                         $this->Item->id = $update_item_id;
                         $new_item = $this->Item->read();
                         $new_item['Item']['pullrequest_update'] = explode('T', $payload['pull_request']['updated_at'])[0];
-                        // $new_item = array(
-                        //     'Item' => array(
-                        //         'id' => $update_item_id,
-                        //         'pullrequest_update' => explode('T', $payload['pull_request']['updated_at'])[0], // payloadの中身をformatする
-                        //     )
-                        // );
+
                         $message .= "\nプルリクが更新されました\n";
                     }
 
@@ -329,18 +324,36 @@ class ItemsController extends AppController
                     }
 
                 }
+                if($payload['action'] == 'closed'){
+                    check_all_open_pullrequests_mergeability();
+                }
             }
         }
+    }
+
+    public function check_all_open_pullrequests_mergeability()
+    {
+        include(CONFIG. 'github_api_token.php');
+
+        $this->autoRender = false;
+        $url = $PR_LIST_URL. '?access_token='. $GITHUB_API_TOKEN. '&state=open';
+        echo $url;
+        $prs = shell_exec("curl {$url}");
+        $prs = json_decode($prs);
+
+        foreach ($prs as $pr) {
+            $pr_number = $pr->number;
+            $this->alert_mergeable($pr_number);
+        }
+
     }
 
     public function alert_mergeable($pullrequest_number)
     {
         $this->autoRender = false;
-
-        sleep(3);// チェックが終わるまで適当に待つ
         include(CONFIG. 'github_api_token.php');
 
-        $url = $PR_LIST_URL. $pullrequest_number. '?access_token='. $GITHUB_API_TOKEN;
+        $url = $PR_LIST_URL. '/'. $pullrequest_number. '?access_token='. $GITHUB_API_TOKEN;
 
         $result = shell_exec("curl {$url}");
         $result = json_decode($result);
@@ -359,28 +372,24 @@ class ItemsController extends AppController
             }
         }
 
+        echo $title. "<br>";
+        echo $mergeable. "<br>";
+        echo $url. "<br>";
+        echo $author_chatwork_id. "<br>";
 
-        echo $title, $mergeable, $url, $author_chatwork_id;
-
-        //クロージャとか使ってすっきり書きたい
         $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]{$url}\n";
-        if ($mergeable) {
-            // $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
-            // $this->send_message_to_chatwork($message);
-        } else if ($mergeable === false) {
-            $message .= ':(マージできません'. '[/info]';
-            $this->send_message_to_chatwork($message);
-        } else { // nulllの場合　一度APIを叩くと$mergeableが確定していることがあるので(closedでなければ確実？)、１回だけリトライする
-            sleep(3);
-            $result = json_decode(shell_exec("curl {$url}"));
-            $mergeable = $result->mergeable;
+        // 一度APIを叩いた時点では$mergeableがnullの場合があるので、一度だけリトライする
+        for ($i = 0; $i < 2; $i++) {
             if ($mergeable) {
                 // $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
                 // $this->send_message_to_chatwork($message);
+                break;
             } else if ($mergeable === false) {
                 $message .= ':(マージできません'. '[/info]';
                 $this->send_message_to_chatwork($message);
+                break;
             }
+            sleep(2);
         }
     }
 

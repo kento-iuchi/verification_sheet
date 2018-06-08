@@ -112,3 +112,5 @@ CakeLog::config('error', array(
 
 CakePlugin::load('DebugKit');
 CakePlugin::load(array('Migrations', 'TwitterBootstrap', 'Search',));
+
+include(CONFIG. 'github_api_token.php');
