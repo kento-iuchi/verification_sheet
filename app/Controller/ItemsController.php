@@ -325,7 +325,7 @@ class ItemsController extends AppController
 
                 }
                 if($payload['action'] == 'closed'){
-                    check_all_open_pullrequests_mergeability();
+                    $this->check_all_open_pullrequests_mergeability();
                 }
             }
         }
@@ -341,9 +341,17 @@ class ItemsController extends AppController
         $prs = shell_exec("curl {$url}");
         $prs = json_decode($prs);
 
+        $null_pr_numbers = array();
         foreach ($prs as $pr) {
             $pr_number = $pr->number;
-            $this->alert_mergeable($pr_number);
+            if(!$this->alert_mergeable($pr_number)){
+                $null_pr_numbers[] = $pr_number;
+            }
+        }
+        if (!empty($null_pr_numbers)) {
+            foreach ($null_pr_numbers as $pr_number) {
+                $this->alert_mergeable($pr_number);
+            }
         }
 
     }
@@ -379,18 +387,17 @@ class ItemsController extends AppController
 
         $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]{$url}\n";
         // 一度APIを叩いた時点では$mergeableがnullの場合があるので、一度だけリトライする
-        for ($i = 0; $i < 2; $i++) {
-            if ($mergeable) {
-                // $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
-                // $this->send_message_to_chatwork($message);
-                break;
-            } else if ($mergeable === false) {
-                $message .= ':(マージできません'. '[/info]';
-                $this->send_message_to_chatwork($message);
-                break;
-            }
-            sleep(2);
+        if ($mergeable) {
+            // $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
+            // $this->send_message_to_chatwork($message);
+            return true;
+        } else if ($mergeable === false) {
+            $message .= ':(マージできません'. '[/info]';
+            $this->send_message_to_chatwork($message);
+            return true;
+        } else {
+            return false;
         }
-    }
+}
 
 }
