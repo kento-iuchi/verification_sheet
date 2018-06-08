@@ -158,8 +158,9 @@ class ItemsController extends AppController
 
     public function send_message_to_chatwork($message, $room_id = 103474903)
     {
+        include(__DIR__.'/../Config/chatwork_api_token.php');
+
         $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API UR
-        $api_key = "20c9d2043b146718a2ba9352179bc10e";
 
         $params = array(
             'body' => $message // メッセージ内容
@@ -167,7 +168,7 @@ class ItemsController extends AppController
 
         $options = array(
             CURLOPT_URL => $url, // URL
-            CURLOPT_HTTPHEADER => array('X-ChatWorkToken: '. $api_key), // APIキー
+            CURLOPT_HTTPHEADER => array('X-ChatWorkToken: '. $CHATWORK_API_kEY), // APIキー
             CURLOPT_RETURNTRANSFER => true, // 文字列で返却
             CURLOPT_SSL_VERIFYPEER => false, // 証明書の検証をしない
             CURLOPT_POST => true, // POST設定
@@ -348,6 +349,7 @@ class ItemsController extends AppController
                 $null_pr_numbers[] = $pr_number;
             }
         }
+        // 一度APIを叩いた時点では$mergeableがnullの場合があるので、一度だけリトライする
         if (!empty($null_pr_numbers)) {
             foreach ($null_pr_numbers as $pr_number) {
                 $this->alert_mergeable($pr_number);
@@ -386,7 +388,6 @@ class ItemsController extends AppController
         echo $author_chatwork_id. "<br>";
 
         $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]{$url}\n";
-        // 一度APIを叩いた時点では$mergeableがnullの場合があるので、一度だけリトライする
         if ($mergeable) {
             // $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
             // $this->send_message_to_chatwork($message);
