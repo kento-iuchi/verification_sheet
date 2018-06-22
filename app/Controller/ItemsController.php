@@ -245,6 +245,7 @@ class ItemsController extends AppController
         $key = $this->request->query['key'];
 
         $this->log($payload['action']);
+        $this->log($payload);
         $this->log($payload['pull_request']['title']);
         if ($this->request->is('post')) {
             if($key == $GITHUB_WEBHOOK_KEY){
