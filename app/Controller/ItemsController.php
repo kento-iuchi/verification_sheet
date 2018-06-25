@@ -246,7 +246,7 @@ class ItemsController extends AppController
 
         $this->log($payload['action']);
         if ($this->request->is('post') && $key == $GITHUB_WEBHOOK_KEY) {
-            if (isset($payload['pull_request'])){
+            if (array_key_exists('pull_request', $payload)){
                 $this->log($payload['pull_request']['title']);
                 $pullrequest_id = $payload['pull_request']['id'];
 
@@ -329,7 +329,7 @@ class ItemsController extends AppController
                 }
             }
 
-            if (isset($payload['pull_request_review_comment'])) {
+            if (array_key_exists('pull_request_review_comment', $payload)) {
                 $this->log('comment test');
                 $this->log($this->$payload['pull_request_review_comment']['comment']['action']);
                 $this->log($this->$payload['pull_request_review_comment']['comment']['user']['id']);
