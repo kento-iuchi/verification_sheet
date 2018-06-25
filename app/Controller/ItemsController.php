@@ -245,90 +245,98 @@ class ItemsController extends AppController
         $key = $this->request->query['key'];
 
         $this->log($payload['action']);
-        $this->log($payload);
-        $this->log($payload['pull_request']['title']);
         if ($this->request->is('post')) {
-            if($key == $GITHUB_WEBHOOK_KEY){
+            if (isset($this->$payload['pull_request'])){
+                $this->log($payload['pull_request']['title']);
+                if($key == $GITHUB_WEBHOOK_KEY){
 
-                $pullrequest_id = $payload['pull_request']['id'];
+                    $pullrequest_id = $payload['pull_request']['id'];
 
-                if ($payload['action'] == 'opened' ||
-                    $payload['action'] == 'synchronize')
-                   {
+                    if ($payload['action'] == 'opened' ||
+                        $payload['action'] == 'synchronize')
+                       {
 
-                    $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]";
-                    $message .=  $payload['pull_request']['html_url'];
+                        $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]";
+                        $message .=  $payload['pull_request']['html_url'];
 
-                    $author_github_name = $payload['pull_request']['user']['login'];
-                    $this->loadModel('Author');
-                    $authors = $this->Author->find('all');
-                    $author_id = 1;
-                    foreach ($authors as $data_id => $author_info) {
-                        if ($author_info['Author']['github_account_name'] == $author_github_name) {
-                            $author_id = $author_info['Author']['id'];
-                            break;
-                        }
-                    }
-
-                    $due_date_for_release = date('Y-m-t', strtotime(date('+1 month')));
-
-                    if ($payload['action'] == 'opened') {
-                        $this->Item->create();
-                        $new_item = array(
-                            'Item' => array(
-                                'content' => $payload['number'] . $payload['pull_request']['title'],
-                                'github_url' => $payload['pull_request']['html_url'],
-                                'chatwork_url' => '',
-                                'status' => 'コードレビュー中',
-                                'category' => '未設定',
-                                'division' => '改善',
-                                'verification_enviroment_url' => '',
-                                'pullrequest_id' => $pullrequest_id,
-                                'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
-                                'due_date_for_release' => $due_date_for_release,
-                                'scheduled_release_date' => '2099-12-31',
-                                'confirm_comment' => $payload['pull_request']['body'],
-                                'author_id' => $author_id,
-                                'pivotal_point' => 1,
-                            )
-                        );
-                        $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
-                    } else {
-
-                        $items = $this->Item->find('all');
-                        $update_item_id = null;
-                        foreach ($items as $item_info) {
-                            if ($item_info['Item']['pullrequest_id'] == $pullrequest_id){
-                                $update_item_id = $item_info['Item']['id'];
+                        $author_github_name = $payload['pull_request']['user']['login'];
+                        $this->loadModel('Author');
+                        $authors = $this->Author->find('all');
+                        $author_id = 1;
+                        foreach ($authors as $data_id => $author_info) {
+                            if ($author_info['Author']['github_account_name'] == $author_github_name) {
+                                $author_id = $author_info['Author']['id'];
                                 break;
                             }
                         }
-                        $this->Item->id = $update_item_id;
-                        $new_item = $this->Item->read();
-                        $new_item['Item']['pullrequest_update'] = explode('T', $payload['pull_request']['updated_at'])[0];
 
-                        $message .= "\nプルリクが更新されました\n";
+                        $due_date_for_release = date('Y-m-t', strtotime(date('+1 month')));
+
+                        if ($payload['action'] == 'opened') {
+                            $this->Item->create();
+                            $new_item = array(
+                                'Item' => array(
+                                    'content' => $payload['number'] . $payload['pull_request']['title'],
+                                    'github_url' => $payload['pull_request']['html_url'],
+                                    'chatwork_url' => '',
+                                    'status' => 'コードレビュー中',
+                                    'category' => '未設定',
+                                    'division' => '改善',
+                                    'verification_enviroment_url' => '',
+                                    'pullrequest_id' => $pullrequest_id,
+                                    'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
+                                    'due_date_for_release' => $due_date_for_release,
+                                    'scheduled_release_date' => '2099-12-31',
+                                    'confirm_comment' => $payload['pull_request']['body'],
+                                    'author_id' => $author_id,
+                                    'pivotal_point' => 1,
+                                )
+                            );
+                            $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
+                        } else {
+
+                            $items = $this->Item->find('all');
+                            $update_item_id = null;
+                            foreach ($items as $item_info) {
+                                if ($item_info['Item']['pullrequest_id'] == $pullrequest_id){
+                                    $update_item_id = $item_info['Item']['id'];
+                                    break;
+                                }
+                            }
+                            $this->Item->id = $update_item_id;
+                            $new_item = $this->Item->read();
+                            $new_item['Item']['pullrequest_update'] = explode('T', $payload['pull_request']['updated_at'])[0];
+
+                            $message .= "\nプルリクが更新されました\n";
+                        }
+
+                        $message .= 'by ' . $payload['pull_request']['user']['login'];
+                        $message .= '[/info]';
+
+                        $room_id = 103474903;
+                        $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
+
+                        $message_id = $this->send_message_to_chatwork($message);
+                        $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid103474903/#!rid{$room_id}-{$message_id}";
+
+                        if ($this->Item->save($new_item)) {
+                            $this->log('save from github: successed');
+                        } else {
+                            $this->log('save from github: failed');
+                        }
+
                     }
-
-                    $message .= 'by ' . $payload['pull_request']['user']['login'];
-                    $message .= '[/info]';
-
-                    $room_id = 103474903;
-                    $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
-
-                    $message_id = $this->send_message_to_chatwork($message);
-                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid103474903/#!rid{$room_id}-{$message_id}";
-
-                    if ($this->Item->save($new_item)) {
-                        $this->log('save from github: successed');
-                    } else {
-                        $this->log('save from github: failed');
+                    if($payload['action'] == 'closed'){
+                        $this->check_all_open_pullrequests_mergeability();
                     }
+                }
+            }
 
-                }
-                if($payload['action'] == 'closed'){
-                    $this->check_all_open_pullrequests_mergeability();
-                }
+            if (isset($this->$payload['pull_request_review_comment'])) {
+                $this->log('comment test');
+                $this->log($this->$payload['pull_request_review_comment']['comment']['action']);
+                $this->log($this->$payload['pull_request_review_comment']['comment']['user']['id']);
+                $this->log($this->$payload['pull_request_review_comment']['comment']['body']);
             }
         }
     }
