@@ -330,7 +330,7 @@ class ItemsController extends AppController
                 }
             }
 
-            if (array_key_exists('issue', $payload)) {
+            if (array_key_exists('issue', $payload) || array_key_exists('comment', $payload)) {
                 $this->tell_code_review_comment($payload);
             }
         }
@@ -415,7 +415,15 @@ class ItemsController extends AppController
 
         if ($payload['action'] == 'created')
         {
-            $author_github_name = $payload['issue']['user']['login'];
+            if (isset($payload['issue'])) {
+                $url = $payload['issue']['html_url'];
+                $title = $payload['issue']['title'];
+                $author_github_name = $payload['issue']['user']['login'];
+            } else if (isset($payload['comment'])){
+                $url = $payload['pull_request']['html_url'];
+                $title = $payload['pull_request']['title'];
+                $author_github_name = $payload['pull_request']['user']['login'];
+            }
             $this->loadModel('Author');
             $authors = $this->Author->find('all');
             foreach ($authors as $data_id => $author_info) {
@@ -424,9 +432,7 @@ class ItemsController extends AppController
                     break;
                 }
             }
-            $url = $payload['issue']['html_url'];
-            $title = $payload['issue']['title'];
-            $message = "[To:{$author_chatwork_id}]\n\nレビューコメントが投稿されています。\n"
+            $message = "[To:{$author_chatwork_id}]\nレビューコメントが投稿されました\n"
                         . "{$title}\n"
                         . "{$url}\n";
 
