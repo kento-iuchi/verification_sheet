@@ -244,15 +244,10 @@ class ItemsController extends AppController
         $payload = json_decode($this->request->data['payload'], true);
         $key = $this->request->query['key'];
 
-        $this->log($payload['action']);
-        $this->log($payload);
-        $this->log(gettype($payload));
-        $this->log(array_key_exists('issue', $payload));
-        $this->log(isset($payload['issue']));
-        $this->log(array_key_exists('pull_request', $payload));
-        $this->log(isset($payload['pull_request']));
         if ($this->request->is('post') && $key == $GITHUB_WEBHOOK_KEY) {
             if (array_key_exists('pull_request', $payload)){
+                $this->log($payload['######## pull_request ########']);
+                $this->log($payload['action']);
                 $this->log($payload['pull_request']['title']);
                 $pullrequest_id = $payload['pull_request']['id'];
 
@@ -336,10 +331,10 @@ class ItemsController extends AppController
             }
 
             if (array_key_exists('issue', $payload)) {
-                $this->log('comment test');
-                $this->log($this->$payload['pull_request_review_comment']['comment']['action']);
-                $this->log($this->$payload['pull_request_review_comment']['comment']['user']['id']);
-                $this->log($this->$payload['pull_request_review_comment']['comment']['body']);
+                $this->log('######## issue_comment ########');
+                $this->log($this->$payload['issue']['comment']['action']);
+                $this->log($this->$payload['issue']['comment']['user']['id']);
+                $this->log($this->$payload['issue']['comment']['body']);
             }
         }
     }
