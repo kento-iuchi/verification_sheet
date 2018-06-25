@@ -432,7 +432,7 @@ class ItemsController extends AppController
                     break;
                 }
             }
-            $message = "[To:{$author_chatwork_id}]\nレビューコメントが投稿されました\n"
+            $message = "[To:{$author_chatwork_id}]\nレビューコメントが投稿されました\n\n"
                         . "{$title}\n"
                         . "{$url}\n";
 
