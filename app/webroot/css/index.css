@@ -96,6 +96,21 @@ tr.table_titles {
     background-color: #838b0d;
 }
 
+table.completed-item tr:nth-child(odd) {
+    background: #E0E6F8;
+}
+
+table.completed-item tr:nth-child(even) {
+    background: #EFF2FB;
+}
+
+table.completed-item tr.table_titles {
+    height: 75px;
+    font-size: 16px;
+    color: white;
+    background-color: #2E9AFE;
+}
+
 .sort_button {
     width: 16px;
     height: 16px;

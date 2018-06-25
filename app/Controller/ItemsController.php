@@ -23,14 +23,31 @@ class ItemsController extends AppController
     );
     public $presetVars = true;
 
-    public function index()
+    public function index($completed_mode_flag = 0)
     {
+        $conditions = array(
+            'is_completed' => $completed_mode_flag,
+        );
+
+        $query_data = array(
+            'from_created' => '',
+            'to_created' => '',
+            'from_merge_finish_date_to_master' => '',
+            'to_merge_finish_date_to_master' => '',
+        );
+        if(!empty($this->request->query)){
+            $query_data = $this->request->query['data'];
+            $conditions = array_merge($conditions, $this->Item->parseCriteria($query_data));
+        }
+        $this->set('query', $query_data);
+
         $this->header("Content-type: text/html; charset=utf-8");
         $this->layout = 'IndexLayout';
         $this->loadModel('VerificationHistory');
         $this->loadModel('Verifier');
         $this->loadModel('Author');
-        $this->set('items', $this->paginate('Item', array('is_completed' => 0)));
+        $this->set('items', $this->paginate('Item', $conditions));
+        $this->set('completed_mode_flag', $completed_mode_flag);
         $this->set('verifier', $this->Verifier->find('all'));
         $this->set('author', $this->Author->find('all'));
     }

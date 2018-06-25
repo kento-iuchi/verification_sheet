@@ -20,18 +20,97 @@ foreach($author as $author_array){
 }
 ?>
 
-<?php echo $this->Html->script('index.js');?>
+<?php
+echo $this->Html->script('index_common.js');
+if (!$completed_mode_flag) {
+    echo $this->Html->script('index.js');
+}
+?>
 <?php echo $this->Html->css('index.css');?>
-<?php echo $this->Form->create('Item', array('url' => 'add'));?>
 
-<?php echo $this->Html->link(
-    '完了済みの項目を表示',
-    '/items/show_completed',
-    array('class' => 'button',)
-);?>
+<?php
+if (!$completed_mode_flag) {
+    echo $this->Html->link('完了済みの項目を表示', '/items/index/1', array('class' => 'button',));
+} else {
+    echo $this->Html->link('未完了の項目を表示', '/items/index/0', array('class' => 'button',));
+}
+?>
+<div id="search-form">
+    <?php
+        echo $this->form->create('Item', array(
+            'url' => '/items/index/' . $completed_mode_flag,
+            'type'  => 'GET',
+        ));
+    ?>
+    <table <?php echo $completed_mode_flag ? 'class="completed-item"' : ''?>>
+        <tr>
+            <td>
+                <label>作成日</label>
+            </td>
+            <td>
+                    <?php echo $this->Datepicker->datepicker(
+                        'from_created',
+                        array(
+                            'div' => false,
+                            'label' => false,
+                            'default' => $query['from_created'],
+                            'class' => 'search-input',
+                            )
+                        );
+                    ?>
+            </td>
+            <td>
+                    <?php echo $this->Datepicker->datepicker(
+                        'to_created',
+                        array(
+                            'div' => false,
+                            'label' => false,
+                            'default' => $query['to_created'],
+                            'class' => 'search-input',
+                            )
+                        );
+                    ?>
+            </td>
+            <td>
+                <label>masterマージ完了日</label>
+            </td>
+            <td>
+                    <?php echo $this->Datepicker->datepicker(
+                        'from_merge_finish_date_to_master',
+                        array(
+                            'div' => false,
+                            'label' => false,
+                            'default' => $query['from_merge_finish_date_to_master'],
+                            'class' => 'search-input',
+                            )
+                        );
+                    ?>
+            </td>
+            <td>
+                    <?php echo $this->Datepicker->datepicker(
+                        'to_merge_finish_date_to_master',
+                        array(
+                            'div' => false,
+                            'label' => false,
+                            'default' => $query['to_merge_finish_date_to_master'],
+                            'class' => 'search-input',
+                            )
+                        );
+                    ?>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?php echo $this->form->submit('検索', array('name' => 'search_condition'))?>
+            </td>
+        </tr>
+    </table>
+    <?php echo $this->form->end();?>
+</div>
+<?php echo $this->Form->create('Item', array('url' => 'add'));?>
 <div id="view_part">
 <div>
-<table id="header_table">
+<table id="header_table" <?php echo $completed_mode_flag ? 'class="completed-item"' : ''?> >
     <thead class="scrollHead">
     <tr class="table_titles">
         <th class="id-column">
@@ -79,9 +158,10 @@ foreach($author as $author_array){
         </td>
     </tr>
     <?php endforeach; ?>
+    <?php if(!$completed_mode_flag):?>
     <tr class="input_part">
         <td class="id-column"></td>
-        <td class="content-column"><?php echo $this->Form->input('content', array('label' => false));?></td>
+        <td class="content-column"><?php echo $this->Form->input('content', array('label' => false,));?></td>
         <td class="date-column"><?php echo $this->Datepicker->datepicker('due_date_for_release', array('type' => 'text', 'label' => false));?></td>
         <td class="status-column">
             <?php echo $this->Form->input('status',array(
@@ -97,12 +177,13 @@ foreach($author as $author_array){
         </td>
         <td class="grace-column"><!-- 検証完了猶予日数 --></td>
     </tr>
+    <?php endif?>
     </tbody>
 </table>
 </div>
 
 <div id='view_part_data'>
-    <table id="data_table" class="data-part-main-table">
+    <table id="data_table" class="data-part-main-table <?php echo $completed_mode_flag ? 'completed-item' : ''?>">
         <thead class="scrollHead">
         <tr class="table_titles">
             <th class="category-column">
@@ -296,10 +377,15 @@ foreach($author as $author_array){
             <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['modified']; ?></span>
             </td>
-            <td class= "complete_column"><div class="complete"><button type="button" class="complete_button" id="<?php echo $item['Item']['id'] . "-complete_button";?>">完了</button></div></td>
+            <td class= "complete_column">
+                <div class="complete">
+                    <button type="button" class="<?php echo !$completed_mode_flag ? 'complete_button' : 'incomplete_button'?>" id="<?php echo $item['Item']['id'] . "-complete_button";?>">完了</button>
+                </div>
+            </td>
         </tr>
         <?php endforeach; ?>
 
+        <?php if(!$completed_mode_flag):?>
         <tr class="input_part">
             <td class="category-column"><?php echo $this->Form->input('category', array('label' => false));?></td>
             <td class="division-column"><?php echo $this->Form->input('division', array(
@@ -338,8 +424,9 @@ foreach($author as $author_array){
                 ?>
             </td>
             <td class="point-column"><?php echo $this->Form->input('pivotal_point', array('type'=>'number', 'label' => false));?></td>
-            <td class="date-column"><?php echo $this->Form->end('送信');?></td>
+            <td class="date-column"><?php echo $this->Form->end('送信', array('name' => 'add_item'));?></td>
         </tr>
+        <?php endif?>
 
     </tbody>
     </table>
