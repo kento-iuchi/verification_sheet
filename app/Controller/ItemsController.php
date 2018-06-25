@@ -331,10 +331,7 @@ class ItemsController extends AppController
             }
 
             if (array_key_exists('issue', $payload)) {
-                $this->log('######## issue_comment ########');
-                $this->log($payload['action']);
-                $this->log($payload['issue']['user']['login']);
-                $this->log($payload['comment']['body']);
+                $this->tell_code_review_comment($payload);
             }
         }
     }
@@ -406,6 +403,35 @@ class ItemsController extends AppController
         } else {
             return false;
         }
-}
+    }
+
+    public function tell_code_review_comment($payload)
+    {
+        $this->autoRender = false;
+        $this->log('######## issue_comment ########');
+        $this->log($payload['action']);
+        $this->log($payload['issue']['user']['login']);
+        $this->log($payload['comment']['body']);
+
+        if ($payload['action'] == 'created')
+        {
+            $author_github_name = $payload['issue']['user']['login'];
+            $this->loadModel('Author');
+            $authors = $this->Author->find('all');
+            foreach ($authors as $data_id => $author_info) {
+                if ($author_info['Author']['github_account_name'] == $author_github_name) {
+                    $author_chatwork_id = $author_info['Author']['chatwork_id'];
+                    break;
+                }
+            }
+            $url = $payload['issue']['html_url'];
+            $title = $payload['issue']['title'];
+            $message = "[To:{$author_chatwork_id}]\n\nレビューコメントが投稿されています。\n"
+                        . "{$title}\n"
+                        . "{$url}\n";
+
+            $this->send_message_to_chatwork($message);
+        }
+    }
 
 }
