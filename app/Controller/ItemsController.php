@@ -335,7 +335,7 @@ class ItemsController extends AppController
                 }
             }
 
-            if (array_key_exists('pull_request_review_comment', $payload)) {
+            if (array_key_exists('issue', $payload)) {
                 $this->log('comment test');
                 $this->log($this->$payload['pull_request_review_comment']['comment']['action']);
                 $this->log($this->$payload['pull_request_review_comment']['comment']['user']['id']);
