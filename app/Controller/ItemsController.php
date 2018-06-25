@@ -332,9 +332,9 @@ class ItemsController extends AppController
 
             if (array_key_exists('issue', $payload)) {
                 $this->log('######## issue_comment ########');
-                $this->log($this->$payload['issue']['comment']['action']);
-                $this->log($this->$payload['issue']['comment']['user']['id']);
-                $this->log($this->$payload['issue']['comment']['body']);
+                $this->log($payload['action']);
+                $this->log($payload['issue']['comment']['user']['login']);
+                $this->log($payload['issue']['comment']['body']);
             }
         }
     }
