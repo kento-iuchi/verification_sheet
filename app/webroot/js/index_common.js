@@ -109,6 +109,5 @@ $(function(){
 
         }
         synchronizeTwoTablesHeight();
-        console.log(appearingHistoryIds);
     });
 })

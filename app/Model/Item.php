@@ -75,24 +75,8 @@ class Item extends AppModel
         if (isset($this->data[$this->alias]['modified'])) {
             unset($this->data[$this->alias]['modified']);
         }
-        $this->data[$this->alias]['last_updated_time'] = time();
+        // $this->data[$this->alias]['last_updated_time'] = time();
         return parent::save($this->data, $validate, $fieldList);
-    }
-
-    /*
-        datepickerのフォーマットの仕方がよくわかってない頃
-        自前で日付をフォーマットする用に作ったものなので
-        今後使わない可能性大
-    */
-    public function formatDate($date)
-    {
-        if (preg_match('/\d{2}\/\d{2}\/\d{4}/', $date, $matches) === 1) {
-            $date = explode("/", $date);
-            $date = implode("-", array($date[2], $date[0], $date[1]));
-            return $date;
-        } else {
-            return $date;
-        }
     }
 
 }

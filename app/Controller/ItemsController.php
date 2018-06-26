@@ -71,6 +71,7 @@ class ItemsController extends AppController
         $this->Item->id = $this->request->data['id'];
         $column_name = $this->request->data['column_name'];
         $content = $this->request->data['content'];
+        $last_updated_time = $this->request->data['last_updated_time'];
 
         // 「～～リリースOK判断日」が新たに入力されたときの処理
         if (in_array(
@@ -100,6 +101,7 @@ class ItemsController extends AppController
             $this->request->data['Item']['status'] = 'サポート・営業確認中';
         }
         $this->request->data['Item'][$column_name] = $content;
+        $this->request->data['Item']['last_updated_time'] = $last_updated_time;
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
                 echo $content;

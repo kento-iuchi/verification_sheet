@@ -145,15 +145,15 @@ if (!$completed_mode_flag) {
             <span class="record_text editable-cell"><?php echo $item['Item']['content']; ?></span>
         </td>
         <td class = "record date-column editable-cell" id="<?php echo $item['Item']['id'] . '-due_date_for_release';?>">
-            <?php echo $item['Item']['due_date_for_release']; ?>
+            <span class="record_text editable-cell"><?php echo $item['Item']['due_date_for_release']; ?></span>
         </td>
         <td class = "record status-column editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
         </td>
         <td class = "record grace-column" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
             <span class="record_text"><?php
-                $scheduled_release_date = new Datetime($item['Item']['scheduled_release_date']);
-                echo str_replace('+', '', $today_date->diff($scheduled_release_date)->format('%R%a'));
+                $due_date_for_release = new Datetime($item['Item']['due_date_for_release']);
+                echo str_replace('+', '', $today_date->diff($due_date_for_release)->format('%R%a'));
             ?></span>
         </td>
     </tr>
@@ -223,7 +223,7 @@ if (!$completed_mode_flag) {
                 サポートリリース<br>OK判断日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
-            <th class="verifier-column" data-verifier-options='<?php echo json_encode($verifier_names)?>' data-author-options='<?php echo json_encode($author_names)?>'>
+            <th class="verifier-column" data-verifier-options='<?php echo json_encode($verifier_names)?>'>
                 検証担当者</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('verifier_id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('verifier_id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
@@ -264,7 +264,7 @@ if (!$completed_mode_flag) {
             <th class="comment-column">
                 確認コメント対応
             </th>
-            <th class="author-column">
+            <th class="author-column" data-author-options='<?php echo json_encode($author_names)?>'>
                 作成者
             </th>
             <th class="point-column">

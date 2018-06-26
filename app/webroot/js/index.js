@@ -125,7 +125,6 @@ $(function(){
             $('#'+formId).datepicker('show');
         } else if (columnName == "author_id"){
             var authorNames = $('th.author-column').attr('data-author-options');
-            console.log($('th.author-column').attr('data-author-options'));
             authorNames = JSON.parse(authorNames);
             var form = "<select id = '" + formId + "'>";
             var defaultValue = 1
@@ -154,7 +153,7 @@ $(function(){
             form += '</select>';
             $(editCellSelector).html(form);
             $('#' + formId).val(defaultValue);
-        } else if ("verifier_id") {
+        } else if (columnName == 'manual_exists') {
             var form = "<select id = '" + formId + "'>"
                      + '<option value="1">◯</option>'
                      + '<option value="0">✕</option>'
@@ -214,7 +213,7 @@ $(function(){
         最終更新時間 - 編集開始時間が10000以上という条件にしているのは、１ユーザーが高速で編集セルを切り替えた際に
         誤反応させないため
         */
-        if ((lastUpdatedTime - editStartingTime) > 1000){
+        if ((lastUpdatedTime - editStartingTime) > 1){
             if(confirm('他のユーザーによってレコードが更新されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
 
                 $('body').append('<textarea id="temp-clipboard-field"></textarea>');
@@ -237,10 +236,13 @@ $(function(){
             currentText = '*EMPTY*';
         }
 
+        var today = new Date();
+        lastUpdatedTime = Math.floor(today.getTime() / 1000);
+
         $.ajax({
         url: editActionUrl,
         type: "POST",
-        data: { id : id, column_name: columnName, content: currentText },
+        data: { id : id, column_name: columnName, content: currentText, last_updated_time : lastUpdatedTime },
         dataType: "text",
         success : function(response){
             //通信成功時
@@ -345,11 +347,11 @@ $(function(){
 
     function updateItemLineStyle(itemId = null)
     {
-        var priorityTdSelecter = '#' + itemId + '-due_date_for_release';
-        if($(priorityTdSelecter).hasClass('high_priority')){
-            $(priorityTdSelecter).css({'color': 'red', 'font-weight': 'bold', 'font-size': '16px'});
+        var dueDateTdSelector = '#' + itemId + '-due_date_for_release';
+        if($(dueDateTdSelector).hasClass('high_priority')){
+            $(dueDateTdSelector).css({'color': 'red', 'font-weight': 'bold', 'font-size': '16px'});
         } else {
-            $(priorityTdSelecter).css({'color': 'black', 'font-weight': 'normal', 'font-size': '12px'});
+            $(dueDateTdSelector).css({'color': 'black', 'font-weight': 'normal', 'font-size': '12px'});
         }
 
         var graceDays = parseInt($('#' + itemId + '-grace_days_of_verification_complete').text(), 10);
@@ -470,7 +472,6 @@ $(function(){
             }
             var verifierName = $('#' + itemId + '-name-selector option:selected').text();
             var today = new Date();
-            console.log(todayDate);
             var todayMonth = ('0' + (today.getMonth() + 1)).slice(-2);
             var todayDate = ('0' + today.getDate()).slice(-2);
             var newHistory =   '<tr>'
