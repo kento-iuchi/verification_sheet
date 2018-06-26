@@ -297,6 +297,7 @@ class ItemsController extends AppController
                                 'category' => '未設定',
                                 'division' => '改善',
                                 'verification_enviroment_url' => '',
+                                'pullrequest_number' => $payload['number'],
                                 'pullrequest_id' => $pullrequest_id,
                                 'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
                                 'due_date_for_release' => $due_date_for_release,
@@ -433,12 +434,12 @@ class ItemsController extends AppController
                 $url = $payload['issue']['html_url'];
                 $title = $payload['issue']['title'];
                 $target_github_name = $payload['issue']['user']['login'];
-                $pullrequest_id = $payload['issue']['number'];
+                $pullrequest_number = $payload['issue']['number'];
             } else if (isset($payload['comment'])){
                 $url = $payload['pull_request']['html_url'];
                 $title = $payload['pull_request']['title'];
                 $target_github_name = $payload['pull_request']['user']['login'];
-                $pullrequest_id = $payload['pull_request']['number'];
+                $pullrequest_number = $payload['pull_request']['number'];
             }
 
             $authors = $this->Author->find('all');
@@ -447,7 +448,7 @@ class ItemsController extends AppController
             $reviewer_github_name = $payload['comment']['user']['login'];
             $reviewer = $this->Author->find('first', array('conditions' => array('Author.github_account_name' => $reviewer_github_name)));
             $reviewer_id = $reviewer['Author']['id'];
-            $reviewed_item = $this->Item->find('first', array('conditions' => array('Item.pullrequest_id' => $pullrequest_id)));
+            $reviewed_item = $this->Item->find('first', array('conditions' => array('Item.pullrequest_number' => $pullrequest_number)));
             $last_reviewr_id = $reviewed_item['Item']['last_reviewr_id'];
             if ($target_github_name == $reviewer_github_name) { // 自分で自分のプルリクにコメントした場合、最後にレビューした人にメッセージを飛ばす
                 foreach ($authors as $data_id => $author_info) {
