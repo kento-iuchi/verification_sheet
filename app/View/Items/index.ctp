@@ -356,7 +356,11 @@ if (!$completed_mode_flag) {
                         <?php endforeach; ?>
                     <?php endif?>
                 </table>
-                <button type="button" class="add-verification-history" id="<?php echo $item['Item']['id'] . '-add-verification-history';?>">新規作成</button>
+                <?php if(!$completed_mode_flag):?>
+                <button type="button" class="add-verification-history" id="<?php echo $item['Item']['id'] . '-add-verification-history';?>">
+                    新規作成
+                </button>
+                <?php endif?>
                 <div id="<?php echo $item['Item']['id'];?>-verification-history-input-area"></div>
             </td>
             <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
