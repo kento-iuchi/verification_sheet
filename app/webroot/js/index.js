@@ -430,7 +430,7 @@ $(function(){
     var verifier_list = ['A', 'B', 'C'];
     function createAddVerifivationHistoryForm(cell_id)
     {
-        var options = $('th.verification-history-column').attr('data-verifier-options');
+        var options = $('th.verifier-column').attr('data-verifier-options');
         options = JSON.parse(options);
         var item_id = cell_id.split('-')[0];
         var name_selector =  '<br><select id = "' + item_id + '-name-selector">';

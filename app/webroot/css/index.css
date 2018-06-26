@@ -168,7 +168,7 @@ table.completed-item tr.table_titles {
     width : 200px;
 }
 
-.author-column {
+.author-column, .verifier-column {
     width: 150px;
 }
 

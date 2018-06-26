@@ -223,7 +223,7 @@ if (!$completed_mode_flag) {
                 サポートリリース<br>OK判断日</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('supp_release_judgement', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
-            <th class="author-column" data-verifier-options='<?php echo json_encode($verifier_names)?>' data-author-options='<?php echo json_encode($author_names)?>'>
+            <th class="verifier-column" data-verifier-options='<?php echo json_encode($verifier_names)?>' data-author-options='<?php echo json_encode($author_names)?>'>
                 検証担当者</br>
                 <button class="sort_button"><?php echo $this->Paginator->sort('verifier_id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
                 <button class="sort_button"><?php echo $this->Paginator->sort('verifier_id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button></th>
