@@ -449,7 +449,7 @@ class ItemsController extends AppController
             $reviewer = $this->Author->find('first', array('conditions' => array('Author.github_account_name' => $reviewer_github_name)));
             $reviewer_id = $reviewer['Author']['id'];
             $reviewed_item = $this->Item->find('first', array('conditions' => array('Item.pullrequest_number' => $pullrequest_number)));
-            $last_reviewr_id = $reviewed_item['Item']['last_reviewr_id'];
+            $last_reviewr_id = $reviewed_item['Item']['last_reviewed_author_id'];
             if ($target_github_name == $reviewer_github_name) { // 自分で自分のプルリクにコメントした場合、最後にレビューした人にメッセージを飛ばす
                 foreach ($authors as $data_id => $author_info) {
                     if ($author_info['Author']['id'] == $last_reviewr_id) {

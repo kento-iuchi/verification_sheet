@@ -33,7 +33,7 @@ class AppSchema extends CakeSchema {
 		'pullrequest_number' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'pullrequest' => array('type' => 'date', 'null' => true, 'default' => null),
 		'pullrequest_update' => array('type' => 'date', 'null' => true, 'default' => null),
-		'last_reviewr_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
+		'last_reviewed_author_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'status' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'tech_release_judgement' => array('type' => 'date', 'null' => true, 'default' => null),
 		'supp_release_judgement' => array('type' => 'date', 'null' => true, 'default' => null),
