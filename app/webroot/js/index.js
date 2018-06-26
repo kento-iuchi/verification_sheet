@@ -2,6 +2,7 @@ $(function(){
     'use strict';
 
     updateStyles();
+    synchronizeTwoTablesHeight();
 
     // ダブルクリックでその場変種
     var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'verification_history'];
@@ -279,7 +280,7 @@ $(function(){
                 $(selectedTd).html(authorNames[currentText]);
             }
             if (columnName == "verifier_id") {
-                var verifierNames = $('th.author-column').attr('data-verifier-options');
+                var verifierNames = $('th.verifier-column').attr('data-verifier-options');
                 verifierNames = JSON.parse(verifierNames);
                 $(selectedTd).html(verifierNames[currentText]);
             }
