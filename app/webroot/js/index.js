@@ -139,7 +139,7 @@ $(function(){
             $(editCellSelector).html(form);
             $('#' + formId).val(defaultValue);
         } else if (columnName == "verifier_id"){
-            var verifierNames = $('th.author-column').attr('data-verifier-options');
+            var verifierNames = $('th.verifier-column').attr('data-verifier-options');
             verifierNames = JSON.parse(verifierNames);
             var form = "<select id = '" + formId + "'>";
             var defaultValue = 1
