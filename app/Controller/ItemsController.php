@@ -432,20 +432,51 @@ class ItemsController extends AppController
             if (isset($payload['issue'])) {
                 $url = $payload['issue']['html_url'];
                 $title = $payload['issue']['title'];
-                $author_github_name = $payload['issue']['user']['login'];
+                $target_github_name = $payload['issue']['user']['login'];
+                $pullrequest_id = $payload['issue']['number'];
             } else if (isset($payload['comment'])){
                 $url = $payload['pull_request']['html_url'];
                 $title = $payload['pull_request']['title'];
-                $author_github_name = $payload['pull_request']['user']['login'];
+                $target_github_name = $payload['pull_request']['user']['login'];
+                $pullrequest_id = $payload['pull_request']['number'];
             }
+
             $authors = $this->Author->find('all');
-            foreach ($authors as $data_id => $author_info) {
-                if ($author_info['Author']['github_account_name'] == $author_github_name) {
-                    $author_chatwork_id = $author_info['Author']['chatwork_id'];
-                    break;
+            $target_chatwork_id = null;
+
+            $reviewer_github_name = $payload['comment']['user']['login'];
+            $reviewer = $this->Author->find('first', array('conditions' => array('Author.github_account_name' => $reviewer_github_name)));
+            $reviewer_id = $reviewer['Author']['id'];
+            $reviewed_item = $this->Item->find('first', array('conditions' => array('Item.pullrequest_id' => $pullrequest_id)));
+            $last_reviewr_id = $reviewed_item['Item']['last_reviewr_id'];
+            if ($target_github_name == $reviewer_github_name) { // 自分で自分のプルリクにコメントした場合、最後にレビューした人にメッセージを飛ばす
+                foreach ($authors as $data_id => $author_info) {
+                    if ($author_info['Author']['id'] == $last_reviewr_id) {
+                        $target_chatwork_id = $author_info['Author']['chatwork_id'];
+                        break;
+                    }
+                }
+            } else { // 最終レビュワーを更新
+                if ($last_reviewr_id != $reviewer_id) {
+                    $reviewed_item['Item']['last_reviewr_id'] = $reviewer_id;
+                    if ($this->Item->save($reviewed_item)) {
+                        $this->log('reviewer save : successed');
+                    } else {
+                        $this->log('reviewer save : failed');
+                    }
                 }
             }
-            $message = "[To:{$author_chatwork_id}]\nレビューコメントが投稿されました\n\n"
+
+            if(!isset($target_chatwork_id)){
+                foreach ($authors as $data_id => $author_info) {
+                    if ($author_info['Author']['github_account_name'] == $target_github_name) {
+                        $target_chatwork_id = $author_info['Author']['chatwork_id'];
+                        break;
+                    }
+                }
+            }
+
+            $message = "[To:{$target_chatwork_id}]\nレビューコメントが投稿されました\n\n"
                         . "{$title}\n"
                         . "{$url}\n";
 
