@@ -7,6 +7,8 @@ include(CONFIG. 'github_api_token.php');
 
 class ItemsController extends AppController
 {
+    public $uses = array('Item', 'Author', 'Verifier', 'VerificationHistory');
+
     public $helpers = array('Html', 'Form', 'Flash', 'Js', 'DatePicker');
 
     public $paginate =  array(
@@ -43,9 +45,6 @@ class ItemsController extends AppController
 
         $this->header("Content-type: text/html; charset=utf-8");
         $this->layout = 'IndexLayout';
-        $this->loadModel('VerificationHistory');
-        $this->loadModel('Verifier');
-        $this->loadModel('Author');
         $this->set('items', $this->paginate('Item', $conditions));
         $this->set('completed_mode_flag', $completed_mode_flag);
         $this->set('verifier', $this->Verifier->find('all'));
@@ -164,7 +163,6 @@ class ItemsController extends AppController
     public function save_verification_history()
     {
         $this->autoRender = false;
-        $this->loadModel('VerificationHistory');
         $this->VerificationHistory->create();
         if ($this->VerificationHistory->save($this->request->data)) {
             echo $this->VerificationHistory->id;
@@ -394,7 +392,6 @@ class ItemsController extends AppController
         $url = $result->html_url;
         $author_github_name = $result->user->login;
 
-        $this->loadModel('Author');
         $authors = $this->Author->find('all');
         foreach ($authors as $data_id => $author_info) {
             if ($author_info['Author']['github_account_name'] == $author_github_name) {
@@ -441,7 +438,6 @@ class ItemsController extends AppController
                 $title = $payload['pull_request']['title'];
                 $author_github_name = $payload['pull_request']['user']['login'];
             }
-            $this->loadModel('Author');
             $authors = $this->Author->find('all');
             foreach ($authors as $data_id => $author_info) {
                 if ($author_info['Author']['github_account_name'] == $author_github_name) {
