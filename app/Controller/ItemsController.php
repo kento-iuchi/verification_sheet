@@ -459,7 +459,7 @@ class ItemsController extends AppController
                 }
             } else { // 最終レビュワーを更新
                 if ($last_reviewr_id != $reviewer_id) {
-                    $reviewed_item['Item']['last_reviewr_id'] = $reviewer_id;
+                    $reviewed_item['Item']['last_reviewed_author_id'] = $reviewer_id;
                     if ($this->Item->save($reviewed_item)) {
                         $this->log('reviewer save : successed');
                     } else {
