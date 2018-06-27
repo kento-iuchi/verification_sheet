@@ -376,9 +376,6 @@ if (!$completed_mode_flag) {
                 <span class="record_text"><?php echo $item['Item']['pivotal_point']; ?></span>
             </td>
             <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-created";?>">
-                <span class="record_text"><?php echo $item['Item']['created']; ?></span>
-            </td>
-            <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-created";?>">
                 <span class="record_text"><?php echo $item['Item']['modified']; ?></span>
             </td>
             <td class= "complete_column">
