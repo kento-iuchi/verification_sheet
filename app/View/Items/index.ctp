@@ -439,10 +439,10 @@ if (!$completed_mode_flag) {
 </div>
 </div>
 <div id="page_selecter">
-    <?php echo $this->Paginator->numbers (
+    <?php echo $this->Paginator->numbers(
         array (
-            'before' => $this->Paginator->hasPrev() ? $this->Paginator->first('<<').' | ' : '',
-            'after' => $this->Paginator->hasNext() ? ' | '.$this->Paginator->last('>>') : '',
+            'before' => $this->Paginator->hasPrev() ? $this->Paginator->first('<<', array('tag' => 'first')).' | ' : '',
+            'after' => $this->Paginator->hasNext() ? ' | '.$this->Paginator->last('>>', array('tag' => 'first')) : '',
             'tag' => 'span',
         )
     );

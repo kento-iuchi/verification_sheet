@@ -258,7 +258,7 @@ $(function(){
                 textEdited = '<a href="' + textEdited + '">' + textEdited + '</a>';
             }
 
-            $(selectedTd).html(recordtext(Edited));
+            $(selectedTd).html(recordtext(textEdited));
             if (columnName == 'pullrequest_update' || columnName == 'due_date_for_release'){
                 var pullrequestDate = new Date($('#' + id + '-pullrequest_update').text());
                 var dueDateForRelease = new Date($('#' + id + '-due_date_for_release').text());

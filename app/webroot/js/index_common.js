@@ -20,7 +20,7 @@ function synchronizeTwoTablesHeight()
     }
 
     var tableHeight = $("#header_table").height();
-    $("#page_selecter").offset({top : tableHeight + 60});
+    $("#page_selecter").offset({top : tableHeight + 160});
 };
 
 $(function(){
@@ -31,7 +31,7 @@ $(function(){
     $('#page_selecter').css('display', 'block');
     synchronizeTwoTablesHeight();
 
-    var interval = 1;
+    var interval = 10;
     var timer;
     $('#header_table tbody.scrollBody').on('scroll', function(){
         clearTimeout(timer);
