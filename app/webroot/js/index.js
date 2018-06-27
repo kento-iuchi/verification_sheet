@@ -265,7 +265,9 @@ $(function(){
                 var todayDate = new Date();
 
                 $('#' + id + '-elapsed').text(Math.round((todayDate - pullrequestDate)/86400000));
-                $('#' + id + '-grace_days_of_verification_complete').text(Math.round((dueDateForRelease - todayDate)/86400000));
+                var graceDaysOfVerificationComplete = Math.round((dueDateForRelease - todayDate)/86400000);
+                graceDaysOfVerificationComplete = isNaN(graceDaysOfVerificationComplete) ? '' : graceDaysOfVerificationComplete;
+                $('#' + id + '-grace_days_of_verification_complete').html(recordtext(graceDaysOfVerificationComplete));
             }
             if (columnName == 'due_date_for_release') {
                 var priority = ['不要', '低', '中', '高'];
@@ -489,6 +491,16 @@ $(function(){
             alert('通信失敗');
         }
         });
+    }
+
+    function recordtext(text, editable = 1){
+        var returnText = '<span class="record_text'
+        if (editable){
+            returnText += ' editable-cell';
+        }
+        returnText += '">' + text + '</span>'
+
+        return returnText;
     }
 
 });

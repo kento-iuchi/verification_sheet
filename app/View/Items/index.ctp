@@ -153,7 +153,9 @@ if (!$completed_mode_flag) {
         <td class = "record grace-column" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
             <span class="record_text"><?php
                 $due_date_for_release = new Datetime($item['Item']['due_date_for_release']);
-                echo str_replace('+', '', $today_date->diff($due_date_for_release)->format('%R%a'));
+                if (!empty($item['Item']['due_date_for_release'])) {
+                    echo str_replace('+', '', $today_date->diff($due_date_for_release)->format('%R%a'));
+                }
             ?></span>
         </td>
     </tr>

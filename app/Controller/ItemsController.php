@@ -303,7 +303,6 @@ class ItemsController extends AppController
                                 'pullrequest_id' => $pullrequest_id,
                                 'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
                                 'due_date_for_release' => $due_date_for_release,
-                                'scheduled_release_date' => '2099-12-31',
                                 'confirm_comment' => $payload['pull_request']['body'],
                                 'author_id' => $author_id,
                                 'pivotal_point' => 1,
@@ -460,7 +459,7 @@ class ItemsController extends AppController
                     }
                 }
             } else { // 最終レビュワーを更新
-                if ($last_reviewr_id != $reviewer_id) {
+                if ($last_reviewr_id != $reviewer_id || empty($last_reviewr_id)) {
                     $reviewed_item['Item']['last_reviewed_author_id'] = $reviewer_id;
                     if ($this->Item->save($reviewed_item)) {
                         $this->log('reviewer save : successed');
