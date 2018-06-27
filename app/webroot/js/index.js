@@ -258,16 +258,17 @@ $(function(){
                 textEdited = '<a href="' + textEdited + '">' + textEdited + '</a>';
             }
 
-            $(selectedTd).html('<span class="record_text">' + textEdited + '</span>');
+            $(selectedTd).html(recordtext(Edited));
             if (columnName == 'pullrequest_update' || columnName == 'due_date_for_release'){
                 var pullrequestDate = new Date($('#' + id + '-pullrequest_update').text());
                 var dueDateForRelease = new Date($('#' + id + '-due_date_for_release').text());
                 var todayDate = new Date();
 
-                $('#' + id + '-elapsed').text(Math.round((todayDate - pullrequestDate)/86400000));
+                $('#' + id + '-elapsed').text(recordtext(Math.round((todayDate - pullrequestDate)/86400000), false));
+
                 var graceDaysOfVerificationComplete = Math.round((dueDateForRelease - todayDate)/86400000);
                 graceDaysOfVerificationComplete = isNaN(graceDaysOfVerificationComplete) ? '' : graceDaysOfVerificationComplete;
-                $('#' + id + '-grace_days_of_verification_complete').html(recordtext(graceDaysOfVerificationComplete));
+                $('#' + id + '-grace_days_of_verification_complete').html(recordtext(graceDaysOfVerificationComplete, false));
             }
             if (columnName == 'due_date_for_release') {
                 var priority = ['不要', '低', '中', '高'];
@@ -281,16 +282,16 @@ $(function(){
             if (columnName == "author_id") {
                 var authorNames = $('th.author-column').attr('data-author-options');
                 authorNames = JSON.parse(authorNames);
-                $(selectedTd).html(authorNames[currentText]);
+                $(selectedTd).html(recordtext(authorNames[currentText]));
             }
             if (columnName == "verifier_id") {
                 var verifierNames = $('th.verifier-column').attr('data-verifier-options');
                 verifierNames = JSON.parse(verifierNames);
-                $(selectedTd).html(verifierNames[currentText]);
+                $(selectedTd).html(recordtext(verifierNames[currentText]));
             }
             if (columnName == "manual_exists") {
                 var manual_exists_char = currentText == 1 ? '◯' : '✕';
-                $(selectedTd).html(manual_exists_char);
+                $(selectedTd).html(recordtext(manual_exists_char));
             }
             synchronizeTwoTablesHeight();
             updateStyles(id);
@@ -493,7 +494,7 @@ $(function(){
         });
     }
 
-    function recordtext(text, editable = 1){
+    function recordtext(text, editable = true){
         var returnText = '<span class="record_text'
         if (editable){
             returnText += ' editable-cell';
