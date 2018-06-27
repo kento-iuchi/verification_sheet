@@ -107,6 +107,9 @@ if (!$completed_mode_flag) {
     </table>
     <?php echo $this->form->end();?>
 </div>
+<span id="hide-column-for-dev">
+    <input type="checkbox">開発部用の項目を表示しない
+</span>
 <?php echo $this->Form->create('Item', array('url' => 'add'));?>
 <div id="view_part">
 <div>
@@ -201,7 +204,7 @@ if (!$completed_mode_flag) {
             <th class="url-column">
                 chatwork URL
             </th>
-            <th class="url-column">
+            <th class="url-column column-for-dev">
                 github URL
             </th>
             <th class="url-column">
@@ -269,13 +272,8 @@ if (!$completed_mode_flag) {
             <th class="author-column" data-author-options='<?php echo json_encode($author_names)?>'>
                 作成者
             </th>
-            <th class="point-column">
+            <th class="point-column column-for-dev">
                 pivotal<br>ポイント
-            </th>
-            <th class="date-column">
-                作成日時</br>
-                <button class="sort_button"><?php echo $this->Paginator->sort('created', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
-                <button class="sort_button"><?php echo $this->Paginator->sort('created', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
             </th>
             <th class="date-column">
                 最終更新日時</br>
@@ -300,7 +298,7 @@ if (!$completed_mode_flag) {
                     <span class="record_text"><?php echo $item['Item']['chatwork_url']; ?></span>
                 </a>
             </td>
-            <td class = "record editable-cell url-column" id="<?php echo $item['Item']['id'] . "-github_url";?>">
+            <td class = "record editable-cell url-column column-for-dev" id="<?php echo $item['Item']['id'] . "-github_url";?>">
                 <a href="<?php echo $item['Item']['github_url']; ?>" target="_blank">
                     <span class="record_text"><?php echo $item['Item']['github_url']; ?></span>
                 </a>
@@ -374,7 +372,7 @@ if (!$completed_mode_flag) {
             <td class = "record editable-cell author-column" id="<?php echo $item['Item']['id'] . "-author_id";?>">
                 <span class="record_text"><?php echo $author_names[$item['Item']['author_id']]; ?></span>
             </td>
-            <td class = "record editable-cell point-column" id="<?php echo $item['Item']['id'] . "-pivotal_point";?>">
+            <td class = "record editable-cell point-column column-for-dev" id="<?php echo $item['Item']['id'] . "-pivotal_point";?>">
                 <span class="record_text"><?php echo $item['Item']['pivotal_point']; ?></span>
             </td>
             <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-created";?>">
@@ -405,7 +403,7 @@ if (!$completed_mode_flag) {
                 ?>
             </td>
             <td class="url-column"><?php echo $this->Form->input('chatwork_url', array('label' => false));?></td>
-            <td class="url-column"><?php echo $this->Form->input('github_url', array('label' => false));?></td>
+            <td class="url-column column-for-dev"><?php echo $this->Form->input('github_url', array('label' => false));?></td>
             <td class="url-column"><?php echo $this->Form->input('verification_enviroment_url', array('label' => false));?></td>
             <td class="date-column"><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
             <td class="date-column"><!-- プルリク更新日 --></td>
@@ -429,7 +427,7 @@ if (!$completed_mode_flag) {
                     ));
                 ?>
             </td>
-            <td class="point-column"><?php echo $this->Form->input('pivotal_point', array('type'=>'number', 'label' => false));?></td>
+            <td class="point-column column-for-dev"><?php echo $this->Form->input('pivotal_point', array('type'=>'number', 'label' => false));?></td>
             <td class="date-column"><?php echo $this->Form->end('送信', array('name' => 'add_item'));?></td>
         </tr>
         <?php endif?>

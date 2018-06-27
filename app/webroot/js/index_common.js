@@ -116,4 +116,17 @@ $(function(){
         }
         synchronizeTwoTablesHeight();
     });
+
+
+    $('#hide-column-for-dev input').click(function(){
+        if ($(this).prop('checked')) {
+            $('td.column-for-dev, th.column-for-dev').each(function(){
+                $(this).hide();
+            })
+        } else {
+            $('td.column-for-dev, th.column-for-dev').each(function(){
+                $(this).show();
+            })
+        }
+    })
 })

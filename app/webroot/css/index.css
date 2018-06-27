@@ -2,9 +2,6 @@
     --header-width: 500px;
 }
 
-.container {
-    margin: 0 auto;
-}
 
 textarea {
     resize: none;
@@ -20,6 +17,11 @@ body {
 table th,td {
     font-size: 12px;
     word-break : break-all;
+}
+
+#hide-column-for-dev input {
+    height: 20px;
+    width: 20px;
 }
 
 #header_table thead tr {
