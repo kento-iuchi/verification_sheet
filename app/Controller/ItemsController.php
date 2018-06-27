@@ -100,6 +100,9 @@ class ItemsController extends AppController
         if ($column_name == 'tech_release_judgement'){
             $this->request->data['Item']['status'] = 'サポート・営業確認中';
         }
+        $this->log($this->request->data);
+        $this->log($column_name);
+        $this->log(isset($this->request->data['Item'][$column_name]));
         $this->request->data['Item'][$column_name] = $content;
         $this->request->data['Item']['last_updated_time'] = $last_updated_time;
         if ($this->request->is(['ajax'])) {

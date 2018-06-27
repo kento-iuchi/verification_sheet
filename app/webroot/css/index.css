@@ -1,7 +1,14 @@
 :root {
-    --header-width: 500px;
+    --header-width: 590px;
 }
 
+/* body {
+    background-color: rgb(22,94,131);
+} */
+
+body {
+    height: 99%;
+}
 
 textarea {
     resize: none;
@@ -31,7 +38,7 @@ table th,td {
 
 #view_part {
     width: 99%;
-    height: 700px;
+    height: 70%; /* 意味なし？ */
     top: 0px;
     left: 1%;
     position: relative;
@@ -46,7 +53,7 @@ table th,td {
 
 #view_part_data {
     position: absolute;
-    left: var(--header-width);
+    left: calc(var(--header-width) - 6px);
     top: 0px;
     width: calc(99% - var(--header-width));
     overflow-x: scroll;
@@ -113,6 +120,10 @@ table.completed-item tr.table_titles {
     background-color: #2E9AFE;
 }
 
+tr.needs-no-confirm {
+    background-color: #d9dad0;
+}
+
 .sort_button {
     width: 16px;
     height: 16px;
@@ -136,6 +147,10 @@ table.completed-item tr.table_titles {
 .priority-column {
     width:  70px;
     text-align: center;
+}
+
+.needs-supp-confirm-column {
+    width: 90px;
 }
 
 .grace-column {

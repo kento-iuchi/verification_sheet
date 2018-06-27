@@ -98,8 +98,6 @@ if (!$completed_mode_flag) {
                         );
                     ?>
             </td>
-        </tr>
-        <tr>
             <td>
                 <?php echo $this->form->submit('検索', array('name' => 'search_condition'))?>
             </td>
@@ -121,6 +119,9 @@ if (!$completed_mode_flag) {
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
+        <th class="needs-supp-confirm-column">
+            サポート・営業<br>確認不要
+        </th>
         <th class="content-column">内容</th>
         <th class="date-column">必須リリース日<br>
             <button class="sort_button"><?php echo $this->Paginator->sort('due_date_for_release', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
@@ -140,9 +141,12 @@ if (!$completed_mode_flag) {
     <tbody class="scrollBody">
     <?php $today_date = new Datetime(date("y-m-d")); //経過日数、猶予日数の計算に使用?>
     <?php foreach ($items as $item): ?>
-    <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item" >
+    <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item <?php echo $item['Item']['needs_supp_confirm'] == 0 ? 'needs-no-confirm' : '' ?>" >
         <td class="record id-column" id="<?php echo $item['Item']['id'] . "-id";?>" data-id="<?php echo h($item['Item']['id']); ?>">
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
+        </td>
+        <td class="record needs-supp-confirm-column editable-cell" id="<?php echo $item['Item']['id'] . "-needs_supp_confirm";?>">
+            <span class="record_text"><?php echo $item['Item']['needs_supp_confirm'] == 1 ? 'いいえ' : 'はい' ?></span>
         </td>
         <td class="record content-column editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>">
             <span class="record_text editable-cell"><?php echo $item['Item']['content']; ?></span>
@@ -166,6 +170,13 @@ if (!$completed_mode_flag) {
     <?php if(!$completed_mode_flag):?>
     <tr class="input_part">
         <td class="id-column"></td>
+        <td class="needs-supp-confirm-column">
+            <?php echo $this->Form->input('needs_supp_confirm', array(
+                    'label' => false,
+                    'options' => array(1 => 'いいえ', 0 => 'はい')
+                ));
+            ?>
+        </td>
         <td class="content-column"><?php echo $this->Form->input('content', array('label' => false,));?></td>
         <td class="date-column"><?php echo $this->Datepicker->datepicker('due_date_for_release', array('type' => 'text', 'label' => false));?></td>
         <td class="status-column">
@@ -286,7 +297,7 @@ if (!$completed_mode_flag) {
 
         <tbody class="scrollBody">
         <?php foreach ($items as $item): ?>
-        <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item">
+        <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item <?php echo $item['Item']['needs_supp_confirm'] == 0 ? 'needs-no-confirm' : '' ?>">
             <td class="record category-column editable-cell" id="<?php echo $item['Item']['id'] . "-category";?>">
                 <span class="record_text"><?php echo $item['Item']['category']; ?></span>
             </td>
@@ -375,7 +386,7 @@ if (!$completed_mode_flag) {
             <td class = "record editable-cell point-column column-for-dev" id="<?php echo $item['Item']['id'] . "-pivotal_point";?>">
                 <span class="record_text"><?php echo $item['Item']['pivotal_point']; ?></span>
             </td>
-            <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-created";?>">
+            <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-modified";?>">
                 <span class="record_text"><?php echo $item['Item']['modified']; ?></span>
             </td>
             <td class= "complete_column">

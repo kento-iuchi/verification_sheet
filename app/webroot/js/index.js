@@ -94,7 +94,13 @@ $(function(){
         initialText = initialText.trim();
 
         formId = editCellId + '_form';
-        if (columnName == 'division') {
+        if (columnName == 'needs_supp_confirm') {
+            var form = "<select id = '" + formId + "'>" +
+                       "<option value='1'>いいえ</option>" +
+                       "<option value='0'>はい</option>" +
+                       "</select>";
+            $(editCellSelector).html(form);
+        } else if (columnName == 'division') {
             var form = "<select id = '" + formId + "'>" +
                        "<option value='改善' id='improvement'>改善</option>" +
                        "<option value='機能追加' id='adding_function'>機能追加</option>" +
@@ -238,13 +244,15 @@ $(function(){
 
         var today = new Date();
         lastUpdatedTime = Math.floor(today.getTime() / 1000);
-
+        console.log(currentText);
+        console.log(columnName);
         $.ajax({
         url: editActionUrl,
         type: "POST",
         data: { id : id, column_name: columnName, content: currentText, last_updated_time : lastUpdatedTime },
         dataType: "text",
         success : function(response){
+            console.log(response);
             //通信成功時
             var textEdited = currentText;
             if(textEdited == '*EMPTY*'){
@@ -264,11 +272,11 @@ $(function(){
                 var dueDateForRelease = new Date($('#' + id + '-due_date_for_release').text());
                 var todayDate = new Date();
 
-                $('#' + id + '-elapsed').text(recordtext(Math.round((todayDate - pullrequestDate)/86400000), false));
+                $('#' + id + '-elapsed').text(recordtext(Math.round((todayDate - pullrequestDate)/86400000)));
 
                 var graceDaysOfVerificationComplete = Math.round((dueDateForRelease - todayDate)/86400000);
                 graceDaysOfVerificationComplete = isNaN(graceDaysOfVerificationComplete) ? '' : graceDaysOfVerificationComplete;
-                $('#' + id + '-grace_days_of_verification_complete').html(recordtext(graceDaysOfVerificationComplete, false));
+                $('#' + id + '-grace_days_of_verification_complete').html(recordtext(graceDaysOfVerificationComplete));
             }
             if (columnName == 'due_date_for_release') {
                 var priority = ['不要', '低', '中', '高'];
@@ -292,6 +300,18 @@ $(function(){
             if (columnName == "manual_exists") {
                 var manual_exists_char = currentText == 1 ? '◯' : '✕';
                 $(selectedTd).html(recordtext(manual_exists_char));
+            }
+            if (columnName == "needs_supp_confirm") {
+                if (currentText == 1) {
+                    var needs_supp_confirm_char = 'いいえ';
+                    $('#item_' + id + '-head').removeClass('needs-no-confirm');
+                    $('#item_' + id + '-data').removeClass('needs-no-confirm');
+                } else {
+                    var needs_supp_confirm_char = 'はい';
+                    $('#item_' + id + '-head').addClass('needs-no-confirm');
+                    $('#item_' + id + '-data').addClass('needs-no-confirm');
+                }
+                $(selectedTd).html(recordtext(needs_supp_confirm_char));
             }
             synchronizeTwoTablesHeight();
             updateStyles(id);
@@ -494,14 +514,8 @@ $(function(){
         });
     }
 
-    function recordtext(text, editable = true){
-        var returnText = '<span class="record_text'
-        if (editable){
-            returnText += ' editable-cell';
-        }
-        returnText += '">' + text + '</span>'
-
-        return returnText;
+    function recordtext(text){
+        return '<span class="record_text">' + text + '</span>'
     }
 
 });

@@ -14,6 +14,7 @@
                 'jquery-migrate-3.0.1.js',
                 'jquery-ui.js',
             ), array( 'inline' => false ));
+        echo $this->Html->script('js.cookie.js', array('inline' => false));
     ?>
     <?= $this->fetch('script'); ?>
     <script>
