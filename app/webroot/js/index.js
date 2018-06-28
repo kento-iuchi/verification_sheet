@@ -135,7 +135,7 @@ $(function(){
             var form = "<select id = '" + formId + "'>";
             var defaultValue = 1
             $.each(authorNames, function(index, name){
-                if(name == initialText){
+                if(name == initialText && initialText){
                     defaultValue = index;
                 }
                 var option = '<option value="' + (index) + '">' + name + '</option>';
@@ -150,7 +150,7 @@ $(function(){
             var form = "<select id = '" + formId + "'>";
             var defaultValue = 1
             $.each(verifierNames, function(index, name){
-                if(name == initialText){
+                if(name == initialText && initialText){
                     defaultValue = index;
                 }
                 var option = '<option value="' + (index) + '">' + name + '</option>';
