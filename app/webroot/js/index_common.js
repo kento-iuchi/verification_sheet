@@ -23,6 +23,22 @@ function synchronizeTwoTablesHeight()
     $("#page_selecter").offset({top : tableHeight + 110});
 };
 
+function changeDataTableWidth()
+{
+    var table_width = 0;
+    var data_th = $('#data_table th');
+
+    for (i=0, l = data_th.length; i < l ; i++){
+        if (data_th.eq(i).css('display') != 'none'){
+            table_width += data_th.eq(i).width();
+        }
+    }
+
+    console.log(table_width);
+    $('#data_table').width(table_width + 120);// スクロールバーのぶん適当に伸ばす
+    return table_width + 120;
+};
+
 $(function(){
     'use strict';
 
@@ -30,6 +46,7 @@ $(function(){
     $('#page_selecter').css('top', viewPartHeight + 'px');
     $('#page_selecter').css('display', 'block');
     synchronizeTwoTablesHeight();
+    var init_data_table_width = changeDataTableWidth();
 
     if (Cookies.get('hideColumnForDev') === 'true') {
         $('#hide-column-for-dev input').prop('checked', true);
@@ -130,6 +147,7 @@ $(function(){
             $('tr.needs-no-confirm').each(function(){
                 $(this).hide();
             })
+            changeDataTableWidth();
         } else {
             $('td.column-for-dev, th.column-for-dev').each(function(){
                 $(this).show();
@@ -137,6 +155,7 @@ $(function(){
             $('tr.needs-no-confirm').each(function(){
                 $(this).show();
             })
+            $('#data_table').width(init_data_table_width);
         }
         Cookies.set('hideColumnForDev', $(selector).prop('checked'));
     }

@@ -331,7 +331,7 @@ if (!$completed_mode_flag) {
             <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>">
                 <span class="record_text"><?php echo $item['Item']['supp_release_judgement']; ?></span>
             </td>
-            <td class = "record editable-cell author-column" id="<?php echo $item['Item']['id'] . "-verifier_id";?>">
+            <td class = "record editable-cell verifier-column" id="<?php echo $item['Item']['id'] . "-verifier_id";?>">
                 <span class="record_text"><?php echo $verifier_names[$item['Item']['verifier_id']]; ?></span>
             </td>
             <td class = "record editable-cell priority-column" id="<?php echo $item['Item']['id'] . "-manual_exists";?>">

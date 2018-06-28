@@ -133,7 +133,7 @@ $(function(){
             var authorNames = $('th.author-column').attr('data-author-options');
             authorNames = JSON.parse(authorNames);
             var form = "<select id = '" + formId + "'>";
-            var defaultValue = 1
+            var defaultValue = 5
             $.each(authorNames, function(index, name){
                 if(name == initialText && initialText){
                     defaultValue = index;
@@ -148,9 +148,9 @@ $(function(){
             var verifierNames = $('th.verifier-column').attr('data-verifier-options');
             verifierNames = JSON.parse(verifierNames);
             var form = "<select id = '" + formId + "'>";
-            var defaultValue = 1
+            var defaultValue = 5
             $.each(verifierNames, function(index, name){
-                if(name == initialText && initialText){
+                if(name == initialText && initialText != ''){
                     defaultValue = index;
                 }
                 var option = '<option value="' + (index) + '">' + name + '</option>';
