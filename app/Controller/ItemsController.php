@@ -364,6 +364,21 @@ class ItemsController extends AppController
         $url = $PR_LIST_URL. '?access_token='. $GITHUB_API_TOKEN. '&state=open';
         echo $url;
         $prs = shell_exec("curl {$url}");
+        if (!empty($prs)){
+            ignore_user_abort(true);       // ブラウザから切断されても処理を中断しないようにする
+            set_time_limit(0);             // 処理時間を無制限にする
+            $response = 'OK';              // レスポンスに含める文字列
+            $length = strlen($response );
+
+            ob_start();                    // 出力をバッファにためる
+            echo $response ;
+
+            header("Content-Length: $length");
+            header("Connection: close");   // HTTP接続を切る
+            ob_end_flush();
+            ob_flush();
+            flush();                       // 溜めてあった出力を解放しフラッシュする
+        }
         $prs = json_decode($prs);
 
         $null_pr_numbers = array();
