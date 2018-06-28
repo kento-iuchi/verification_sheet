@@ -196,7 +196,6 @@ $(function(){
             type: "POST",
             data: {id : recordId},
             dataType: "text",
-            async: false,
         })
     }
 
@@ -204,123 +203,120 @@ $(function(){
     {
         var lastUpdatedTime
         fetchLastUpdatedTime(id).done(function(response){
+            console.log(response);
             lastUpdatedTime = response;
+            /*
+            最終更新時間　> 編集開始時間の場合、
+            ユーザが編集している最中にレコードが更新されたとみなす。
+            最終更新時間 - 編集開始時間が1000以上という条件にしているのは、１ユーザーが高速で編集セルを切り替えた際に
+            誤反応させないため
+            */
+            if ((lastUpdatedTime - editStartingTime) > 1000){
+                if(confirm('他のユーザーによってレコードが更新されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
+
+                    $('body').append('<textarea id="temp-clipboard-field"></textarea>');
+                    $('#temp-clipboard-field').val(currentText);
+                    $('#temp-clipboard-field').select();
+
+                    document.execCommand('copy');
+                }
+                location.reload();
+                finishEdit();
+                return;
+            }
+
+            var editActionUrl = WEBROOT + 'items/edit/';
+            currentText = replaceSlashAndColon(currentText);
+            currentText = currentText.replace(/\r\n/g, '&&NEWLINE&&');
+            currentText = currentText.replace(/\r/g, '&&NEWLINE&&');
+            currentText = currentText.replace(/\n/g, '&&NEWLINE&&');
+            if(currentText.length == 0){
+                currentText = '*EMPTY*';
+            }
+
+            var today = new Date();
+            lastUpdatedTime = Math.floor(today.getTime() / 1000);
+            console.log(currentText);
+            console.log(columnName);
+            $.ajax({
+            url: editActionUrl,
+            type: "POST",
+            data: { id : id, column_name: columnName, content: currentText, last_updated_time : lastUpdatedTime },
+            dataType: "text",
+            success : function(response){
+                console.log(response);
+                //通信成功時
+                var textEdited = currentText;
+                if(textEdited == '*EMPTY*'){
+                    textEdited = '';
+                }
+                textEdited = restoreSlashAndColon(textEdited);
+                textEdited = textEdited.replace(/&&NEWLINE&&/g, '</br>');
+                if(columnName == 'chatwork_url'
+                　　|| columnName == 'github_url'
+                　　|| columnName == 'verification_enviroment_url'){
+                    textEdited = '<a href="' + textEdited + '">' + textEdited + '</a>';
+                }
+
+                $(selectedTd).html(recordtext(textEdited));
+                if (columnName == 'pullrequest_update' || columnName == 'due_date_for_release'){
+                    var pullrequestDate = new Date($('#' + id + '-pullrequest_update').text());
+                    var dueDateForRelease = new Date($('#' + id + '-due_date_for_release').text());
+                    var todayDate = new Date();
+
+                    $('#' + id + '-elapsed').text(recordtext(Math.round((todayDate - pullrequestDate)/86400000)));
+
+                    var graceDaysOfVerificationComplete = Math.round((dueDateForRelease - todayDate)/86400000);
+                    graceDaysOfVerificationComplete = isNaN(graceDaysOfVerificationComplete) ? '' : graceDaysOfVerificationComplete;
+                    $('#' + id + '-grace_days_of_verification_complete').html(recordtext(graceDaysOfVerificationComplete));
+                }
+                if (columnName == 'due_date_for_release') {
+                    var priority = ['不要', '低', '中', '高'];
+                    $(selectedTd).html(priority[textEdited]);
+                    if (textEdited == '3'){
+                        $(selectedTd).addClass('high_priority');
+                    } else {
+                        $(selectedTd).removeClass('high_priority');
+                    }
+                }
+                if (columnName == "author_id") {
+                    var authorNames = $('th.author-column').attr('data-author-options');
+                    authorNames = JSON.parse(authorNames);
+                    $(selectedTd).html(recordtext(authorNames[currentText]));
+                }
+                if (columnName == "verifier_id") {
+                    var verifierNames = $('th.verifier-column').attr('data-verifier-options');
+                    verifierNames = JSON.parse(verifierNames);
+                    $(selectedTd).html(recordtext(verifierNames[currentText]));
+                }
+                if (columnName == "manual_exists") {
+                    var manual_exists_char = currentText == 1 ? '◯' : '✕';
+                    $(selectedTd).html(recordtext(manual_exists_char));
+                }
+                if (columnName == "needs_supp_confirm") {
+                    if (currentText == 1) {
+                        var needs_supp_confirm_char = 'いいえ';
+                        $('#item_' + id + '-head').removeClass('needs-no-confirm');
+                        $('#item_' + id + '-data').removeClass('needs-no-confirm');
+                    } else {
+                        var needs_supp_confirm_char = 'はい';
+                        $('#item_' + id + '-head').addClass('needs-no-confirm');
+                        $('#item_' + id + '-data').addClass('needs-no-confirm');
+                    }
+                    $(selectedTd).html(recordtext(needs_supp_confirm_char));
+                }
+                synchronizeTwoTablesHeight();
+                updateStyles(id);
+            },
+            error: function(){
+                //通信失敗時の処理
+                alert('通信失敗');
+            }
+            });
         }).fail(function(response){
             alert('最終編集時間の取得に失敗しました');
             return;
         })
-        if (!lastUpdatedTime){
-            finishEdit();
-            return;
-        }
-        /*
-        最終更新時間　> 編集開始時間の場合、
-        ユーザが編集している最中にレコードが更新されたとみなす。
-        最終更新時間 - 編集開始時間が10000以上という条件にしているのは、１ユーザーが高速で編集セルを切り替えた際に
-        誤反応させないため
-        */
-        if ((lastUpdatedTime - editStartingTime) > 1){
-            if(confirm('他のユーザーによってレコードが更新されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
-
-                $('body').append('<textarea id="temp-clipboard-field"></textarea>');
-                $('#temp-clipboard-field').val(currentText);
-                $('#temp-clipboard-field').select();
-
-                document.execCommand('copy');
-            }
-            location.reload();
-            finishEdit();
-            return;
-        }
-
-        var editActionUrl = WEBROOT + 'items/edit/';
-        currentText = replaceSlashAndColon(currentText);
-        currentText = currentText.replace(/\r\n/g, '&&NEWLINE&&');
-        currentText = currentText.replace(/\r/g, '&&NEWLINE&&');
-        currentText = currentText.replace(/\n/g, '&&NEWLINE&&');
-        if(currentText.length == 0){
-            currentText = '*EMPTY*';
-        }
-
-        var today = new Date();
-        lastUpdatedTime = Math.floor(today.getTime() / 1000);
-        console.log(currentText);
-        console.log(columnName);
-        $.ajax({
-        url: editActionUrl,
-        type: "POST",
-        data: { id : id, column_name: columnName, content: currentText, last_updated_time : lastUpdatedTime },
-        dataType: "text",
-        success : function(response){
-            console.log(response);
-            //通信成功時
-            var textEdited = currentText;
-            if(textEdited == '*EMPTY*'){
-                textEdited = '';
-            }
-            textEdited = restoreSlashAndColon(textEdited);
-            textEdited = textEdited.replace(/&&NEWLINE&&/g, '</br>');
-            if(columnName == 'chatwork_url'
-            　　|| columnName == 'github_url'
-            　　|| columnName == 'verification_enviroment_url'){
-                textEdited = '<a href="' + textEdited + '">' + textEdited + '</a>';
-            }
-
-            $(selectedTd).html(recordtext(textEdited));
-            if (columnName == 'pullrequest_update' || columnName == 'due_date_for_release'){
-                var pullrequestDate = new Date($('#' + id + '-pullrequest_update').text());
-                var dueDateForRelease = new Date($('#' + id + '-due_date_for_release').text());
-                var todayDate = new Date();
-
-                $('#' + id + '-elapsed').text(recordtext(Math.round((todayDate - pullrequestDate)/86400000)));
-
-                var graceDaysOfVerificationComplete = Math.round((dueDateForRelease - todayDate)/86400000);
-                graceDaysOfVerificationComplete = isNaN(graceDaysOfVerificationComplete) ? '' : graceDaysOfVerificationComplete;
-                $('#' + id + '-grace_days_of_verification_complete').html(recordtext(graceDaysOfVerificationComplete));
-            }
-            if (columnName == 'due_date_for_release') {
-                var priority = ['不要', '低', '中', '高'];
-                $(selectedTd).html(priority[textEdited]);
-                if (textEdited == '3'){
-                    $(selectedTd).addClass('high_priority');
-                } else {
-                    $(selectedTd).removeClass('high_priority');
-                }
-            }
-            if (columnName == "author_id") {
-                var authorNames = $('th.author-column').attr('data-author-options');
-                authorNames = JSON.parse(authorNames);
-                $(selectedTd).html(recordtext(authorNames[currentText]));
-            }
-            if (columnName == "verifier_id") {
-                var verifierNames = $('th.verifier-column').attr('data-verifier-options');
-                verifierNames = JSON.parse(verifierNames);
-                $(selectedTd).html(recordtext(verifierNames[currentText]));
-            }
-            if (columnName == "manual_exists") {
-                var manual_exists_char = currentText == 1 ? '◯' : '✕';
-                $(selectedTd).html(recordtext(manual_exists_char));
-            }
-            if (columnName == "needs_supp_confirm") {
-                if (currentText == 1) {
-                    var needs_supp_confirm_char = 'いいえ';
-                    $('#item_' + id + '-head').removeClass('needs-no-confirm');
-                    $('#item_' + id + '-data').removeClass('needs-no-confirm');
-                } else {
-                    var needs_supp_confirm_char = 'はい';
-                    $('#item_' + id + '-head').addClass('needs-no-confirm');
-                    $('#item_' + id + '-data').addClass('needs-no-confirm');
-                }
-                $(selectedTd).html(recordtext(needs_supp_confirm_char));
-            }
-            synchronizeTwoTablesHeight();
-            updateStyles(id);
-        },
-        error: function(){
-            //通信失敗時の処理
-            alert('通信失敗');
-        }
-        });
     };
 
     function replaceSlashAndColon(originText)

@@ -107,9 +107,9 @@ class ItemsController extends AppController
         $this->request->data['Item']['last_updated_time'] = $last_updated_time;
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
-                echo $content;
+                echo true;
             } else {
-                echo '失敗です';
+                echo false;
             }
         }
     }
