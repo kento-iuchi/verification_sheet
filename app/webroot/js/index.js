@@ -380,18 +380,19 @@ $(function(){
             tdColor = '#000000';
             fontColor = '#FFFFFF';
         } else if(graceDays <= 1){
-            tdColor = '#F78181';
+            tdColor = '#ba2636';
+            fontColor = '#FFFFFF';
         } else if(graceDays <= 3){
-            tdColor = '#FAAC58';
+            tdColor = '#f08300';
         } else if(graceDays <= 5){
-            tdColor = '#F4FA58';
+            tdColor = '#f5e56b';
         }
 
-        $('#item_' + itemId + '-head td.record').each(function(){
+        $('#item_' + itemId + '-head td').each(function(){
             $(this).css('background', tdColor);
             $(this).children('span').css('color', fontColor);
         });
-        $('#item_' + itemId + '-data td.record').each(function(){
+        $('#item_' + itemId + '-data td').each(function(){
             $(this).css('background', tdColor);
             $(this).children('span').css('color', fontColor);
         });

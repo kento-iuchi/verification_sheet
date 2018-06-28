@@ -28,6 +28,7 @@ if (!$completed_mode_flag) {
 ?>
 <?php echo $this->Html->css('index.css');?>
 
+<button>
 <?php
 if (!$completed_mode_flag) {
     echo $this->Html->link('完了済みの項目を表示', '/items/index/1', array('class' => 'button',));
@@ -35,6 +36,7 @@ if (!$completed_mode_flag) {
     echo $this->Html->link('未完了の項目を表示', '/items/index/0', array('class' => 'button',));
 }
 ?>
+</button>
 <div id="search-form">
     <?php
         echo $this->form->create('Item', array(
@@ -42,62 +44,62 @@ if (!$completed_mode_flag) {
             'type'  => 'GET',
         ));
     ?>
-    <table <?php echo $completed_mode_flag ? 'class="completed-item"' : ''?>>
+    <table class="search-form <?php echo $completed_mode_flag ? "completed-item" : ''?>">
         <tr>
             <td>
                 <label>作成日</label>
             </td>
-            <td>
-                    <?php echo $this->Datepicker->datepicker(
-                        'from_created',
-                        array(
-                            'div' => false,
-                            'label' => false,
-                            'default' => $query['from_created'],
-                            'class' => 'search-input',
-                            )
-                        );
-                    ?>
-            </td>
-            <td>
-                    <?php echo $this->Datepicker->datepicker(
-                        'to_created',
-                        array(
-                            'div' => false,
-                            'label' => false,
-                            'default' => $query['to_created'],
-                            'class' => 'search-input',
-                            )
-                        );
-                    ?>
-            </td>
+            <td><div class="input">
+            <?php echo $this->Datepicker->datepicker(
+                'from_created',
+                array(
+                    'div' => false,
+                    'label' => false,
+                    'default' => $query['from_created'],
+                    'class' => 'search-input',
+                    )
+                );
+            ?>
+            </div></td>
+            <td><div class="input">
+            <?php echo $this->Datepicker->datepicker(
+                'to_created',
+                array(
+                    'div' => false,
+                    'label' => false,
+                    'default' => $query['to_created'],
+                    'class' => 'search-input',
+                    )
+                );
+            ?>
+            </div></td>
             <td>
                 <label>masterマージ完了日</label>
             </td>
-            <td>
-                    <?php echo $this->Datepicker->datepicker(
-                        'from_merge_finish_date_to_master',
-                        array(
-                            'div' => false,
-                            'label' => false,
-                            'default' => $query['from_merge_finish_date_to_master'],
-                            'class' => 'search-input',
-                            )
-                        );
-                    ?>
-            </td>
-            <td>
-                    <?php echo $this->Datepicker->datepicker(
-                        'to_merge_finish_date_to_master',
-                        array(
-                            'div' => false,
-                            'label' => false,
-                            'default' => $query['to_merge_finish_date_to_master'],
-                            'class' => 'search-input',
-                            )
-                        );
-                    ?>
-            </td>
+            <td><div class="input">
+            <?php echo $this->Datepicker->datepicker(
+                'from_merge_finish_date_to_master',
+                array(
+                    'div' => false,
+                    'label' => false,
+                    'default' => $query['from_merge_finish_date_to_master'],
+                    'class' => 'search-input',
+                    )
+                );
+            ?>
+            </div></td>
+            <td><div class="input">
+            <?php echo $this->Datepicker->datepicker(
+                'to_merge_finish_date_to_master',
+                array(
+                    'div' => false,
+                    'label' => false,
+                    'default' => $query['to_merge_finish_date_to_master'],
+                    'class' => 'search-input',
+                    )
+                );
+            ?>
+            </div></td>
             <td>
                 <?php echo $this->form->submit('検索', array('name' => 'search_condition'))?>
             </td>
@@ -106,7 +108,7 @@ if (!$completed_mode_flag) {
     <?php echo $this->form->end();?>
 </div>
 <span id="hide-column-for-dev">
-    <input type="checkbox">開発部用の項目を表示しない
+    <input type="checkbox"><span class="body-text">開発部用の項目を表示しない</span>
 </span>
 <?php echo $this->Form->create('Item', array('url' => 'add'));?>
 <div id="view_part">
@@ -119,7 +121,7 @@ if (!$completed_mode_flag) {
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▲', array('direction' => 'desc', 'lock' => true)) ?></button>
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
-        <th class="needs-supp-confirm-column">
+        <th class="needs-supp-confirm-column column-for-dev">
             サポート・営業<br>確認不要
         </th>
         <th class="content-column">内容</th>
@@ -145,7 +147,7 @@ if (!$completed_mode_flag) {
         <td class="record id-column" id="<?php echo $item['Item']['id'] . "-id";?>" data-id="<?php echo h($item['Item']['id']); ?>">
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
         </td>
-        <td class="record needs-supp-confirm-column editable-cell" id="<?php echo $item['Item']['id'] . "-needs_supp_confirm";?>">
+        <td class="record needs-supp-confirm-column editable-cell column-for-dev" id="<?php echo $item['Item']['id'] . "-needs_supp_confirm";?>">
             <span class="record_text"><?php echo $item['Item']['needs_supp_confirm'] == 1 ? 'いいえ' : 'はい' ?></span>
         </td>
         <td class="record content-column editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>">
@@ -170,7 +172,7 @@ if (!$completed_mode_flag) {
     <?php if(!$completed_mode_flag):?>
     <tr class="input_part">
         <td class="id-column"></td>
-        <td class="needs-supp-confirm-column">
+        <td class="needs-supp-confirm-column column-for-dev">
             <?php echo $this->Form->input('needs_supp_confirm', array(
                     'label' => false,
                     'options' => array(1 => 'いいえ', 0 => 'はい')
