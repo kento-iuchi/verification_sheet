@@ -5,7 +5,7 @@ $(function(){
     synchronizeTwoTablesHeight();
 
     // ダブルクリックでその場変種
-    var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'verification_history'];
+    var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'verification_history', 'author_id'];
     var editCellId;
     var selectedTd;
     var recordId;

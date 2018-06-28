@@ -382,7 +382,7 @@ if (!$completed_mode_flag) {
             <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></div>
             </td>
-            <td class = "record editable-cell author-column" id="<?php echo $item['Item']['id'] . "-author_id";?>">
+            <td class = "record author-column" id="<?php echo $item['Item']['id'] . "-author_id";?>">
                 <span class="record_text"><?php echo $author_names[$item['Item']['author_id']]; ?></span>
             </td>
             <td class = "record editable-cell point-column column-for-dev" id="<?php echo $item['Item']['id'] . "-pivotal_point";?>">
@@ -393,7 +393,9 @@ if (!$completed_mode_flag) {
             </td>
             <td class= "complete_column">
                 <div class="complete">
-                    <button type="button" class="<?php echo !$completed_mode_flag ? 'complete_button' : 'incomplete_button'?>" id="<?php echo $item['Item']['id'] . "-complete_button";?>">完了</button>
+                    <button type="button" class="<?php echo !$completed_mode_flag ? 'complete_button' : 'incomplete_button'?>" id="<?php echo $item['Item']['id'] . "-complete_button";?>">
+                        <?php echo !$completed_mode_flag ? '完了' : '戻す'?>
+                    </button>
                 </div>
             </td>
         </tr>
@@ -446,7 +448,8 @@ if (!$completed_mode_flag) {
     </table>
 </div>
 </div>
-<div id="page_selecter">
+<div id="under-menu">
+<div id="page_selector">
     <?php echo $this->Paginator->numbers(
         array (
             'before' => $this->Paginator->hasPrev() ? $this->Paginator->first('<<', array('tag' => 'first')).' | ' : '',
@@ -455,4 +458,5 @@ if (!$completed_mode_flag) {
         )
     );
     ?>
+</span>
 </div>

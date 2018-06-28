@@ -20,7 +20,6 @@ function synchronizeTwoTablesHeight()
     }
 
     var tableHeight = $("#header_table").height();
-    $("#page_selecter").offset({top : tableHeight + 110});
 };
 
 function measureTableWidth(table_id)
@@ -40,7 +39,7 @@ function measureTableWidth(table_id)
 function changeScrollTbodyHeight()
 {
     var tbody_height = 0;
-    var table_tr = $('#header_table tr');
+    var table_tr = $('#header_table tbody tr');
 
     for (i=0, l = table_tr.length; i < l ; i++){
         if (table_tr.eq(i).css('display') != 'none'){
@@ -49,13 +48,11 @@ function changeScrollTbodyHeight()
     }
 
     if (tbody_height < 500) {
-        $('tbody.scrollBody').height(tbody_height);
+        $('tbody.scrollBody').height(tbody_height + table_tr.eq(-1).height());
     } else {
         $('tbody.scrollBody').height(500);
     }
-    var viewPartHeight = $('#header_table').outerHeight();
-    $('#page_selecter').css('top', (viewPartHeight + 110) + 'px');
-    $('#page_selecter').css('display', 'block');
+    $('view_part_data').height($('tbody.scrollBody').height());
 
     return tbody_height;
 }
@@ -65,6 +62,7 @@ $(function(){
 
     synchronizeTwoTablesHeight();
     var init_data_table_width = measureTableWidth('#data_table') + 120;// スクロールバーのぶん適当に伸ばす
+    $('#data_table').width(init_data_table_width);
     var init_header_table_width = $('#header_table').width();
     var init_scroll_tbody_height = changeScrollTbodyHeight();
     if (Cookies.get('hideColumnForDev') === 'true') {
