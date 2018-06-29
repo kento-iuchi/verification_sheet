@@ -305,11 +305,8 @@ class ItemsController extends AppController
                     $message .= 'by ' . $payload['pull_request']['user']['login'];
                     $message .= '[/info]';
 
-                    $room_id = 103474903;
-                    $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
-
                     $message_id = $this->send_message_to_chatwork($message);
-                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid103474903/#!rid{$room_id}-{$message_id}";
+                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid{$room_id}/#!rid-{$message_id}";
 
                     if ($this->Item->save($new_item)) {
                         $this->log('save from github: successed');
@@ -322,7 +319,6 @@ class ItemsController extends AppController
                     $this->check_all_open_pullrequests_mergeability();
                 }
             }
-
             if (array_key_exists('issue', $payload) || array_key_exists('comment', $payload)) {
                 $this->tell_code_review_comment($payload);
             }
@@ -435,12 +431,8 @@ class ItemsController extends AppController
             $reviewed_item = $this->Item->find('first', array('conditions' => array('Item.pullrequest_number' => $pullrequest_number)));
             $last_reviewr_id = $reviewed_item['Item']['last_reviewed_author_id'];
             if ($target_github_name == $reviewer_github_name) { // 自分で自分のプルリクにコメントした場合、最後にレビューした人にメッセージを飛ばす
-                foreach ($authors as $data_id => $author_info) {
-                    if ($author_info['Author']['id'] == $last_reviewr_id) {
-                        $target_chatwork_id = $author_info['Author']['chatwork_id'];
-                        break;
-                    }
-                }
+                $author_cw_ids = Hash::combine($this->Author->find('all'), '{n}.Author.id', '{n}.Author.chatwork_id');
+                $target_chatwork_id = $author_cw_ids[$last_reviewr_id]
             } else { // 最終レビュワーを更新
                 if ($last_reviewr_id != $reviewer_id || empty($last_reviewr_id)) {
                     $reviewed_item['Item']['last_reviewed_author_id'] = $reviewer_id;
