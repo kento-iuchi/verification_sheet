@@ -14,13 +14,6 @@ for ($vi=0; $vi < $verifiers_count; $vi++) {
 ?>
 
 <?php
-$author_names = array();
-foreach($author as $author_array){
-    $author_names[$author_array['Author']['id']] = $author_array['Author']['name'];
-}
-?>
-
-<?php
 echo $this->Html->script('index_common.js');
 if (!$completed_mode_flag) {
     echo $this->Html->script('index.js');

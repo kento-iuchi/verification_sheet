@@ -16,7 +16,6 @@ function synchronizeTwoTablesHeight()
         } else if(data_cells_height > header_cells_height){
             header_cells.height(data_cells_height);
         }
-        // var headerTableTrHeight = header_cells[0].height();
     }
 
     var tableHeight = $("#header_table").height();
