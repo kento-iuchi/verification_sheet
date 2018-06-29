@@ -26,35 +26,8 @@ class Item extends AppModel
         ),
     );
 
-    public $validate = array
-    (
-        // 'content' => array(
-        //     'rule' => 'notBlank',
-        // ),
-        // 'category' => array(
-        //     'rule' => 'notBlank',
-        // ),
-        // 'chatwork_url' => array(
-        //     'rule' => 'notBlank',
-        // ),
-        // 'github_url' => array(
-        //     'rule' => 'notBlank',
-        // ),
-        // 'pullrequest' => array(
-        //     'rule' => array('date', 'ymd'),
-        // ),
-        // 'confirm_points' => array(
-        //     'rule' => 'notBlank',
-        // ),
-        // 'author' => array(
-        //     'rule' => 'notBlank',
-        //     'allowEmpty' => false,
-        // ),
-    );
-
     public function beforeSave($options = array())
     {
-
         foreach ($this->data['Item'] as &$field) {
             if ($field == '*EMPTY*') {
                 $field = '';
@@ -75,7 +48,6 @@ class Item extends AppModel
         if (isset($this->data[$this->alias]['modified'])) {
             unset($this->data[$this->alias]['modified']);
         }
-        // $this->data[$this->alias]['last_updated_time'] = time();
         return parent::save($this->data, $validate, $fieldList);
     }
 
