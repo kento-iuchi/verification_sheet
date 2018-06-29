@@ -108,6 +108,8 @@ CakeLog::config('error', array(
 	'engine' => 'File',
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
+	'size' => '10MB',
+	'rotate' => 10,
 ));
 
 CakePlugin::load('DebugKit');
