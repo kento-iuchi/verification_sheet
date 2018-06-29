@@ -1,5 +1,5 @@
 
-function synchronizeTwoTablesHeight()
+function synchronizeTwoTablesHeight(edited_table_id = null)
 {
     var header_tr = $("#header_table tr.view_part_item");
     var data_tr = $("#data_table tr.view_part_item");
@@ -11,10 +11,19 @@ function synchronizeTwoTablesHeight()
         var header_cells_height = header_cells.height();
         var data_cells_height = data_cells.height();
 
-        if(header_cells_height > data_cells_height){
-            data_cells.height(header_cells_height);
-        } else if(data_cells_height > header_cells_height){
-            header_cells.height(data_cells_height);
+        if (edited_table_id != null) {
+            console.log(edited_table_id)
+            if (edited_table_id == 'header_table') {
+                data_cells.height(header_cells_height);
+            } else if(edited_table_id == 'data_table') {
+                header_cells.height(data_cells_height);
+            }
+        } else {
+            if (header_cells_height > data_cells_height) {
+                data_cells.height(header_cells_height);
+            } else if(data_cells_height > header_cells_height){
+                header_cells.height(data_cells_height);
+            }
         }
     }
 

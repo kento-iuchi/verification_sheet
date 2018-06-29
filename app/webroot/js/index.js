@@ -211,7 +211,7 @@ $(function(){
             最終更新時間 - 編集開始時間が1000以上という条件にしているのは、１ユーザーが高速で編集セルを切り替えた際に
             誤反応させないため
             */
-            if ((lastUpdatedTime - editStartingTime) > 1){
+            if ((lastUpdatedTime - editStartingTime) > 10){
                 if(confirm('他のユーザーによってレコードが更新されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
 
                     $('body').append('<textarea id="temp-clipboard-field"></textarea>');
@@ -239,11 +239,11 @@ $(function(){
             console.log(currentText);
             console.log(columnName);
             $.ajax({
-            url: editActionUrl,
-            type: "POST",
-            data: { id : id, column_name: columnName, content: currentText, last_updated_time : lastUpdatedTime },
-            dataType: "text",
-            success : function(response){
+                url: editActionUrl,
+                type: "POST",
+                data: { id : id, column_name: columnName, content: currentText, last_updated_time : lastUpdatedTime },
+                dataType: "text",
+            }).done(function(response){
                 console.log(response);
                 //通信成功時
                 var textEdited = currentText;
@@ -305,14 +305,13 @@ $(function(){
                     }
                     $(selectedTd).html(recordtext(needs_supp_confirm_char));
                 }
-                synchronizeTwoTablesHeight();
+                var table_id = $(selectedTd).parents('table').attr('id');
+                synchronizeTwoTablesHeight(table_id);
                 updateStyles(id);
-            },
-            error: function(){
+            }).fail(function(){
                 //通信失敗時の処理
                 alert('通信失敗');
-            }
-            });
+            })
         }).fail(function(response){
             alert('最終編集時間の取得に失敗しました');
             return;
