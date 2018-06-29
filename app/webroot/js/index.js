@@ -211,7 +211,7 @@ $(function(){
             最終更新時間 - 編集開始時間が1000以上という条件にしているのは、１ユーザーが高速で編集セルを切り替えた際に
             誤反応させないため
             */
-            if ((lastUpdatedTime - editStartingTime) > 1000){
+            if ((lastUpdatedTime - editStartingTime) > 1){
                 if(confirm('他のユーザーによってレコードが更新されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
 
                     $('body').append('<textarea id="temp-clipboard-field"></textarea>');
