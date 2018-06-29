@@ -432,7 +432,7 @@ class ItemsController extends AppController
             $last_reviewr_id = $reviewed_item['Item']['last_reviewed_author_id'];
             if ($target_github_name == $reviewer_github_name) { // 自分で自分のプルリクにコメントした場合、最後にレビューした人にメッセージを飛ばす
                 $author_cw_ids = Hash::combine($this->Author->find('all'), '{n}.Author.id', '{n}.Author.chatwork_id');
-                $target_chatwork_id = $author_cw_ids[$last_reviewr_id]
+                $target_chatwork_id = $author_cw_ids[$last_reviewr_id];
             } else { // 最終レビュワーを更新
                 if ($last_reviewr_id != $reviewer_id || empty($last_reviewr_id)) {
                     $reviewed_item['Item']['last_reviewed_author_id'] = $reviewer_id;
