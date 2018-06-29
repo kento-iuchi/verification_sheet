@@ -23,10 +23,12 @@ class ItemsController extends AppController
             ),
         ),
     );
-    public $presetVars = true;
 
     public function index($completed_mode_flag = 0)
     {
+        $this->layout = 'IndexLayout';
+        $this->header("Content-type: text/html; charset=utf-8");
+
         $conditions = array(
             'is_completed' => $completed_mode_flag,
         );
@@ -42,13 +44,12 @@ class ItemsController extends AppController
             $conditions = array_merge($conditions, $this->Item->parseCriteria($query_data));
         }
         $this->set('query', $query_data);
-
-        $this->header("Content-type: text/html; charset=utf-8");
-        $this->layout = 'IndexLayout';
         $this->set('items', $this->paginate('Item', $conditions));
         $this->set('completed_mode_flag', $completed_mode_flag);
         $this->set('verifier', $this->Verifier->find('all'));
         $this->set('author', $this->Author->find('all'));
+        $author_names = Hash::combine($this->Author->find('all'), '{n}.Author.id', '{n}.Author.name');
+        $this->set('author_names', $author_names);
     }
 
     public function add()
@@ -58,7 +59,7 @@ class ItemsController extends AppController
             if ($this->Item->save($this->request->data)) {
                 return $this->redirect(array('action' => 'index'));
             } else {
-                echo "add error";
+                echo "500: failed to add Item";
             }
         }
         return $this->redirect(array('action' => 'index'));
@@ -100,15 +101,14 @@ class ItemsController extends AppController
         if ($column_name == 'tech_release_judgement'){
             $this->request->data['Item']['status'] = 'サポート・営業確認中';
         }
-        $this->log($this->request->data);
-        $this->log($column_name);
-        $this->log(isset($this->request->data['Item'][$column_name]));
         $this->request->data['Item'][$column_name] = $content;
         $this->request->data['Item']['last_updated_time'] = $last_updated_time;
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
+                $this->log("Edit suceed [id:{$this->Item->id} field:{$column_name}]");
                 echo true;
             } else {
+                $this->log("Edit failed [id:{$this->Item->id} field:{$column_name}]");
                 echo false;
             }
         }
@@ -132,37 +132,11 @@ class ItemsController extends AppController
         $this->request->data['Item']['is_completed'] = $this->request->data['Item']['is_completed'] == 0 ? 1 : 0;
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
-                echo '変更しました';
+                echo 'successfully switched complete status';
             } else {
-                echo '変更できませんでした';
+                echo 'failed to switch complete status';
             }
         }
-    }
-
-    public function show_completed()
-    {
-        $conditions = array(
-            'is_completed' => 1,
-        );
-
-        $query_data = array(
-            'from_created' => '',
-            'to_created' => '',
-            'from_merge_finish_date_to_master' => '',
-            'to_merge_finish_date_to_master' => '',
-        );
-        if(!empty($this->request->query)){
-            $query_data = $this->request->query['data'];
-            $conditions = array_merge($conditions, $this->Item->parseCriteria($query_data));
-        }
-        $this->layout = 'IndexLayout';
-        $this->loadModel('VerificationHistory');
-        $this->loadModel('Verifier');
-        $this->loadModel('Author');
-        $this->set('items', $this->paginate('Item', $conditions));
-        $this->set('verifier', $this->Verifier->find('all'));
-        $this->set('author', $this->Author->find('all'));
-        $this->set('query', $query_data);
     }
 
     public function save_verification_history()
@@ -172,7 +146,7 @@ class ItemsController extends AppController
         if ($this->VerificationHistory->save($this->request->data)) {
             echo $this->VerificationHistory->id;
         } else {
-            echo 'save failed';
+            echo 'failed to save verification history';
         }
     }
 
@@ -188,7 +162,7 @@ class ItemsController extends AppController
 
         $options = array(
             CURLOPT_URL => $url, // URL
-            CURLOPT_HTTPHEADER => array('X-ChatWorkToken: '. $CHATWORK_API_kEY), // APIキー
+            CURLOPT_HTTPHEADER => array('X-ChatWorkToken: '. $CHATWORK_API_KEY), // APIキー
             CURLOPT_RETURNTRANSFER => true, // 文字列で返却
             CURLOPT_SSL_VERIFYPEER => false, // 証明書の検証をしない
             CURLOPT_POST => true, // POST設定
@@ -206,14 +180,18 @@ class ItemsController extends AppController
     {
         $message = '[info][title]おしらせ[/title]';
         $today_date = new Datetime(date("y-m-d"));
-        $contents = Hash::extract($this->Item->find('all'), '{n}.Item[is_completed=0].content');
-        $scheduled_release_dates = Hash::extract($this->Item->find('all'), '{n}.Item[is_completed=0].scheduled_release_date');
-        foreach ($scheduled_release_dates as $i => $schedled_release_date) {
-            $scheduled_release_date = new Datetime($schedled_release_date);
-            $grace_days = $today_date->diff($scheduled_release_date)->format('%r%a');
+        $items = $this->Item->find('all');
+        $contents = Hash::extract($items, '{n}.Item[is_completed=0].content');
+        $due_dates_for_release = Hash::extract($items, '{n}.Item[is_completed=0].due_date_for_release');
+        foreach ($due_dates_for_release as $i => $due_date_for_release) {
+            if (empty($due_date_for_release)){
+                continue;
+            }
+            $due_date_for_release = new Datetime($due_date_for_release);
+            $grace_days = $today_date->diff($due_date_for_release)->format('%r%a');
             if($grace_days <= 7){
                 $message .=  '■'. $contents[$i] . "\n";
-                $message .=  "　リリース予定日まで {$grace_days} 日です\n";
+                $message .=  "　必須リリース日まで {$grace_days} 日です\n";
             }
         }
 
@@ -234,12 +212,13 @@ class ItemsController extends AppController
             'supp_release_judgement' => 'サポートリリースOK判断日',
             'sale_release_judgement' => '営業リリースOK判断日',
         );
-        $titles = Hash::extract($this->Item->find('all'), '{n}.Item[is_completed=0].content');
+        $items = $this->Item->find('all');
+        $titles = Hash::extract($items, '{n}.Item[is_completed=0].content');
         foreach ($column_name_text as $column_name=> $column_name_jp) {
-            $target_column = Hash::extract($this->Item->find('all'), "{n}.Item[is_completed=0].{$column_name}");
-            foreach ($target_column as $idx => $value) {
-                $value_date = new Datetime($value);
-                $elapsed_days = $value_date->diff($today_date)->format('%r%a');
+            $target_column = Hash::extract($items, "{n}.Item[is_completed=0].{$column_name}");
+            foreach ($target_column as $idx => $judge_date) {
+                $judge_date = new Datetime($judge_date);
+                $elapsed_days = $judge_date->diff($today_date)->format('%r%a');
                 if($elapsed_days >= 3){
                     $message .=  '■'. $titles[$idx] . "\n";
                     $message .=  "　{$column_name_text[$column_name]}から {$elapsed_days} 日経過しています\n";
@@ -272,24 +251,19 @@ class ItemsController extends AppController
                 $pullrequest_id = $payload['pull_request']['id'];
 
                 if ($payload['action'] == 'opened' ||
-                    $payload['action'] == 'synchronize')
-                   {
+                    $payload['action'] == 'synchronize'){
 
                     $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]";
                     $message .=  $payload['pull_request']['html_url'];
 
                     $author_github_name = $payload['pull_request']['user']['login'];
-                    $this->loadModel('Author');
-                    $authors = $this->Author->find('all');
-                    $author_id = 1;
-                    foreach ($authors as $data_id => $author_info) {
-                        if ($author_info['Author']['github_account_name'] == $author_github_name) {
-                            $author_id = $author_info['Author']['id'];
-                            break;
-                        }
-                    }
 
-                    $due_date_for_release = date('Y-m-t', strtotime(date('+1 month')));
+                    $author_ids = Hash::combine($this->Author->find('all'), '{n}.Author.github_account_name', '{n}.Author.id');
+                    if (in_array($author_github_name, $author_ids)) {
+                        $author_id = $author_ids[$author_github_name];
+                    } else {
+                        $author_id = null;
+                    }
 
                     if ($payload['action'] == 'opened') {
                         $this->Item->create();
@@ -305,7 +279,6 @@ class ItemsController extends AppController
                                 'pullrequest_number' => $payload['number'],
                                 'pullrequest_id' => $pullrequest_id,
                                 'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
-                                'due_date_for_release' => $due_date_for_release,
                                 'confirm_comment' => $payload['pull_request']['body'],
                                 'author_id' => $author_id,
                                 'pivotal_point' => 1,
@@ -383,9 +356,8 @@ class ItemsController extends AppController
 
         $null_pr_numbers = array();
         foreach ($prs as $pr) {
-            $pr_number = $pr->number;
-            if(!$this->alert_mergeable($pr_number)){
-                $null_pr_numbers[] = $pr_number;
+            if(!$this->alert_mergeable($pr->number)){
+                $null_pr_numbers[] = $pr->number;
             }
         }
         // 一度APIを叩いた時点では$mergeableがnullの場合があるので、一度だけリトライする
@@ -394,7 +366,6 @@ class ItemsController extends AppController
                 $this->alert_mergeable($pr_number);
             }
         }
-
     }
 
     public function alert_mergeable($pullrequest_number)
@@ -410,15 +381,9 @@ class ItemsController extends AppController
         $title = $result->title;
         $mergeable = $result->mergeable;
         $url = $result->html_url;
-        $author_github_name = $result->user->login;
 
-        $authors = $this->Author->find('all');
-        foreach ($authors as $data_id => $author_info) {
-            if ($author_info['Author']['github_account_name'] == $author_github_name) {
-                $author_chatwork_id = $author_info['Author']['chatwork_id'];
-                break;
-            }
-        }
+        $author_cw_ids = Hash::combine($this->Author->find('all'), '{n}.Author.github_account_name', '{n}.Author.chatwork_id');
+        $author_chatwork_id = $author_cw_ids[$result->user->login];
 
         echo $title. "<br>";
         echo $mergeable. "<br>";
