@@ -328,7 +328,7 @@ if (!$completed_mode_flag) {
                 <span class="record_text"><?php echo $item['Item']['supp_release_judgement']; ?></span>
             </td>
             <td class = "record editable-cell verifier-column" id="<?php echo $item['Item']['id'] . "-verifier_id";?>">
-                <span class="record_text"><?php echo $verifier_names[$item['Item']['verifier_id']]; ?></span>
+                <span class="record_text"><?php echo !is_null($item['Item']['verifier_id']) ? $verifier_names[$item['Item']['verifier_id']] : '未設定'; ?></span>
             </td>
             <td class = "record editable-cell priority-column" id="<?php echo $item['Item']['id'] . "-manual_exists";?>">
                 <span class="record_text"><?php echo $item['Item']['manual_exists'] == 1 ? '◯' : '✕'; ?></span>
@@ -377,7 +377,7 @@ if (!$completed_mode_flag) {
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></div>
             </td>
             <td class = "record author-column" id="<?php echo $item['Item']['id'] . "-author_id";?>">
-                <span class="record_text"><?php echo $author_names[$item['Item']['author_id']]; ?></span>
+                <span class="record_text"><?php echo !is_null($item['Item']['author_id']) ? $author_names[$item['Item']['author_id']] : '未設定'; ?></span>
             </td>
             <td class = "record editable-cell point-column column-for-dev" id="<?php echo $item['Item']['id'] . "-pivotal_point";?>">
                 <span class="record_text"><?php echo $item['Item']['pivotal_point']; ?></span>
