@@ -96,9 +96,12 @@ $(function(){
 
     $('.complete_button, .incomplete_button').click(function()
     {
+        if $(this).parents('td').hasClass('somebody-editing') {
+            return;
+        }
         var button_id = $(this).attr('id');
         var item_id = button_id.split('-')[0];
-        var message = $(this).hasClass('complete_button') ? '　検証完了状態にしますか' : '　未完了に戻しますか？'
+        var message = $(this).hasClass('complete_button') ? '　検証完了状態にしますか？' : '　未完了に戻しますか？'
         if(!confirm('id = ' + item_id + message)){
             return false;
         }else{
