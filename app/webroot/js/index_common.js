@@ -96,7 +96,7 @@ $(function(){
 
     $('.complete_button, .incomplete_button').click(function()
     {
-        if $(this).parents('td').hasClass('somebody-editing') {
+        if ($(this).parents('td').hasClass('somebody-editing')) {
             return;
         }
         var button_id = $(this).attr('id');
