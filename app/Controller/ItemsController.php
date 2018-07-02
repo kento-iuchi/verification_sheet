@@ -159,7 +159,8 @@ class ItemsController extends AppController
         $editor_ip = $_SERVER['REMOTE_ADDR'];
     }
 
-    function unregister_item_editing(){
+    function unregister_item_editing()
+    {
         $this->autoRender = false;
         if (empty($this->request->data['record_id'])) {
             return false;
