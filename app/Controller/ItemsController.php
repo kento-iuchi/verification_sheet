@@ -136,7 +136,6 @@ class ItemsController extends AppController
             return false;
         }
 
-        // header('Content-Type: application/json');
         return json_encode($somebody_editing_item);
     }
 
