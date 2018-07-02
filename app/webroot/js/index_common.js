@@ -94,11 +94,12 @@ $(function(){
         }, interval);
     })
 
-    $('.incomplete_button').click(function()
+    $('.complete_button, .incomplete_button').click(function()
     {
         var button_id = $(this).attr('id');
         var item_id = button_id.split('-')[0];
-        if(!confirm('id = ' + item_id + '未完了に戻しますか？')){
+        var message = $(this).hasClass('complete_button') ? '　検証完了状態にしますか' : '　未完了に戻しますか？'
+        if(!confirm('id = ' + item_id + message)){
             return false;
         }else{
             turnItemIncompleted(item_id);

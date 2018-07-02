@@ -17,6 +17,7 @@ for ($vi=0; $vi < $verifiers_count; $vi++) {
 echo $this->Html->script('index_common.js');
 if (!$completed_mode_flag) {
     echo $this->Html->script('index.js');
+    echo $this->Html->script('detect_editing.js');
 }
 ?>
 <?php echo $this->Html->css('index.css');?>

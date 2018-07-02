@@ -7,7 +7,7 @@ include(CONFIG. 'github_api_token.php');
 
 class ItemsController extends AppController
 {
-    public $uses = array('Item', 'Author', 'Verifier', 'VerificationHistory');
+    public $uses = array('Item', 'Author', 'Verifier', 'VerificationHistory', 'EditingItem');
 
     public $helpers = array('Html', 'Form', 'Flash', 'Js', 'DatePicker');
 
@@ -121,6 +121,23 @@ class ItemsController extends AppController
         $last_updated_time = Hash::get($result, 'Item.last_updated_time');
 
         return $last_updated_time;
+    }
+
+    public function fetch_items_list_somebody_editing()
+    {
+        $this->autoRender = false;
+        $editing_items = $this->EditingItem->find('all');
+        if (empty($editing_items)) {
+            return false;
+        }
+
+        $somebody_editing_item = Hash::extract($editing_items, "{n}.EditingItem[editor_ip!={$_SERVER['REMOTE_ADDR']}]");
+        if (empty($somebody_editing_item)) {
+            return false;
+        }
+
+        // header('Content-Type: application/json');
+        return json_encode($somebody_editing_item);
     }
 
     public function toggle_complete_state($id = null)

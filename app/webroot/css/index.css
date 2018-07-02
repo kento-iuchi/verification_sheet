@@ -26,6 +26,7 @@ table th,td {
     word-break : break-all;
 }
 
+/* 検索フォーム */
 .search-form td {
     font-size: 16px;
     color: white;
@@ -45,10 +46,7 @@ table.search-form.completed-item td {
     width: 20px;
 }
 
-#header_table thead tr {
-    top: 25px;
-    z-index: 2;
-}
+/* テーブル */
 
 #view_part {
     width: 99%;
@@ -56,6 +54,11 @@ table.search-form.completed-item td {
     top: 0px;
     left: 1%;
     position: relative;
+}
+
+#header_table thead tr {
+    top: 25px;
+    z-index: 2;
 }
 
 #header_table {
@@ -99,7 +102,6 @@ tbody.scrollBody{
 }
 
 #view_part tbody tr:nth-child(odd) {
-    /* background: #dadea7; */
     background: #e4e6c2;
 }
 
@@ -120,6 +122,10 @@ tr.table_titles {
 
 #view_part table.completed-item tbody tr:nth-child(even) {
     background: #EFF2FB;
+}
+
+td.somebody-editing {
+    background: #8e8e8e !important;
 }
 
 table.completed-item tr.table_titles {

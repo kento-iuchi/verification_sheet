@@ -26,8 +26,13 @@ $(function(){
             finishEdit();
             return;
         }
-        editCellId = $(this).attr('id');
 
+        if ($(this).hasClass('somebody-editing')) {
+            finishEdit();
+            return;
+        }
+
+        editCellId = $(this).attr('id');
         formId = createEditForm(editCellId);
         if (formId == 'uneditable_cell'){
             finishEdit();
@@ -400,16 +405,16 @@ $(function(){
     }
 
     // 完了ボタンを押した際の処理
-    $('.complete_button').click(function()
-    {
-        var button_id = $(this).attr('id');
-        var item_id = button_id.split('-')[0];
-        if(!confirm('id = ' + item_id + ' 完了してよろしいですか？')){
-            return false;
-        }else{
-            turnItemCompleted(item_id);
-        }
-    })
+    // $('.complete_button').click(function()
+    // {
+    //     var button_id = $(this).attr('id');
+    //     var item_id = button_id.split('-')[0];
+    //     if(!confirm('id = ' + item_id + ' 完了してよろしいですか？')){
+    //         return false;
+    //     }else{
+    //         turnItemCompleted(item_id);
+    //     }
+    // })
 
     function turnItemCompleted(item_id)
     {
@@ -513,5 +518,6 @@ $(function(){
     function recordtext(text){
         return '<span class="record_text">' + text + '</span>'
     }
+
 
 });
