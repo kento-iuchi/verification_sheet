@@ -4,6 +4,12 @@ $(function(){
     updateStyles();
     synchronizeTwoTablesHeight();
 
+    if (Cookies.get('my_editing_item_record_id')) {
+        if (unRegisterItemEditing(Cookies.get('my_editing_item_record_id'))) {
+            Cookies.remove('my_editing_item_record_id');
+        }
+    }
+
     // ダブルクリックでその場変種
     var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'verification_history', 'author_id'];
     var editCellId;
@@ -20,6 +26,7 @@ $(function(){
             var columnName = editCellId.split('-')[1];
             currentText = $('#' + formId).val();
             postToEdit('#' + editCellId, recordId, columnName, currentText);
+            unRegisterItemEditing(my_editing_item_record_id);
         }
 
         if($(this).attr('id') == editCellId){// 編集中のセルをもう一度ダブルクリックしたなら、何も編集していない状態に
@@ -89,6 +96,8 @@ $(function(){
         if(!$(editCellSelector).hasClass('editable-cell')){
             return 'uneditable_cell';
         }
+
+        registerItemEditing(recordId);
 
         var today = new Date();
         editStartingTime = Math.floor(today.getTime() / 1000);
@@ -192,6 +201,44 @@ $(function(){
         }
 
         return formId;
+    }
+
+    var my_editing_item_record_id
+    function registerItemEditing(item_id)
+    {
+        $.ajax({
+            url: WEBROOT + 'items/register_item_editing',
+            type: "POST",
+            data: {item_id : item_id},
+            dataType: "text",
+        }).done(function(response){
+            if (response){
+                my_editing_item_record_id = response;
+                Cookies.set('my_editing_item_record_id', my_editing_item_record_id);
+                console.log(my_editing_item_record_id);
+            }
+        }).fail(function(response){
+            console.log('failed to register item editing');
+        });
+    }
+
+    function unRegisterItemEditing(record_id)
+    {
+        console.log(record_id);
+        $.ajax({
+            url: WEBROOT + 'items/unregister_item_editing',
+            type: "POST",
+            data: {record_id : record_id},
+            dataType: "text",
+        }).done(function(response){
+            if (response){
+                console.log('delete editing record');
+            }
+            return true;
+        }).fail(function(response){
+            console.log('failed to delete editing record');
+            return false;
+        });
     }
 
     function fetchLastUpdatedTime(recordId)

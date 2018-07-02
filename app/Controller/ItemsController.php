@@ -140,6 +140,40 @@ class ItemsController extends AppController
         return json_encode($somebody_editing_item);
     }
 
+    function register_item_editing()
+    {
+        $this->autoRender = false;
+        if (empty($this->request->data['item_id'])) {
+            return false;
+        }
+
+        $this->request->data['item_id'] = $this->request->data['item_id'];
+        $this->request->data['editor_ip'] = $_SERVER['REMOTE_ADDR'];
+        $this->EditingItem->create();
+        if ($this->EditingItem->save($this->request->data)) {
+            return $this->EditingItem->id;
+        } else {
+            return false;
+        }
+
+        $editor_ip = $_SERVER['REMOTE_ADDR'];
+    }
+
+    function unregister_item_editing(){
+        $this->autoRender = false;
+        if (empty($this->request->data['record_id'])) {
+            return false;
+        }
+
+        if ($this->EditingItem->delete($this->request->data['record_id'])) {
+            return true;
+        } else {
+            return false;
+        }
+
+        $editor_ip = $_SERVER['REMOTE_ADDR'];
+    }
+
     public function toggle_complete_state($id = null)
     {
         $this->autoRender = false;
