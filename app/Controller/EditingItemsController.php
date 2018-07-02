@@ -18,9 +18,9 @@ class EditingItemsController extends AppController
 
             if (($current_datetime - $modified) > 10800000) {
                 if ($this->EditingItem->delete($id) {
-                    $this->log("delete editing item record[{$id}]")
+                    $this->log("delete editing item record[{$id}]");
                 } else {
-                    $this->log("failed to delete editing item record[{$id}]")
+                    $this->log("failed to delete editing item record[{$id}]");
                 }
             }
         }
