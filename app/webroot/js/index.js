@@ -4,28 +4,30 @@ $(function(){
     updateStyles();
     synchronizeTwoTablesHeight();
 
+    // リロードしたとき、自分が編集している項目の情報を
+    //　editing_itemsケーブルから消去する
     if (Cookies.get('my_editing_item_record_id')) {
         if (unRegisterItemEditing(Cookies.get('my_editing_item_record_id'))) {
             Cookies.remove('my_editing_item_record_id');
         }
     }
 
-    // ダブルクリックでその場変種
+    // セルをダブルクリックした際の処理
     var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'verification_history', 'author_id'];
     var editCellId;
     var selectedTd;
     var recordId;
     var columnName;
     var formId;
-    var currentText;
+    var postValue;
     var isEditing = false;
     $('#view_part td.record').dblclick(function()
     {
         if (isEditing){
             var recordId   = editCellId.split('-')[0];
             var columnName = editCellId.split('-')[1];
-            currentText = $('#' + formId).val();
-            postToEdit('#' + editCellId, recordId, columnName, currentText);
+            postValue = $('#' + formId).val();
+            postToEditAction('#' + editCellId, recordId, columnName, postValue);
             unRegisterItemEditing(my_editing_item_record_id);
         }
 
@@ -56,8 +58,8 @@ $(function(){
             if(isEditing){
                 var recordId   = editCellId.split('-')[0];
                 var columnName = editCellId.split('-')[1];
-                currentText = $('#' + formId).val();
-                postToEdit('#' + editCellId, recordId, columnName, currentText);
+                postValue = $('#' + formId).val();
+                postToEditAction('#' + editCellId, recordId, columnName, postValue);
 
                 if (columnName == 'status' && !event.shiftKey){
                     var nextId = recordId + '-' + 'category';
@@ -249,7 +251,7 @@ $(function(){
         })
     }
 
-    function postToEdit(selectedTd, id, columnName, currentText)
+    function postToEditAction(selectedTd, id, columnName, postValue)
     {
         var lastUpdatedTime
         fetchLastUpdatedTime(id).done(function(response){
@@ -266,7 +268,7 @@ $(function(){
                 if(confirm('他のユーザーによってレコードが更新されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
 
                     $('body').append('<textarea id="temp-clipboard-field"></textarea>');
-                    $('#temp-clipboard-field').val(currentText);
+                    $('#temp-clipboard-field').val(postValue);
                     $('#temp-clipboard-field').select();
 
                     document.execCommand('copy');
@@ -277,12 +279,12 @@ $(function(){
             }
 
             var editActionUrl = WEBROOT + 'items/edit/';
-            currentText = replaceSlashAndColon(currentText);
-            currentText = currentText.replace(/\r\n/g, '&&NEWLINE&&');
-            currentText = currentText.replace(/\r/g, '&&NEWLINE&&');
-            currentText = currentText.replace(/\n/g, '&&NEWLINE&&');
-            if(currentText.length == 0){
-                currentText = '*EMPTY*';
+            postValue = replaceSlashAndColon(postValue);
+            postValue = postValue.replace(/\r\n/g, '&&NEWLINE&&');
+            postValue = postValue.replace(/\r/g, '&&NEWLINE&&');
+            postValue = postValue.replace(/\n/g, '&&NEWLINE&&');
+            if(postValue.length == 0){
+                postValue = '*EMPTY*';
             }
 
             var today = new Date();
@@ -290,11 +292,11 @@ $(function(){
             $.ajax({
                 url: editActionUrl,
                 type: "POST",
-                data: { id : id, column_name: columnName, content: currentText, last_updated_time : lastUpdatedTime },
+                data: { id : id, column_name: columnName, content: postValue, last_updated_time : lastUpdatedTime },
                 dataType: "text",
             }).done(function(response){
                 //通信成功時
-                var textEdited = currentText;
+                var textEdited = postValue;
                 if(textEdited == '*EMPTY*'){
                     textEdited = '';
                 }
@@ -330,19 +332,19 @@ $(function(){
                 if (columnName == "author_id") {
                     var authorNames = $('th.author-column').attr('data-author-options');
                     authorNames = JSON.parse(authorNames);
-                    $(selectedTd).html(recordtext(authorNames[currentText]));
+                    $(selectedTd).html(recordtext(authorNames[postValue]));
                 }
                 if (columnName == "verifier_id") {
                     var verifierNames = $('th.verifier-column').attr('data-verifier-options');
                     verifierNames = JSON.parse(verifierNames);
-                    $(selectedTd).html(recordtext(verifierNames[currentText]));
+                    $(selectedTd).html(recordtext(verifierNames[postValue]));
                 }
                 if (columnName == "manual_exists") {
-                    var manual_exists_char = currentText == 1 ? '◯' : '✕';
+                    var manual_exists_char = postValue == 1 ? '◯' : '✕';
                     $(selectedTd).html(recordtext(manual_exists_char));
                 }
                 if (columnName == "needs_supp_confirm") {
-                    if (currentText == 1) {
+                    if (postValue == 1) {
                         var needs_supp_confirm_char = 'いいえ';
                         $('#item_' + id + '-head').removeClass('needs-no-confirm');
                         $('#item_' + id + '-data').removeClass('needs-no-confirm');
@@ -393,8 +395,8 @@ $(function(){
         if (isEditing) {
             var recordId   = editCellId.split('-')[0];
             var columnName = editCellId.split('-')[1];
-            currentText = $('#' + formId).val();
-            postToEdit('#' + editCellId, recordId, columnName, currentText);
+            postValue = $('#' + formId).val();
+            postToEditAction('#' + editCellId, recordId, columnName, postValue);
             finishEdit();
         }
     })
@@ -546,7 +548,7 @@ $(function(){
             var newHistory =   '<tr class="verification-history">'
                              + '<td class="verification-history" style="background:#838b0d; color:white">' + verifierName + '</td>'
                              + '<td class="verification-history" style="background:#838b0d; color:white">' + today.getFullYear() + '-' + todayMonth + '-' + todayDate + '</td>'
-                             + '<td class="verification-history verification-history-detail" style="background:#ba2636; color:white">' +
+                             + '<td class="verification-history verification-history-detail" style="background:#ba2636; color:#FFFFFF">' +
                                    '<span class="verification-history-detail-link" data-comment = "' + comment + '" data-id = "' + response + '">詳細</span>' +
                                '</td>'
                              + '</tr>';
