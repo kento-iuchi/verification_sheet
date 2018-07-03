@@ -358,8 +358,7 @@ class ItemsController extends AppController
                     $message .= '[/info]';
 
                     $message_id = $this->send_message_to_chatwork($message);
-                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid{$room_id}/#!rid-{$message_id}";
-
+                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid103474903-{$message_id}";
                     if ($this->Item->save($new_item)) {
                         $this->log('save from github: successed');
                     } else {
