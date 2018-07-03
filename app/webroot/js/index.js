@@ -215,7 +215,6 @@ $(function(){
             if (response){
                 my_editing_item_record_id = response;
                 Cookies.set('my_editing_item_record_id', my_editing_item_record_id);
-                console.log(my_editing_item_record_id);
             }
         }).fail(function(response){
             console.log('failed to register item editing');
@@ -224,7 +223,6 @@ $(function(){
 
     function unRegisterItemEditing(record_id)
     {
-        console.log(record_id);
         $.ajax({
             url: WEBROOT + 'items/unregister_item_editing',
             type: "POST",
@@ -255,7 +253,6 @@ $(function(){
     {
         var lastUpdatedTime
         fetchLastUpdatedTime(id).done(function(response){
-            console.log(response);
             lastUpdatedTime = response;
             /*
             最終更新時間　> 編集開始時間の場合、
@@ -263,7 +260,9 @@ $(function(){
             最終更新時間 - 編集開始時間が1000以上という条件にしているのは、１ユーザーが高速で編集セルを切り替えた際に
             誤反応させないため
             */
-            if ((lastUpdatedTime - editStartingTime) > 10){
+            console.log('start ' + editStartingTime);
+            console.log('last  ' + lastUpdatedTime);
+            if ((lastUpdatedTime - editStartingTime) > 1){
                 if(confirm('他のユーザーによってレコードが更新されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
 
                     $('body').append('<textarea id="temp-clipboard-field"></textarea>');
@@ -288,15 +287,12 @@ $(function(){
 
             var today = new Date();
             lastUpdatedTime = Math.floor(today.getTime() / 1000);
-            console.log(currentText);
-            console.log(columnName);
             $.ajax({
                 url: editActionUrl,
                 type: "POST",
                 data: { id : id, column_name: columnName, content: currentText, last_updated_time : lastUpdatedTime },
                 dataType: "text",
             }).done(function(response){
-                console.log(response);
                 //通信成功時
                 var textEdited = currentText;
                 if(textEdited == '*EMPTY*'){
@@ -444,8 +440,10 @@ $(function(){
             $(this).children('span').css('color', fontColor);
         });
         $('#item_' + itemId + '-data td').each(function(){
-            $(this).css('background', tdColor);
-            $(this).children('span').css('color', fontColor);
+            if (!$(this).hasClass('verification-history')) {
+                $(this).css('background', tdColor);
+                $(this).children('span').css('color', fontColor);
+            }
         });
 
 
@@ -539,18 +537,22 @@ $(function(){
         success : function(response)
         {
             if($('#' + itemId + '-verification_history table').length == 0){
-                $('#' + itemId + '-verification_history').append('<table></table>');
+                $('#' + itemId + '-verification_history').append('<table id="verification-history-table"><tbody></tbody></table>');
             }
             var verifierName = $('#' + itemId + '-name-selector option:selected').text();
             var today = new Date();
             var todayMonth = ('0' + (today.getMonth() + 1)).slice(-2);
             var todayDate = ('0' + today.getDate()).slice(-2);
-            var newHistory =   '<tr>'
-                             + '<td>' + verifierName + '</td>'
-                             + '<td>' + today.getFullYear() + '-' + todayMonth + '-' + todayDate + '</td>'
-                             + '<td>' + '<span class="verification-history-detail-link" data-comment = "' + comment + '" data-id = "' + response + '">詳細</span>' + '</td>'
+            var newHistory =   '<tr class="verification-history">'
+                             + '<td class="verification-history" style="background:#838b0d; color:white">' + verifierName + '</td>'
+                             + '<td class="verification-history" style="background:#838b0d; color:white">' + today.getFullYear() + '-' + todayMonth + '-' + todayDate + '</td>'
+                             + '<td class="verification-history verification-history-detail" style="background:#ba2636; color:white">' +
+                                   '<span class="verification-history-detail-link" data-comment = "' + comment + '" data-id = "' + response + '">詳細</span>' +
+                               '</td>'
                              + '</tr>';
-            $('#' + itemId + '-verification_history table').append(newHistory);
+            console.log(newHistory);
+            $('#' + itemId + '-verification_history table').append(newHistory).trigger('create');
+            // $('#verification-history-table td').css('background', '#838b0d');
             $('#' + itemId + '-add-verification-history').show();
             $('#' + itemId + '-verification-history-input-area').empty();
             synchronizeTwoTablesHeight();

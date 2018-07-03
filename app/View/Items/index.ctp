@@ -352,15 +352,17 @@ if (!$completed_mode_flag) {
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></div>
             </td>
             <td class = "record verification-history-column" id="<?php echo $item['Item']['id'] . "-verification_history";?>">
-                <table>
+                <table id="verification-history-table">
                     <?php if(!empty($item['verification_history'])):?>
-                        <?php foreach ($item['verification_history'] as $verification_history): ?>
-                            <tr>
-                            <td><?php echo $verifier_names[$verification_history['verifier_id']-1];?></td>
-                            <td><?php echo $verification_history['created'];?></td>
-                            <td><span class="verification-history-detail-link" data-comment="<?php echo $verification_history['comment']?>" data-id = "<?php echo $verification_history['id']?>">詳細</span></td>
-                            </tr>
-                        <?php endforeach; ?>
+                    <?php foreach ($item['verification_history'] as $verification_history): ?>
+                        <tr class="verification_history">
+                            <td class="verification-history"><?php echo $verifier_names[$verification_history['verifier_id']-1];?></td>
+                            <td class="verification-history"><?php echo $verification_history['created'];?></td>
+                            <td class="verification-history verification-history-detail">
+                                <span class="verification-history-detail-link" data-comment="<?php echo $verification_history['comment']?>" data-id = "<?php echo $verification_history['id']?>">詳細</span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                     <?php endif?>
                 </table>
                 <?php if(!$completed_mode_flag):?>
