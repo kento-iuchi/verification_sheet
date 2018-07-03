@@ -80,7 +80,8 @@ class ItemsController extends AppController
                 array('tech_release_judgement', 'supp_release_judgement', 'sale_release_judgement')
         )){
             if ($content !== null){
-                $title = Hash::get($this->Item->read('content', $this->request->data['id']), 'Item.content');
+                $target_item = $this->Item->find('first', array('conditions' => array('Item.id' => $this->request->data['id'])));
+                $title = Hash::get($target_item, '{0}.Item.content');
                 $column_name_text = array(
                     'tech_release_judgement' => '技術リリースOK判断日',
                     'supp_release_judgement' => 'サポートリリースOK判断日',
@@ -443,8 +444,8 @@ class ItemsController extends AppController
             // $this->send_message_to_chatwork($message);
             return true;
         } else if ($mergeable === false) {
-            $message .= ':(マージできません'. '[/info]';
-            $this->send_message_to_chatwork($message);
+            $message .= ':(コンフリクトしています'. '[/info]';
+            $this->send_message_to_chatwork($message, 94715642);
             return true;
         } else {
             return false;
@@ -508,7 +509,7 @@ class ItemsController extends AppController
                         . "{$title}\n"
                         . "{$url}\n";
 
-            $this->send_message_to_chatwork($message);
+            $this->send_message_to_chatwork($message, 94715642);
         }
     }
 
