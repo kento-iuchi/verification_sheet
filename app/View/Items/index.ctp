@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 ?>
 
 <?php
-// jsonとしてindex.jsに与える要
+// jsonとしてindex.jsに与えるため
 $verifier_names = array();
 $verifiers_count = count($verifier);
 for ($vi=0; $vi < $verifiers_count; $vi++) {
@@ -67,6 +67,7 @@ if (!$completed_mode_flag) {
                 );
             ?>
             </div></td>
+            <?php if ($completed_mode_flag) :?>
             <td>
                 <label>masterマージ完了日</label>
             </td>
@@ -94,6 +95,21 @@ if (!$completed_mode_flag) {
                 );
             ?>
             </div></td>
+            <?php else:?>
+            <td><label>ステータス</label></td>
+            <td><div class="input">
+            <?php echo $this->Form->input('status', array(
+                    'label' => false,
+                    'options' => array(
+                        'コードレビュー中' => 'コードレビュー中',
+                        '改修中' => '改修中',
+                        '技術二重チェック中' => '技術二重チェック中',
+                        '差し戻し' => '差し戻し',
+                    ),
+                ));
+            ?>
+            </div></td>
+            <?php endif?>
             <td>
                 <?php echo $this->form->submit('検索', array('name' => 'search_condition'))?>
             </td>
@@ -179,6 +195,7 @@ if (!$completed_mode_flag) {
             <?php echo $this->Form->input('status',array(
                   'label' => false,
                   'options' => array(
+                      '差し戻し' => '差し戻し',
                       'コードレビュー中' => 'コードレビュー中',
                       '改修中' => '改修中',
                       '技術二重チェック中' => '技術二重チェック中',

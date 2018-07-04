@@ -8,6 +8,10 @@ class Item extends AppModel
     );
     public $actsAs = array('Search.Searchable');
     public $filterArgs = array(
+        'status' => array(
+            'field' => 'Item.status =',
+            'type' => 'value',
+        ),
         'from_created' => array(
             'field' => 'Item.created >=',
             'type' => 'value',

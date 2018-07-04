@@ -34,6 +34,7 @@ class ItemsController extends AppController
         );
 
         $query_data = array(
+            'status' => '',
             'from_created' => '',
             'to_created' => '',
             'from_merge_finish_date_to_master' => '',
