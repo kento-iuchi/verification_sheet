@@ -236,23 +236,23 @@ tr.needs-no-confirm {
     text-align: center;
 }
 
-#verification-history-table,
-#verification-history-table td {
+.verification-history-table {
+    width: 100%;
+}
+
+.verification-history-table,
+.verification-history-table td {
     border: 1px #000000 solid;
     border-collapse:collapse;
 }
 
-tr.verification_history td {
+tr.verification-history-header td {
     background: #838b0d;
     color: #FFFFFF;
 }
 
-tr.verification_history td.verification-history-detail {
-    background: #ba2636;
-}
-
-tr.verification_history td.verification-history-detail span {
-    color: #FFFFFF;
+tr.verification-history-comment td {
+    background: #e4e6c2;
 }
 
 ul > li {

@@ -15,11 +15,11 @@ $(function(){
     // セルをダブルクリックした際の処理
     var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'verification_history', 'author_id'];
     var editCellId; //
-    var selectedTd; //　上と何が違うのかよくわからん 実際に使われてる行がもっとした
+    var selectedTd; //　editCellIdのセレクタ　上と何が違うのかよくわからん 実際に使われてる行がずっと下にある…
     var recordId; // data-idをセルごとに与えれば（もしくは親のtrからとってくる）すれば不要な気がする…
     var columnName; // data-column-nameなどをtdに与えて処理するようにしたい　毎度splitするのはパフォーマンス的によくなさそう
     var formId; // その場編集で生成するフォームのid
-    var postValue; // DBに保存する値
+    var postValue; // DBに保存する値　postingValueとかのほうがいいかも
     var isEditing = false;
     $('#view_part td.record').dblclick(function()
     {
@@ -130,6 +130,7 @@ $(function(){
             $(editCellSelector).html(form);
         } else if (columnName == 'status') {
             var form = "<select id = '" + formId + "'>" +
+                       "<option value='差し戻し'>差し戻し</option>" +
                        "<option value='コードレビュー中'>コードレビュー中</option>" +
                        "<option value='改修中'>改修中</option>" +
                        "<option value='技術二重チェック中'>技術二重チェック中</option>" +
@@ -202,7 +203,7 @@ $(function(){
         syncTwoTablesHeight();
         $('#'+formId).focus();
         // セレクトボックスの初期値設定
-        if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'コードレビュー中',
+        if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'差し戻し', 'コードレビュー中',
                                     '改修中', '技術二重チェック中', 'サポート・営業確認中',]) != -1){
             $('#' + formId).val(initialText);
         }
@@ -447,7 +448,7 @@ $(function(){
             $(this).children('span').css('color', fontColor);
         });
         $('#item_' + itemId + '-data td').each(function(){
-            if (!$(this).hasClass('verification-history')) {
+            if (!$(this).hasClass('table-in-td')) {
                 $(this).css('background', tdColor);
                 $(this).children('span').css('color', fontColor);
             }
@@ -505,32 +506,31 @@ $(function(){
         syncTwoTablesHeight();
     })
 
-    // 検証履歴新規作成フォーム生成
-    var verifier_list = ['A', 'B', 'C'];
+    // 検証履歴(確認コメント)新規作成フォーム生成
     function createAddVerifivationHistoryForm(cell_id)
     {
         var options = $('th.verifier-column').attr('data-verifier-options');
         options = JSON.parse(options);
         var item_id = cell_id.split('-')[0];
-        var name_selector =  '<br><select id = "' + item_id + '-name-selector">';
+        var name_selector =  '<div><select id = "' + item_id + '-name-selector">';
         $.each(options, function(index, name){
             index += 1;
             name_selector += '<option value="' + index + '">' + name + '</option>';
         });
-        name_selector += '</select>';
+        name_selector += '</select></div>';
         $('#' + item_id + '-verification-history-input-area').append(name_selector);
 
-        var comment_form = '<textarea rows = 5 id = "' + item_id + '-comment_form"></textarea>';
+        var comment_form = '<div><textarea rows = 5 id = "' + item_id + '-comment_form"></textarea></div>';
         $('#' + item_id + '-verification-history-input-area').append(comment_form);
 
-        var submit_button = '<button type = "button" class = "add-history-button">保存</button>';
-        $('#' + item_id + '-verification-history-input-area').append($(submit_button).click(function(){saveHistory(item_id);}));
+        var submit_button = '<div><button type = "button" class = "add-history-button">保存</button></div>';
+        $('#' + item_id + '-verification-history-input-area').append($(submit_button).click(function(){saveConfirmComment(item_id);}));
 
         $('#' + name_selector).focus();
     }
 
-    // 保存ボタンが押されたときの処理
-    function saveHistory(itemId)
+    // 検証履歴(確認コメント)保存ボタンが押されたときの処理
+    function saveConfirmComment(itemId)
     {
         var verifierId = $('#' + itemId + '-name-selector').val();
         var comment = $('#' + itemId + '-comment_form').val();
@@ -543,22 +543,22 @@ $(function(){
         dataType: "text",
         success : function(response)
         {
-            if($('#' + itemId + '-verification_history table').length == 0){
-                $('#' + itemId + '-verification_history').append('<table id="verification-history-table"><tbody></tbody></table>');
+            if($('#' + itemId + '-confirm_comment table').length == 0){
+                $('#' + itemId + '-confirm_comment').append('<table class="verification-history-table"><tbody></tbody></table>');
             }
             var verifierName = $('#' + itemId + '-name-selector option:selected').text();
             var today = new Date();
             var todayMonth = ('0' + (today.getMonth() + 1)).slice(-2);
             var todayDate = ('0' + today.getDate()).slice(-2);
-            var newHistory =   '<tr class="verification-history">'
-                             + '<td class="verification-history" style="background:#838b0d; color:white">' + verifierName + '</td>'
-                             + '<td class="verification-history" style="background:#838b0d; color:white">' + today.getFullYear() + '-' + todayMonth + '-' + todayDate + '</td>'
-                             + '<td class="verification-history verification-history-detail" style="background:#ba2636; color:#FFFFFF">' +
-                                   '<span class="verification-history-detail-link" data-comment = "' + comment + '" data-id = "' + response + '">詳細</span>' +
-                               '</td>'
+            var newHistory =   '<tr class="verification-history-header">'
+                             + '<td class="verification-history-header" style="background:#838b0d; color:white">' + verifierName + '</td>'
+                             + '<td class="verification-history-header" style="background:#838b0d; color:white">' + today.getFullYear() + '-' + todayMonth + '-' + todayDate + '</td>'
+                             + '</tr>'
+                             + '<tr class="verification-history-comment">'
+                             + '<td class="verification-history-comment" colspan="2">' + comment + '</td>'
                              + '</tr>';
             console.log(newHistory);
-            $('#' + itemId + '-verification_history table').append(newHistory).trigger('create');
+            $('#' + itemId + '-confirm_comment table').append(newHistory).trigger('create');
             // $('#verification-history-table td').css('background', '#838b0d');
             $('#' + itemId + '-add-verification-history').show();
             $('#' + itemId + '-verification-history-input-area').empty();
