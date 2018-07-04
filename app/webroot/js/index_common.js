@@ -1,5 +1,5 @@
 
-function synchronizeTwoTablesHeight(edited_table_id = null)
+function syncTwoTablesHeight(edited_table_id = null)
 {
     var header_tr = $("#header_table tr.view_part_item");
     var data_tr = $("#data_table tr.view_part_item");
@@ -68,7 +68,7 @@ function changeScrollTbodyHeight()
 $(function(){
     'use strict';
 
-    synchronizeTwoTablesHeight();
+    syncTwoTablesHeight();
     var init_data_table_width = measureTableWidth('#data_table') + 120;// スクロールバーのぶん適当に伸ばす
     $('#data_table').width(init_data_table_width);
     var init_header_table_width = $('#header_table').width();
@@ -165,7 +165,7 @@ $(function(){
             $('#item_' + recordId + '-data').height(originHeight);
 
         }
-        synchronizeTwoTablesHeight();
+        syncTwoTablesHeight();
     });
 
     function toggle_column_for_dev_show_or_hide(selector)
@@ -196,7 +196,7 @@ $(function(){
         var old_view_part_data_left = $('#view_part_data').position().left;
         $('#view_part_data').offset({left : $('#header_table').width() + 8});
         $('#view_part_data').width($('#view_part_data').width() + (old_view_part_data_left - $('#view_part_data').position().left));
-        synchronizeTwoTablesHeight();
+        syncTwoTablesHeight();
     }
 
     $('#hide-column-for-dev').click(function(){

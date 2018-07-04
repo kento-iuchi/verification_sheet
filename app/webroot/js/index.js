@@ -1,8 +1,8 @@
 $(function(){
     'use strict';
 
-    updateStyles();
-    synchronizeTwoTablesHeight();
+    updateStyles(); // データに応じて見た目を初期化する（ハイライトなど）
+    syncTwoTablesHeight(); // header-tableとdata-tableの行の高さを合わせる
 
     // リロードしたとき、自分が編集している項目の情報を
     //　editing_itemsケーブルから消去する
@@ -14,12 +14,12 @@ $(function(){
 
     // セルをダブルクリックした際の処理
     var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'verification_history', 'author_id'];
-    var editCellId;
-    var selectedTd;
-    var recordId;
-    var columnName;
-    var formId;
-    var postValue;
+    var editCellId; //
+    var selectedTd; //　上と何が違うのかよくわからん 実際に使われてる行がもっとした
+    var recordId; // data-idをセルごとに与えれば（もしくは親のtrからとってくる）すれば不要な気がする…
+    var columnName; // data-column-nameなどをtdに与えて処理するようにしたい　毎度splitするのはパフォーマンス的によくなさそう
+    var formId; // その場編集で生成するフォームのid
+    var postValue; // DBに保存する値
     var isEditing = false;
     $('#view_part td.record').dblclick(function()
     {
@@ -42,7 +42,7 @@ $(function(){
         }
 
         editCellId = $(this).attr('id');
-        formId = createEditForm(editCellId);
+        formId = createEditForm(editCellId); // 編集可能かどうかのチェックとフォームの生成を分けるべき
         if (formId == 'uneditable_cell'){
             finishEdit();
             return;
@@ -86,6 +86,11 @@ $(function(){
             }
         }
     })
+
+    // セルが編集可能かどうかを返す
+    function checkEditable(cellId) {
+
+    }
 
     var editStartingTime;
     function createEditForm(editCellId)
@@ -194,7 +199,7 @@ $(function(){
             var form = "<div style='text-align: center;'><textarea rows= '3' cols='" + folm_cols + "' " + "id ='" + formId + "'>" + initialText + "</textarea></div>";
             $(editCellSelector).html(form);
         }
-        synchronizeTwoTablesHeight();
+        syncTwoTablesHeight();
         $('#'+formId).focus();
         // セレクトボックスの初期値設定
         if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'コードレビュー中',
@@ -356,7 +361,7 @@ $(function(){
                     $(selectedTd).html(recordtext(needs_supp_confirm_char));
                 }
                 var table_id = $(selectedTd).parents('table').attr('id');
-                synchronizeTwoTablesHeight(table_id);
+                syncTwoTablesHeight(table_id);
                 updateStyles(id);
             }).fail(function(){
                 //通信失敗時の処理
@@ -497,7 +502,7 @@ $(function(){
         var item_id = button_id.split('-')[0];
         createAddVerifivationHistoryForm($(this).parent().attr('id'));
         $('#' + button_id).hide();
-        synchronizeTwoTablesHeight();
+        syncTwoTablesHeight();
     })
 
     // 検証履歴新規作成フォーム生成
@@ -557,7 +562,7 @@ $(function(){
             // $('#verification-history-table td').css('background', '#838b0d');
             $('#' + itemId + '-add-verification-history').show();
             $('#' + itemId + '-verification-history-input-area').empty();
-            synchronizeTwoTablesHeight();
+            syncTwoTablesHeight();
         },
         error: function()
         {
