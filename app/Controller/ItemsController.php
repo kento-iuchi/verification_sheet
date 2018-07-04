@@ -310,9 +310,9 @@ class ItemsController extends AppController
 
                     $author_github_name = $payload['pull_request']['user']['login'];
 
-                    $author_ids = Hash::combine($this->Author->find('all'), '{n}.Author.github_account_name', '{n}.Author.id');
-                    if (in_array($author_github_name, array_keys($author_ids))) {
-                        $author_id = $author_ids[$author_github_name];
+                    $author_names_and_ids = Hash::combine($this->Author->find('all'), '{n}.Author.github_account_name', '{n}.Author.id');
+                    if (in_array($author_github_name, array_keys($author_names_and_ids))) {
+                        $author_id = $author_names_and_ids[$author_github_name];
                     } else {
                         $author_id = null;
                     }
