@@ -119,7 +119,8 @@ $(function(){
         dataType: "text",
         success : function(response){
             //通信成功時
-            alert("'未完了'に戻しました");
+            var message = $(this).hasClass('complete_button') ? "'完了'状態にしました" : "'未完了'に戻しました"
+            alert(message);
             var item_head_tr_id = '#item_' + item_id + '-head';
             var item_data_tr_id = '#item_' + item_id + '-data';
             $(item_head_tr_id).fadeOut(600).queue(function() {

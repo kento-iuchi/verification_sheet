@@ -197,6 +197,15 @@ class ItemsController extends AppController
         $this->autoRender = false;
         $this->VerificationHistory->create();
         if ($this->VerificationHistory->save($this->request->data)) {
+            $result = $this->Item->find('first', array('conditions' => array('id' => $this->request->data['item_id'])));
+            $title = Hash::get($result, 'Item.content');
+            $author_id = Hash::get($result, 'Item.author_id');
+            $result = $this->Author->read('chatwork_id', $author_id);
+            $author_chatwork_id = Hash::get($result, 'Author.chatwork_id');
+
+            $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]確認コメントが記載されました"
+                       ."[code]{$this->request->data['comment']}[/code][/info]";
+            $this->send_message_to_chatwork($message);
             echo $this->VerificationHistory->id;
         } else {
             echo 'failed to save verification history';

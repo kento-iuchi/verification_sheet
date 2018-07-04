@@ -548,11 +548,14 @@ $(function(){
             }
             var verifierName = $('#' + itemId + '-name-selector option:selected').text();
             var today = new Date();
+            console.log(today);
             var todayMonth = ('0' + (today.getMonth() + 1)).slice(-2);
             var todayDate = ('0' + today.getDate()).slice(-2);
             var newHistory =   '<tr class="verification-history-header">'
                              + '<td class="verification-history-header" style="background:#838b0d; color:white">' + verifierName + '</td>'
-                             + '<td class="verification-history-header" style="background:#838b0d; color:white">' + today.getFullYear() + '-' + todayMonth + '-' + todayDate + '</td>'
+                             + '<td class="verification-history-header" style="background:#838b0d; color:white">'
+                             + today.getFullYear() + '-' + todayMonth + '-' + todayDate + ' ' + today.toLocaleTimeString() //' ' + + ':' + + ':' +
+                             + '</td>'
                              + '</tr>'
                              + '<tr class="verification-history-comment">'
                              + '<td class="verification-history-comment" colspan="2">' + comment + '</td>'

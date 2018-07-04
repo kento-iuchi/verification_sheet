@@ -284,9 +284,6 @@ if (!$completed_mode_flag) {
             <th class="comment-column">
                 確認ポイント
             </th>
-            <th class="verification-history-column">
-                検証履歴
-            </th>
             <th class="comment-column">
                 確認コメント
             </th>
@@ -368,8 +365,6 @@ if (!$completed_mode_flag) {
             <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-confirm_points";?>">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></div>
             </td>
-            <td class = "record verification-history-column" id="<?php echo $item['Item']['id'] . "-verification_history";?>">
-            </td>
             <td class = "record comment-column" data-column_name = "confirm_comment" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
                 <table class="verification-history-table">
                     <?php if(!empty($item['verification_history'])):?>
@@ -377,9 +372,6 @@ if (!$completed_mode_flag) {
                         <tr class="verification-history-header">
                             <td class="verification-history-header table-in-td"><?php echo $verifier_names[$verification_history['verifier_id']-1];?></td>
                             <td class="verification-history-header table-in-td"><?php echo $verification_history['created'];?></td>
-                            <!-- <td class="verification-history verification-history-detail">
-                                <span class="verification-history-detail-link" data-comment="<?php echo $verification_history['comment']?>" data-id = "<?php echo $verification_history['id']?>">詳細</span>
-                            </td> -->
                         </tr>
                         <tr class="verification-history-comment">
                             <td class="verification-history-comment table-in-td" colspan="2"><?php echo $verification_history['comment'];?></td>
@@ -443,7 +435,6 @@ if (!$completed_mode_flag) {
             <td class="date-column"><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
             <td class="date-column"><!-- masterマージ完了日 --></td>
             <td class="comment-column"><?php echo $this->Form->input('confirm_points', array('label' => false));?></td>
-            <td class="verification-history-column"></td>
             <td class="comment-column"><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
             <td class="comment-column"><!--確認コメント対応 --></td>
             <td class="author-column">
