@@ -153,23 +153,24 @@ if (!$completed_mode_flag) {
     <tbody class="scrollBody">
     <?php $today_date = new Datetime(date("y-m-d")); //経過日数、猶予日数の計算に使用?>
     <?php foreach ($items as $item): ?>
-    <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item <?php echo $item['Item']['needs_supp_confirm'] == 0 ? 'needs-no-confirm' : '' ?>" >
-        <td class="record id-column" id="<?php echo $item['Item']['id'] . "-id";?>" data-id="<?php echo h($item['Item']['id']); ?>">
+    <tr id="item_<?php echo h($item['Item']['id'] . '-head'); ?>" class="view_part_item <?php echo $item['Item']['needs_supp_confirm'] == 0 ? 'needs-no-confirm' : '' ?>"
+        data-id="<?php echo h($item['Item']['id']); ?>" data-controller="items">
+        <td class="record id-column" id="<?php echo $item['Item']['id'] . "-id";?>" data-id="<?php echo h($item['Item']['id']); ?>" data-column="id">
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
         </td>
-        <td class="record needs-supp-confirm-column editable-cell column-for-dev" id="<?php echo $item['Item']['id'] . "-needs_supp_confirm";?>">
+        <td class="record needs-supp-confirm-column editable-cell column-for-dev" id="<?php echo $item['Item']['id'] . "-needs_supp_confirm";?>" data-column="needs_supp_confirm">
             <span class="record_text"><?php echo $item['Item']['needs_supp_confirm'] == 1 ? 'いいえ' : 'はい' ?></span>
         </td>
-        <td class="record content-column editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>">
+        <td class="record content-column editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>" data-column="content">
             <span class="record_text editable-cell"><?php echo $item['Item']['content']; ?></span>
         </td>
-        <td class = "record date-column editable-cell" id="<?php echo $item['Item']['id'] . '-due_date_for_release';?>">
+        <td class = "record date-column editable-cell" id="<?php echo $item['Item']['id'] . '-due_date_for_release';?>" data-column="due_date_for_release">
             <span class="record_text editable-cell"><?php echo $item['Item']['due_date_for_release']; ?></span>
         </td>
-        <td class = "record status-column editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>">
+        <td class = "record status-column editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>" data-column="status">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
         </td>
-        <td class = "record grace-column" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>">
+        <td class = "record grace-column" id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>" data-column="grace_days_of_verification_complete">
             <span class="record_text"><?php
                 $due_date_for_release = new Datetime($item['Item']['due_date_for_release']);
                 if (!empty($item['Item']['due_date_for_release'])) {
@@ -307,74 +308,75 @@ if (!$completed_mode_flag) {
 
         <tbody class="scrollBody">
         <?php foreach ($items as $item): ?>
-        <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item <?php echo $item['Item']['needs_supp_confirm'] == 0 ? 'needs-no-confirm' : '' ?>">
-            <td class="record category-column editable-cell" id="<?php echo $item['Item']['id'] . "-category";?>">
+        <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="view_part_item <?php echo $item['Item']['needs_supp_confirm'] == 0 ? 'needs-no-confirm' : '' ?>"
+            data-id="<?php echo h($item['Item']['id']); ?>" data-controller="items">
+            <td class="record category-column editable-cell" id="<?php echo $item['Item']['id'] . "-category";?>" data-column="category">
                 <span class="record_text"><?php echo $item['Item']['category']; ?></span>
             </td>
-            <td class="record division-column editable-cell" id="<?php echo $item['Item']['id'] . "-division";?>">
+            <td class="record division-column editable-cell" id="<?php echo $item['Item']['id'] . "-division";?>" data-column="division">
                 <span class="record_text"><?php echo $item['Item']['division']; ?></span>
             </td>
-            <td class = "record editable-cell url-column" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>">
+            <td class = "record editable-cell url-column" id="<?php echo $item['Item']['id'] . "-chatwork_url";?>" data-column="chatwork_url">
                 <a href = "<?php echo $item['Item']['chatwork_url']; ?>" target="_blank">
                     <span class="record_text"><?php echo $item['Item']['chatwork_url']; ?></span>
                 </a>
             </td>
-            <td class = "record editable-cell url-column column-for-dev" id="<?php echo $item['Item']['id'] . "-github_url";?>">
+            <td class = "record editable-cell url-column column-for-dev" id="<?php echo $item['Item']['id'] . "-github_url";?>" data-column="github_url">
                 <a href="<?php echo $item['Item']['github_url']; ?>" target="_blank">
                     <span class="record_text"><?php echo $item['Item']['github_url']; ?></span>
                 </a>
             </td>
-            <td class = "record editable-cell url-column" id="<?php echo $item['Item']['id'] . "-verification_enviroment_url";?>">
+            <td class = "record editable-cell url-column" id="<?php echo $item['Item']['id'] . "-verification_enviroment_url";?>" data-column="verification_enviroment_url">
                 <a href="<?php echo $item['Item']['verification_enviroment_url']; ?>" target="_blank">
                     <span class="record_text"><?php echo $item['Item']['verification_enviroment_url']; ?></span>
                 </a>
             </td>
-            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-pullrequest";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-pullrequest";?>" data-column="pullrequest">
                 <span class="record_text"><?php echo $item['Item']['pullrequest']; ?></span>
             </td>
-            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-pullrequest_update";?>" data-column="pullrequest_update">
                 <span class="record_text"><?php echo $item['Item']['pullrequest_update']; ?></span>
             </td>
-            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-tech_release_judgement";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-tech_release_judgement";?>" data-column="tech_release_judgement">
                 <span class="record_text"><?php echo $item['Item']['tech_release_judgement']; ?></span>
             </td>
-            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-supp_release_judgement";?>" data-column="supp_release_judgement">
                 <span class="record_text"><?php echo $item['Item']['supp_release_judgement']; ?></span>
             </td>
-            <td class = "record editable-cell verifier-column" id="<?php echo $item['Item']['id'] . "-verifier_id";?>">
+            <td class = "record editable-cell verifier-column" id="<?php echo $item['Item']['id'] . "-verifier_id";?>" data-column="verifier_id">
                 <span class="record_text"><?php echo !is_null($item['Item']['verifier_id']) ? $verifier_names[$item['Item']['verifier_id']] : '未設定'; ?></span>
             </td>
-            <td class = "record editable-cell priority-column" id="<?php echo $item['Item']['id'] . "-manual_exists";?>">
+            <td class = "record editable-cell priority-column" id="<?php echo $item['Item']['id'] . "-manual_exists";?>" data-column="manual_exists">
                 <span class="record_text"><?php echo $item['Item']['manual_exists'] == 1 ? '◯' : '✕'; ?></span>
             </td>
-            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-sale_release_judgement";?>" data-column="sale_release_judgement">
                 <span class="record_text"><?php echo $item['Item']['sale_release_judgement']; ?></span>
             </td>
-            <td class = "record day_count-column" id="<?php echo $item['Item']['id'] . "-elapsed";?>">
+            <td class = "record day_count-column" id="<?php echo $item['Item']['id'] . "-elapsed";?>" data-column="data-column">
                 <span class="record_text"><?php
                     $pullrequest_date = new Datetime($item['Item']['pullrequest']);
                     echo $today_date->diff($pullrequest_date)->format('%a');;
                 ?></span>
             </td>
-            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-scheduled_release_date";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-scheduled_release_date";?>" data-column="scheduled_release_date">
                 <span class="record_text"><?php echo $item['Item']['scheduled_release_date']; ?></span>
             </td>
-            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-merge_finish_date_to_master";?>">
+            <td class = "record editable-cell date-column" id="<?php echo $item['Item']['id'] . "-merge_finish_date_to_master";?>" data-column="merge_finish_date_to_master">
                 <span class="record_text"><?php echo $item['Item']['merge_finish_date_to_master']; ?></span>
             </td>
-            <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-confirm_points";?>">
+            <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-confirm_points";?>" data-column="confirm_points">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></div>
             </td>
-            <td class = "record comment-column" data-column_name = "confirm_comment" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>">
+            <td class = "record comment-column" data-column_name = "confirm_comment" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>" data-column="confirm_comment">
                 <table class="verification-history-table">
                     <?php if(!empty($item['verification_history'])):?>
                     <?php foreach ($item['verification_history'] as $verification_history): ?>
                         <tr class="verification-history-header">
-                            <td class="verification-history-header table-in-td"><?php echo $verifier_names[$verification_history['verifier_id']-1];?></td>
-                            <td class="verification-history-header table-in-td"><?php echo $verification_history['created'];?></td>
+                            <td class="verification-history-header td-of-table-in-row"><?php echo $verifier_names[$verification_history['verifier_id']-1];?></td>
+                            <td class="verification-history-header td-of-table-in-row"><?php echo $verification_history['created'];?></td>
                         </tr>
-                        <tr class="verification-history-comment">
-                            <td class="verification-history-comment table-in-td" colspan="2"><?php echo $verification_history['comment'];?></td>
+                        <tr class="verification-history-comment" data-id="<?php echo $verification_history['id']?>" data-controller="verification_history">
+                            <td class="editable-comment td-of-table-in-row" colspan="2"><?php echo $verification_history['comment'];?></td>
                         </tr>
                     <?php endforeach; ?>
                     <?php endif?>
@@ -386,21 +388,21 @@ if (!$completed_mode_flag) {
                 <?php endif?>
                 <div id="<?php echo $item['Item']['id'];?>-verification-history-input-area"></div>
             </td>
-            <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>">
-                <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></div>
+            <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>" data-column="response_to_confirm_comment">
+                <!-- <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></div> -->
             </td>
-            <td class = "record author-column" id="<?php echo $item['Item']['id'] . "-author_id";?>">
+            <td class = "record author-column" id="<?php echo $item['Item']['id'] . "-author_id";?>" data-column="author_id">
                 <span class="record_text"><?php echo !is_null($item['Item']['author_id']) ? $author_names[$item['Item']['author_id']] : '未設定'; ?></span>
             </td>
-            <td class = "record editable-cell point-column column-for-dev" id="<?php echo $item['Item']['id'] . "-pivotal_point";?>">
+            <td class = "record editable-cell point-column column-for-dev" id="<?php echo $item['Item']['id'] . "-pivotal_point";?>" data-column="pivotal_point">
                 <span class="record_text"><?php echo $item['Item']['pivotal_point']; ?></span>
             </td>
-            <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-modified";?>">
+            <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-modified";?>" data-column="modified">
                 <span class="record_text"><?php echo $item['Item']['modified']; ?></span>
             </td>
             <td class= "complete_column">
                 <div class="complete">
-                    <button type="button" class="<?php echo !$completed_mode_flag ? 'complete_button' : 'incomplete_button'?>" id="<?php echo $item['Item']['id'] . "-complete_button";?>">
+                    <button type="button" class="<?php echo !$completed_mode_flag ? 'complete_button' : 'incomplete_button'?>" id="<?php echo $item['Item']['id'] . "-complete_button";?>" data-column="">
                         <?php echo !$completed_mode_flag ? '完了' : '戻す'?>
                     </button>
                 </div>

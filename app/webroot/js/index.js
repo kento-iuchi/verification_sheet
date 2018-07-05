@@ -12,8 +12,9 @@ $(function(){
         }
     }
 
-    // セルをダブルクリックした際の処理
-    var uneditableColumnNames =  ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'verification_history', 'author_id'];
+    // レコードのセルをダブルクリックした際の処理
+    var uneditableColumnNames = ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'confirm_comment', 'author_id'];
+    var controller_name;
     var editCellId; //
     var selectedTd; //　editCellIdのセレクタ　上と何が違うのかよくわからん 実際に使われてる行がずっと下にある…
     var recordId; // data-idをセルごとに与えれば（もしくは親のtrからとってくる）すれば不要な気がする…
@@ -21,13 +22,13 @@ $(function(){
     var formId; // その場編集で生成するフォームのid
     var postValue; // DBに保存する値　postingValueとかのほうがいいかも
     var isEditing = false;
-    $('#view_part td.record').dblclick(function()
+    $('td.record').dblclick(function()
     {
         if (isEditing){
-            var recordId   = editCellId.split('-')[0];
-            var columnName = editCellId.split('-')[1];
+            var recordId   = $(this).parent().attr('data-id');
+            var columnName = $(this).attr('data-column');
             postValue = $('#' + formId).val();
-            postToEditAction('#' + editCellId, recordId, columnName, postValue);
+            postToEditAction(controller_name, '#' + editCellId, postValue);
             unRegisterItemEditing(my_editing_item_record_id);
         }
 
@@ -48,6 +49,8 @@ $(function(){
             return;
         }
 
+        controller_name = $(this).parent().attr('data-controller');
+
         isEditing = true;
     });
 
@@ -56,10 +59,10 @@ $(function(){
     {
         if(e.keyCode == 9){
             if(isEditing){
-                var recordId   = editCellId.split('-')[0];
-                var columnName = editCellId.split('-')[1];
+                var recordId   = $('#' + editCellId).parent().attr('data-id');
+                var columnName = $('#' + editCellId).attr('data-column');
                 postValue = $('#' + formId).val();
-                postToEditAction('#' + editCellId, recordId, columnName, postValue);
+                postToEditAction(controller_name, '#' + editCellId, postValue);
 
                 if (columnName == 'status' && !event.shiftKey){
                     var nextId = recordId + '-' + 'category';
@@ -68,14 +71,14 @@ $(function(){
                 } else {
                     var nextId = event.shiftKey ? $('#' + editCellId).prev().attr('id') : $('#' + editCellId).next().attr('id');
                 }
-                var nextColumnName = nextId.split('-')[1];
+                var nextColumnName = $('#' + nextId).attr('data-column');
                 if ($.inArray(nextColumnName, uneditableColumnNames) != -1){
                     if (nextColumnName == 'created' || nextColumnName == 'id'){
                         finishEdit();
                         return;
                     }
                     var nextId = event.shiftKey ? $('#' + nextId).prev().attr('id') : $('#' + nextId).next().attr('id');
-                    nextColumnName = nextId.split('-')[1];
+                    nextColumnName = $('#' + nextId).attr('data-column');
                 }
                 formId = createEditForm(nextId);
                 editCellId = nextId;
@@ -96,8 +99,8 @@ $(function(){
     function createEditForm(editCellId)
     {
         var editCellSelector  = '#' + editCellId;
-        var recordId    = editCellId.split('-')[0]// 要素idは 'レコードid_カラム名'という形式
-        var columnName  = editCellId.split('-')[1];
+        var recordId   = $('#' + editCellId).parent().attr('data-id');
+        var columnName = $('#' + editCellId).attr('data-column');
         var initialText = String($(editCellSelector).html());
         // いくつかの項目を編集できないようにする
         if(!$(editCellSelector).hasClass('editable-cell')){
@@ -257,8 +260,11 @@ $(function(){
         })
     }
 
-    function postToEditAction(selectedTd, id, columnName, postValue)
+    function postToEditAction(controller_name, selectedTd, postValue)
     {
+        var id   = $(selectedTd).parent().attr('data-id');
+        var columnName = $(selectedTd).attr('data-column');
+
         var lastUpdatedTime
         fetchLastUpdatedTime(id).done(function(response){
             lastUpdatedTime = response;
@@ -284,7 +290,7 @@ $(function(){
                 return;
             }
 
-            var editActionUrl = WEBROOT + 'items/edit/';
+            var editActionUrl = WEBROOT + controller_name + '/edit/';
             postValue = replaceSlashAndColon(postValue);
             postValue = postValue.replace(/\r\n/g, '&&NEWLINE&&');
             postValue = postValue.replace(/\r/g, '&&NEWLINE&&');
@@ -393,16 +399,17 @@ $(function(){
     function finishEdit(){
         editCellId = '';
         isEditing = false;
+        controller_name = null;
         return;
     }
 
     $('div.input').click(function()
     {
         if (isEditing) {
-            var recordId   = editCellId.split('-')[0];
-            var columnName = editCellId.split('-')[1];
+            var recordId   = $('#' + editCellId).parent().attr('data-id');
+            var columnName = $('#' + editCellId).attr('data-column');
             postValue = $('#' + formId).val();
-            postToEditAction('#' + editCellId, recordId, columnName, postValue);
+            postToEditAction(controller_name, '#' + editCellId, postValue);
             finishEdit();
         }
     })
@@ -448,7 +455,7 @@ $(function(){
             $(this).children('span').css('color', fontColor);
         });
         $('#item_' + itemId + '-data td').each(function(){
-            if (!$(this).hasClass('table-in-td')) {
+            if (!$(this).hasClass('td-of-table-in-row')) {
                 $(this).css('background', tdColor);
                 $(this).children('span').css('color', fontColor);
             }
@@ -499,19 +506,18 @@ $(function(){
     // 検証履歴新規作成
     $('.add-verification-history').click(function()
     {
+        createAddVerifivationHistoryForm($(this).parents('tr').attr('data-id'));
         var button_id = $(this).attr('id');
-        var item_id = button_id.split('-')[0];
-        createAddVerifivationHistoryForm($(this).parent().attr('id'));
         $('#' + button_id).hide();
         syncTwoTablesHeight();
     })
 
     // 検証履歴(確認コメント)新規作成フォーム生成
-    function createAddVerifivationHistoryForm(cell_id)
+    function createAddVerifivationHistoryForm(item_id)
     {
+        console.log(item_id);
         var options = $('th.verifier-column').attr('data-verifier-options');
         options = JSON.parse(options);
-        var item_id = cell_id.split('-')[0];
         var name_selector =  '<div><select id = "' + item_id + '-name-selector">';
         $.each(options, function(index, name){
             index += 1;
@@ -558,7 +564,7 @@ $(function(){
                              + '</td>'
                              + '</tr>'
                              + '<tr class="verification-history-comment">'
-                             + '<td class="verification-history-comment" colspan="2">' + comment + '</td>'
+                             + '<td class="editable-comment td-of-table-in-row" colspan="2">' + comment + '</td>'
                              + '</tr>';
             console.log(newHistory);
             $('#' + itemId + '-confirm_comment table').append(newHistory).trigger('create');
