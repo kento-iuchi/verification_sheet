@@ -25,6 +25,7 @@ class AppSchema extends CakeSchema {
 		'item_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
 		'author_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
 		'comment' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'last_updated_time' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'indexes' => array(
@@ -102,6 +103,7 @@ class AppSchema extends CakeSchema {
 		'item_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
 		'verifier_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
 		'comment' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'last_updated_time' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
 		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
 		'indexes' => array(
@@ -113,6 +115,7 @@ class AppSchema extends CakeSchema {
 	public $verifiers = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
 		'name' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'chatwork_id' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
