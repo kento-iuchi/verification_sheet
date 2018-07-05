@@ -5,6 +5,9 @@ class Item extends AppModel
         'verification_history' => array(
             'className' => 'verification_history',
         ),
+        'confirm_comment_response' => array(
+            'className' => 'confirm_comment_response',
+        ),
     );
     public $actsAs = array('Search.Searchable');
     public $filterArgs = array(

@@ -22,14 +22,18 @@ $(function(){
     var formId; // その場編集で生成するフォームのid
     var postValue; // DBに保存する値　postingValueとかのほうがいいかも
     var isEditing = false;
-    $('td.record').dblclick(function()
+    $(document).on('dblclick', 'td.record', function()
+    // $('td.record').dblclick(function()
     {
+        event.stopPropagation();
         if (isEditing){
             var recordId   = $(this).parent().attr('data-id');
             var columnName = $(this).attr('data-column');
             postValue = $('#' + formId).val();
             postToEditAction(controller_name, '#' + editCellId, postValue);
-            unRegisterItemEditing(my_editing_item_record_id);
+            if (!$('#' + editCellId).hasClass('td-of-table-in-row')) {
+                unRegisterItemEditing(my_editing_item_record_id);
+            }
         }
 
         if($(this).attr('id') == editCellId){// 編集中のセルをもう一度ダブルクリックしたなら、何も編集していない状態に
@@ -107,7 +111,9 @@ $(function(){
             return 'uneditable_cell';
         }
 
-        registerItemEditing(recordId);
+        if (!$('#' + editCellId).hasClass('td-of-table-in-row')) {
+            registerItemEditing(recordId);
+        }
 
         var today = new Date();
         editStartingTime = Math.floor(today.getTime() / 1000);
@@ -250,10 +256,10 @@ $(function(){
         });
     }
 
-    function fetchLastUpdatedTime(recordId)
+    function fetchLastUpdatedTime(recordId, controllerName)
     {
         return $.ajax({
-            url: WEBROOT + 'items/fetch_last_updated_time',
+            url: WEBROOT + controllerName + '/fetch_last_updated_time',
             type: "POST",
             data: {id : recordId},
             dataType: "text",
@@ -266,16 +272,15 @@ $(function(){
         var columnName = $(selectedTd).attr('data-column');
 
         var lastUpdatedTime
-        fetchLastUpdatedTime(id).done(function(response){
+        fetchLastUpdatedTime(id, controller_name).done(function(response){
             lastUpdatedTime = response;
+            console.log(lastUpdatedTime);
             /*
             最終更新時間　> 編集開始時間の場合、
             ユーザが編集している最中にレコードが更新されたとみなす。
             最終更新時間 - 編集開始時間が1000以上という条件にしているのは、１ユーザーが高速で編集セルを切り替えた際に
             誤反応させないため
             */
-            console.log('start ' + editStartingTime);
-            console.log('last  ' + lastUpdatedTime);
             if ((lastUpdatedTime - editStartingTime) > 1){
                 if(confirm('他のユーザーによってレコードが更新されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
 
@@ -298,7 +303,6 @@ $(function(){
             if(postValue.length == 0){
                 postValue = '*EMPTY*';
             }
-
             var today = new Date();
             lastUpdatedTime = Math.floor(today.getTime() / 1000);
             $.ajax({
@@ -504,73 +508,81 @@ $(function(){
     }
 
     // 検証履歴新規作成
-    $('.add-verification-history').click(function()
+    $('.add-comment').click(function(object)
     {
-        createAddVerifivationHistoryForm($(this).parents('tr').attr('data-id'));
+        createAddVerifivationHistoryForm($(this).parents('tr').attr('data-id'), $(this).parent().attr('data-column'));
         var button_id = $(this).attr('id');
         $('#' + button_id).hide();
         syncTwoTablesHeight();
     })
 
     // 検証履歴(確認コメント)新規作成フォーム生成
-    function createAddVerifivationHistoryForm(item_id)
+    function createAddVerifivationHistoryForm(item_id, dataColumn)
     {
-        console.log(item_id);
-        var options = $('th.verifier-column').attr('data-verifier-options');
+        if (dataColumn == 'verification_history') {
+            var controllerName = 'verification_histories';
+            var options = $('th.verifier-column').attr('data-verifier-options');
+        } else if (dataColumn == 'response_to_confirm_comment') {
+            var controllerName = 'confirm_comment_responses';
+            var options = $('th.author-column').attr('data-author-options');
+        }
         options = JSON.parse(options);
-        var name_selector =  '<div><select id = "' + item_id + '-name-selector">';
+        var name_selector =  '<div><select id = "' + item_id + '-' + dataColumn + '-name-selector">';
         $.each(options, function(index, name){
-            index += 1;
+            index = parseInt(index);
             name_selector += '<option value="' + index + '">' + name + '</option>';
         });
         name_selector += '</select></div>';
-        $('#' + item_id + '-verification-history-input-area').append(name_selector);
+        $('#' + item_id + '-' + dataColumn + ' div.comment-input-area').append(name_selector);
 
-        var comment_form = '<div><textarea rows = 5 id = "' + item_id + '-comment_form"></textarea></div>';
-        $('#' + item_id + '-verification-history-input-area').append(comment_form);
+        var comment_form = '<div><textarea rows = 5 id = "' + item_id + '-' + dataColumn + '-comment_form"></textarea></div>';
+        $('#' + item_id + '-' + dataColumn + ' div.comment-input-area').append(comment_form);
 
-        var submit_button = '<div><button type = "button" class = "add-history-button">保存</button></div>';
-        $('#' + item_id + '-verification-history-input-area').append($(submit_button).click(function(){saveConfirmComment(item_id);}));
+        var submit_button = '<div><button type = "button" class = "add-comment-button">保存</button></div>';
+        $('#' + item_id + '-' + dataColumn + ' div.comment-input-area').append($(submit_button).click(() => {saveConfirmComment(item_id, dataColumn, controllerName)}));
 
-        $('#' + name_selector).focus();
+        $('#' + item_id + '-' + dataColumn + '-name-selector').focus();
     }
 
     // 検証履歴(確認コメント)保存ボタンが押されたときの処理
-    function saveConfirmComment(itemId)
+    function saveConfirmComment(itemId, dataColumn, controllerName)
     {
-        var verifierId = $('#' + itemId + '-name-selector').val();
-        var comment = $('#' + itemId + '-comment_form').val();
-        var editActionUrl = WEBROOT + 'items/save_verification_history/' + itemId + '/' + verifierId + '/' + comment;
+        var commenterId = $('#' + itemId + '-' + dataColumn + '-name-selector').val();
+        var comment = $('#' + itemId + '-' + dataColumn + '-comment_form').val();
+        var editActionUrl = WEBROOT + controllerName + '/save';
 
+        var targetTdId = itemId + '-' + dataColumn
+        // tdのidがitemId とdata-columnでできていることが暗黙のルールになってしまっているが、他にいいやり方を思いつかなかた…
         $.ajax({
         url: editActionUrl,
         type: "POST",
-        data: { item_id : itemId, verifier_id: verifierId, comment: comment },
+        data: { item_id : itemId, commenter_id: commenterId, comment: comment },
         dataType: "text",
         success : function(response)
         {
-            if($('#' + itemId + '-confirm_comment table').length == 0){
-                $('#' + itemId + '-confirm_comment').append('<table class="verification-history-table"><tbody></tbody></table>');
+            if($('#' + targetTdId + ' table').length == 0){
+                $('#' + targetTdId).append('<table class="comment-table"><tbody></tbody></table>');
             }
-            var verifierName = $('#' + itemId + '-name-selector option:selected').text();
+            var verifierName = $('#' + itemId + '-' + dataColumn  + '-name-selector option:selected').text();
             var today = new Date();
             console.log(today);
             var todayMonth = ('0' + (today.getMonth() + 1)).slice(-2);
             var todayDate = ('0' + today.getDate()).slice(-2);
-            var newHistory =   '<tr class="verification-history-header">'
-                             + '<td class="verification-history-header" style="background:#838b0d; color:white">' + verifierName + '</td>'
-                             + '<td class="verification-history-header" style="background:#838b0d; color:white">'
+            var newHistory =   '<tr class="comment-table-header">'
+                             + '<td class="comment-table-header" style="background:#838b0d; color:white">' + verifierName + '</td>'
+                             + '<td class="comment-table-header" style="background:#838b0d; color:white">'
                              + today.getFullYear() + '-' + todayMonth + '-' + todayDate + ' ' + today.toLocaleTimeString() //' ' + + ':' + + ':' +
                              + '</td>'
                              + '</tr>'
-                             + '<tr class="verification-history-comment">'
-                             + '<td class="editable-comment td-of-table-in-row" colspan="2">' + comment + '</td>'
+                             + '<tr class="comment-content" data-id="' + response+ '" data-controller="' + controllerName + '">'
+                             + '<td class="editable-comment td-of-table-in-row record editable-cell" colspan="2" data-column="' + dataColumn + '"'
+                             + 'id="' + response + '-' + dataColumn + '-comment">' + comment + '</td>'
                              + '</tr>';
             console.log(newHistory);
-            $('#' + itemId + '-confirm_comment table').append(newHistory).trigger('create');
+            $('#' + targetTdId + ' table').append(newHistory).trigger('create');
             // $('#verification-history-table td').css('background', '#838b0d');
-            $('#' + itemId + '-add-verification-history').show();
-            $('#' + itemId + '-verification-history-input-area').empty();
+            $('#' + itemId + '-add-comment').show();
+            $('#' + itemId + '-' + dataColumn + ' div.comment-input-area').empty();
             syncTwoTablesHeight();
         },
         error: function()

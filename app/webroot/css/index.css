@@ -236,22 +236,22 @@ tr.needs-no-confirm {
     text-align: center;
 }
 
-.verification-history-table {
+.comment-table {
     width: 100%;
 }
 
-.verification-history-table,
-.verification-history-table td {
+.comment-table,
+.comment-table td {
     border: 1px #000000 solid;
     border-collapse:collapse;
 }
 
-tr.verification-history-header td {
+tr.comment-table-header td {
     background: #838b0d;
     color: #FFFFFF;
 }
 
-tr.verification-history-comment td {
+tr.comment-content td {
     background: #e4e6c2;
 }
 
@@ -270,3 +270,4 @@ ul > li {
 #page_selector span {
     font-size: 16px;
 }
+comment-table-header

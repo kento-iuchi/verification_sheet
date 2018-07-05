@@ -47,8 +47,8 @@ class ItemsController extends AppController
         $this->set('query', $query_data);
         $this->set('items', $this->paginate('Item', $conditions));
         $this->set('completed_mode_flag', $completed_mode_flag);
-        $this->set('verifier', $this->Verifier->find('all'));
-        $this->set('author', $this->Author->find('all'));
+        $verifier_names = Hash::combine($this->Verifier->find('all'), '{n}.Verifier.id', '{n}.Verifier.name');
+        $this->set('verifier_names', $verifier_names);
         $author_names = Hash::combine($this->Author->find('all'), '{n}.Author.id', '{n}.Author.name');
         $this->set('author_names', $author_names);
     }
@@ -70,6 +70,7 @@ class ItemsController extends AppController
     {
         $this->autoRender = false;
 
+        $this->log('aaa');
         $this->Item->id = $this->request->data['id'];
         $column_name = $this->request->data['column_name'];
         $content = $this->request->data['content'];

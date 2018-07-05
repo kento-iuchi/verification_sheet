@@ -4,14 +4,7 @@ ini_set("display_errors", 'On');
 error_reporting(E_ALL);
 ?>
 
-<?php
-// jsonとしてindex.jsに与えるため
-$verifier_names = array();
-$verifiers_count = count($verifier);
-for ($vi=0; $vi < $verifiers_count; $vi++) {
-    $verifier_names[$vi] = $verifier[$vi]['Verifier']['name'];
-}
-?>
+
 
 <?php
 echo $this->Html->script('index_common.js');
@@ -344,7 +337,7 @@ if (!$completed_mode_flag) {
                 <span class="record_text"><?php echo $item['Item']['supp_release_judgement']; ?></span>
             </td>
             <td class = "record editable-cell verifier-column" id="<?php echo $item['Item']['id'] . "-verifier_id";?>" data-column="verifier_id">
-                <span class="record_text"><?php echo !is_null($item['Item']['verifier_id']) ? $verifier_names[$item['Item']['verifier_id']] : '未設定'; ?></span>
+                <span class="record_text"><?php echo !empty($item['Item']['verifier_id']) ? $verifier_names[$item['Item']['verifier_id']] : '未設定'; ?></span>
             </td>
             <td class = "record editable-cell priority-column" id="<?php echo $item['Item']['id'] . "-manual_exists";?>" data-column="manual_exists">
                 <span class="record_text"><?php echo $item['Item']['manual_exists'] == 1 ? '◯' : '✕'; ?></span>
@@ -367,29 +360,54 @@ if (!$completed_mode_flag) {
             <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-confirm_points";?>" data-column="confirm_points">
                 <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['confirm_points']); ?></div>
             </td>
-            <td class = "record comment-column" data-column_name = "confirm_comment" id="<?php echo $item['Item']['id'] . "-confirm_comment";?>" data-column="confirm_comment">
-                <table class="verification-history-table">
+            <td class = "comment-column" data-column_name = "confirm_comment" id="<?php echo $item['Item']['id'] . "-verification_history";?>" data-column="verification_history">
+                <table class="comment-table">
                     <?php if(!empty($item['verification_history'])):?>
                     <?php foreach ($item['verification_history'] as $verification_history): ?>
-                        <tr class="verification-history-header">
-                            <td class="verification-history-header td-of-table-in-row"><?php echo $verifier_names[$verification_history['verifier_id']-1];?></td>
-                            <td class="verification-history-header td-of-table-in-row"><?php echo $verification_history['created'];?></td>
+                        <tr class="comment-table-header">
+                            <td class="comment-table-header td-of-table-in-row"><?php echo $verifier_names[$verification_history['verifier_id']];?></td>
+                            <td class="comment-table-header td-of-table-in-row"><?php echo $verification_history['created'];?></td>
                         </tr>
-                        <tr class="verification-history-comment" data-id="<?php echo $verification_history['id']?>" data-controller="verification_history">
-                            <td class="editable-comment td-of-table-in-row" colspan="2"><?php echo $verification_history['comment'];?></td>
+                        <tr class="comment-content" data-id="<?php echo $verification_history['id']?>" data-controller="verification_histories">
+                            <td class="editable-comment td-of-table-in-row record editable-cell" colspan="2" id="<?php echo $verification_history['id']?>-verification_history-comment"
+                                data-column = "verification_history">
+                                <?php echo str_replace('\n', '<br>', $verification_history['comment']);?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                     <?php endif?>
                 </table>
                 <?php if(!$completed_mode_flag):?>
-                <button type="button" class="add-verification-history" id="<?php echo $item['Item']['id'] . '-add-verification-history';?>">
+                <button type="button" class="add-comment" id="<?php echo $item['Item']['id'] . '-add-verification_history';?>">
                     新規コメント
                 </button>
                 <?php endif?>
-                <div id="<?php echo $item['Item']['id'];?>-verification-history-input-area"></div>
+                <div class = "comment-input-area"></div>
             </td>
-            <td class = "record editable-cell comment-column" id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>" data-column="response_to_confirm_comment">
-                <!-- <div class="record_text"><?php echo str_replace(array("\r\n", "\r", "\n"), '</br>', $item['Item']['response_to_confirm_comment']); ?></div> -->
+            <td class = "comment-column" data-column_name = "response_to_confirm_comment"
+                id="<?php echo $item['Item']['id'] . "-response_to_confirm_comment";?>" data-column="response_to_confirm_comment">
+                <table class="comment-table">
+                    <?php if(!empty($item['confirm_comment_response'])):?>
+                    <?php foreach ($item['confirm_comment_response'] as $confirm_comment_response): ?>
+                        <tr class="comment-table-header">
+                            <td class="comment-table-header td-of-table-in-row"><?php echo $author_names[$confirm_comment_response['author_id']];?></td>
+                            <td class="comment-table-header td-of-table-in-row"><?php echo $confirm_comment_response['created'];?></td>
+                        </tr>
+                        <tr class="comment-content" data-id="<?php echo $confirm_comment_response['id']?>" data-controller="confirm_comment_responses">
+                            <td class="editable-comment td-of-table-in-row record editable-cell" colspan="2" id="<?php echo $confirm_comment_response['id']?>-verification_history-comment"
+                                data-column = "verification_history">
+                                <?php echo str_replace('\n', '<br>', $confirm_comment_response['comment']);?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <?php endif?>
+                </table>
+                <?php if(!$completed_mode_flag):?>
+                <button type="button" class="add-comment" id="<?php echo $item['Item']['id'] . '-add-confirm_comment_response';?>">
+                    新規コメント
+                </button>
+                <?php endif?>
+                <div class = "comment-input-area"></div>
             </td>
             <td class = "record author-column" id="<?php echo $item['Item']['id'] . "-author_id";?>" data-column="author_id">
                 <span class="record_text"><?php echo !is_null($item['Item']['author_id']) ? $author_names[$item['Item']['author_id']] : '未設定'; ?></span>
