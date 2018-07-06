@@ -155,10 +155,10 @@ if (!$completed_mode_flag) {
             <span class="record_text"><?php echo $item['Item']['needs_supp_confirm'] == 1 ? '必要' : '不要' ?></span>
         </td>
         <td class="record content-column editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>" data-column="content">
-            <span class="record_text editable-cell"><?php echo $item['Item']['content']; ?></span>
+            <span class="record_text"><?php echo $item['Item']['content']; ?></span>
         </td>
         <td class = "record date-column editable-cell" id="<?php echo $item['Item']['id'] . '-due_date_for_release';?>" data-column="due_date_for_release">
-            <span class="record_text editable-cell"><?php echo $item['Item']['due_date_for_release']; ?></span>
+            <span class="record_text"><?php echo $item['Item']['due_date_for_release']; ?></span>
         </td>
         <td class = "record status-column editable-cell" id="<?php echo $item['Item']['id'] . "-status";?>" data-column="status">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>

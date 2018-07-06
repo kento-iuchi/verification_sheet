@@ -210,6 +210,7 @@ $(function(){
             $(editCellSelector).html(form);
         }
         syncTwoTablesHeight();
+        $('#'+formId).css('width', '90%');
         $('#'+formId).focus();
         // セレクトボックスの初期値設定
         if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'差し戻し', 'コードレビュー中',
@@ -325,12 +326,15 @@ $(function(){
                 }
 
                 $(selectedTd).html(recordtext(textEdited));
-                if (columnName == 'pullrequest_update' || columnName == 'due_date_for_release'){
+                if (columnName == 'pullrequest_update') {
                     var pullrequestDate = new Date($('#' + id + '-pullrequest_update').text());
-                    var dueDateForRelease = new Date($('#' + id + '-due_date_for_release').text());
                     var todayDate = new Date();
 
-                    $('#' + id + '-elapsed').text(recordtext(Math.round((todayDate - pullrequestDate)/86400000)));
+                    $('#' + id + '-elapsed').html(recordtext(Math.round((todayDate - pullrequestDate)/86400000)));
+                }
+                if (columnName == 'pullrequest_update' || columnName == 'due_date_for_release') {
+                    var dueDateForRelease = new Date($('#' + id + '-due_date_for_release').text());
+                    var todayDate = new Date();
 
                     var graceDaysOfVerificationComplete = Math.round((dueDateForRelease - todayDate)/86400000);
                     graceDaysOfVerificationComplete = isNaN(graceDaysOfVerificationComplete) ? '' : graceDaysOfVerificationComplete;

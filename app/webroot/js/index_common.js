@@ -12,7 +12,6 @@ function syncTwoTablesHeight(edited_table_id = null)
         var data_cells_height = data_cells.height();
 
         if (edited_table_id != null) {
-            console.log(edited_table_id)
             if (edited_table_id == 'header_table') {
                 data_cells.height(header_cells_height);
             } else if(edited_table_id == 'data_table') {
