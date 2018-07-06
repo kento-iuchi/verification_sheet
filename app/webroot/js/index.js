@@ -126,8 +126,8 @@ $(function(){
         formId = editCellId + '_form';
         if (columnName == 'needs_supp_confirm') {
             var form = "<select id = '" + formId + "'>" +
-                       "<option value='1'>いいえ</option>" +
-                       "<option value='0'>はい</option>" +
+                       "<option value='1'>必要</option>" +
+                       "<option value='0'>不要</option>" +
                        "</select>";
             $(editCellSelector).html(form);
         } else if (columnName == 'division') {
@@ -361,11 +361,11 @@ $(function(){
                 }
                 if (columnName == "needs_supp_confirm") {
                     if (postValue == 1) {
-                        var needs_supp_confirm_char = 'いいえ';
+                        var needs_supp_confirm_char = '必要';
                         $('#item_' + id + '-head').removeClass('needs-no-confirm');
                         $('#item_' + id + '-data').removeClass('needs-no-confirm');
                     } else {
-                        var needs_supp_confirm_char = 'はい';
+                        var needs_supp_confirm_char = '不要';
                         $('#item_' + id + '-head').addClass('needs-no-confirm');
                         $('#item_' + id + '-data').addClass('needs-no-confirm');
                     }

@@ -125,7 +125,7 @@ if (!$completed_mode_flag) {
             <button class="sort_button"><?php echo $this->Paginator->sort('id', '▼', array('direction' => 'asc',  'lock' => true)) ?></button>
         </th>
         <th class="needs-supp-confirm-column column-for-dev">
-            サポート・営業<br>確認不要
+            サポート・営業<br>確認
         </th>
         <th class="content-column">内容</th>
         <th class="date-column">必須リリース日<br>
@@ -152,7 +152,7 @@ if (!$completed_mode_flag) {
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
         </td>
         <td class="record needs-supp-confirm-column editable-cell column-for-dev" id="<?php echo $item['Item']['id'] . "-needs_supp_confirm";?>" data-column="needs_supp_confirm">
-            <span class="record_text"><?php echo $item['Item']['needs_supp_confirm'] == 1 ? 'いいえ' : 'はい' ?></span>
+            <span class="record_text"><?php echo $item['Item']['needs_supp_confirm'] == 1 ? '必要' : '不要' ?></span>
         </td>
         <td class="record content-column editable-cell" id="<?php echo $item['Item']['id'] . "-content";?>" data-column="content">
             <span class="record_text editable-cell"><?php echo $item['Item']['content']; ?></span>
@@ -179,7 +179,7 @@ if (!$completed_mode_flag) {
         <td class="needs-supp-confirm-column column-for-dev">
             <?php echo $this->Form->input('needs_supp_confirm', array(
                     'label' => false,
-                    'options' => array(1 => 'いいえ', 0 => 'はい')
+                    'options' => array(1 => '必要', 0 => '不要')
                 ));
             ?>
         </td>
