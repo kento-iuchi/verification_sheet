@@ -83,7 +83,7 @@ class ItemsController extends AppController
         )){
             if ($content !== null){
                 $target_item = $this->Item->find('first', array('conditions' => array('Item.id' => $this->request->data['id'])));
-                $title = Hash::get($target_item, '{0}.Item.content');
+                $title = Hash::get($target_item, 'Item.content');
                 $column_name_text = array(
                     'tech_release_judgement' => '技術リリースOK判断日',
                     'supp_release_judgement' => 'サポートリリースOK判断日',
@@ -138,7 +138,6 @@ class ItemsController extends AppController
         if (empty($somebody_editing_item)) {
             return false;
         }
-
         return json_encode($somebody_editing_item);
     }
 
