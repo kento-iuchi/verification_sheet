@@ -9,8 +9,8 @@ error_reporting(E_ALL);
 <?php
 echo $this->Html->script('index_common.js');
 if (!$completed_mode_flag) {
-    echo $this->Html->script('index.js');
     echo $this->Html->script('detect_editing.js');
+    echo $this->Html->script('index.js');
 }
 ?>
 <?php echo $this->Html->css('index.css');?>

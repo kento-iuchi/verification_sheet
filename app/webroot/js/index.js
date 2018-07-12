@@ -4,14 +4,6 @@ $(function(){
     updateStyles(); // データに応じて見た目を初期化する（ハイライトなど）
     syncTwoTablesHeight(); // header-tableとdata-tableの行の高さを合わせる
 
-    // リロードしたとき、自分が編集している項目の情報を
-    //　editing_itemsケーブルから消去する
-    if (Cookies.get('my_editing_item_record_id')) {
-        if (unRegisterItemEditing(Cookies.get('my_editing_item_record_id'))) {
-            Cookies.remove('my_editing_item_record_id');
-        }
-    }
-
     // レコードのセルをダブルクリックした際の処理
     var uneditableColumnNames = ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'confirm_comment', 'author_id'];
     var controller_name;
@@ -32,7 +24,7 @@ $(function(){
             postValue = $('#' + formId).val();
             postToEditAction(controller_name, '#' + editCellId, postValue);
             if (!$('#' + editCellId).hasClass('td-of-table-in-row')) {
-                unRegisterItemEditing(my_editing_item_record_id);
+                unRegisterItemEditing(recordId);
             }
         }
 
@@ -219,42 +211,6 @@ $(function(){
         }
 
         return formId;
-    }
-
-    var my_editing_item_record_id
-    function registerItemEditing(item_id)
-    {
-        $.ajax({
-            url: WEBROOT + 'items/register_item_editing',
-            type: "POST",
-            data: {item_id : item_id},
-            dataType: "text",
-        }).done(function(response){
-            if (response){
-                my_editing_item_record_id = response;
-                Cookies.set('my_editing_item_record_id', my_editing_item_record_id);
-            }
-        }).fail(function(response){
-            console.log('failed to register item editing');
-        });
-    }
-
-    function unRegisterItemEditing(record_id)
-    {
-        $.ajax({
-            url: WEBROOT + 'items/unregister_item_editing',
-            type: "POST",
-            data: {record_id : record_id},
-            dataType: "text",
-        }).done(function(response){
-            if (response){
-                console.log('delete editing record');
-            }
-            return true;
-        }).fail(function(response){
-            console.log('failed to delete editing record');
-            return false;
-        });
     }
 
     function fetchLastUpdatedTime(recordId, controllerName)

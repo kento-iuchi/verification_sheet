@@ -129,12 +129,18 @@ class ItemsController extends AppController
     public function fetch_items_list_somebody_editing()
     {
         $this->autoRender = false;
-        $editing_items = $this->EditingItem->find('all');
+
+        $editing_items = $this->EditingItem->find(
+            'all',
+            array('conditions' =>
+                array('editor_token !=' => $this->request->data['my_editor_token'])
+            )
+        );
         if (empty($editing_items)) {
-            return false;
+            return array();
         }
 
-        $somebody_editing_item = Hash::extract($editing_items, "{n}.EditingItem[editor_ip!={$_SERVER['REMOTE_ADDR']}]");
+        $somebody_editing_item = Hash::extract($editing_items, "{n}.EditingItem");
         if (empty($somebody_editing_item)) {
             return false;
         }
@@ -144,20 +150,18 @@ class ItemsController extends AppController
     function register_item_editing()
     {
         $this->autoRender = false;
-        if (empty($this->request->data['item_id'])) {
+        if (empty($this->request->data['item_id']) || empty($this->request->data['editor_token'])) {
             return false;
         }
 
-        $this->request->data['item_id'] = $this->request->data['item_id'];
-        $this->request->data['editor_ip'] = $_SERVER['REMOTE_ADDR'];
         $this->EditingItem->create();
+        $this->request->data['EditingItem']['item_id'] = $this->request->data['item_id'];
+        $this->request->data['EditingItem']['editor_token'] = $this->request->data['editor_token'];
         if ($this->EditingItem->save($this->request->data)) {
             return $this->EditingItem->id;
         } else {
             return false;
         }
-
-        $editor_ip = $_SERVER['REMOTE_ADDR'];
     }
 
     function unregister_item_editing()
@@ -172,8 +176,6 @@ class ItemsController extends AppController
         } else {
             return false;
         }
-
-        $editor_ip = $_SERVER['REMOTE_ADDR'];
     }
 
     public function toggle_complete_state($id = null, $state = null)
