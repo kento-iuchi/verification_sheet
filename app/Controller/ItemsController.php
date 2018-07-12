@@ -176,13 +176,17 @@ class ItemsController extends AppController
         $editor_ip = $_SERVER['REMOTE_ADDR'];
     }
 
-    public function toggle_complete_state($id = null)
+    public function toggle_complete_state($id = null, $state = null)
     {
         $this->autoRender = false;
 
         $this->Item->id = $id;
         $this->request->data = $this->Item->read();
-        $this->request->data['Item']['is_completed'] = $this->request->data['Item']['is_completed'] == 0 ? 1 : 0;
+        if (isset($state)){
+            $this->request->data['Item']['is_completed'] = $state;
+        } else {
+            $this->request->data['Item']['is_completed'] = $this->request->data['Item']['is_completed'] == 0 ? 1 : 0;
+        }
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
                 echo 'successfully switched complete status';
@@ -377,6 +381,10 @@ class ItemsController extends AppController
 
                 }
                 if($payload['action'] == 'closed'){
+                    $result = $this->Item->find('first', array('conditions' => array('pullrequest_number' => $payload['pull_request']['number'])));
+                    if (!empty($result)){
+                        $this->toggle_complete_state(Hash::get('Item.id'), true);
+                    }
                     $this->check_all_open_pullrequests_mergeability();
                 }
             }
