@@ -104,7 +104,10 @@ $(function(){
         if(!confirm('id = ' + item_id + message)){
             return false;
         }else{
-            turnItemIncompleted(item_id);
+            if (turnItemIncompleted(item_id)){
+                var message = $(this).hasClass('complete_button') ? "'完了'状態にしました" : "'未完了'に戻しました"
+                alert(message);
+            }
         }
     })
 
@@ -118,8 +121,6 @@ $(function(){
         dataType: "text",
         success : function(response){
             //通信成功時
-            var message = $(this).hasClass('complete_button') ? "'完了'状態にしました" : "'未完了'に戻しました"
-            alert(message);
             var item_head_tr_id = '#item_' + item_id + '-head';
             var item_data_tr_id = '#item_' + item_id + '-data';
             $(item_head_tr_id).fadeOut(600).queue(function() {
@@ -128,10 +129,12 @@ $(function(){
             $(item_data_tr_id).fadeOut(600).queue(function() {
                 $(item_data_tr_id).remove();
             });
+            return true;
         },
         error: function(){
             //通信失敗時の処理
             alert('通信失敗');
+            return false;
         }
         });
     }
