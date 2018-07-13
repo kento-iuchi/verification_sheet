@@ -1,7 +1,7 @@
 <?php
 App::uses('ItemsController', 'Controller');
 
-class ItemShell extends AppShell
+class SendAlertShell extends AppShell
 {
     function startup()
     {
@@ -9,13 +9,13 @@ class ItemShell extends AppShell
         $this->ItemsController = new ItemsController();
     }
 
-    public function day_before_confirm()
+    public function grace_days_alert()
     {
         $this->ItemsController->send_grace_days_alert();
     }
 
     public function elapsed_days_alert()
     {
-        $this->ItemsController->elapsed_days_alert();
+        $this->ItemsController->send_elapsed_days_alert();
     }
 }

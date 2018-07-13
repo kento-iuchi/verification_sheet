@@ -246,13 +246,13 @@ class ItemsController extends AppController
 
     public function send_grace_days_alert()
     {
-        $message = '[info][title]おしらせ[/title]';
+        $message = '[info][title]必須リリース日までの残日数[/title]';
         $today_date = new Datetime(date("y-m-d"));
-        $items = $this->Item->find('all');
-        $contents = Hash::extract($items, '{n}.Item[is_completed=0].content');
-        $due_dates_for_release = Hash::extract($items, '{n}.Item[is_completed=0].due_date_for_release');
+        $incomplete_items = $this->Item->find('all', array('conditions' => array('is_completed' => 0)));
+        $contents = Hash::extract($incomplete_items, '{n}.Item.content');
+        $due_dates_for_release = Hash::extract($incomplete_items, '{n}.Item.due_date_for_release');
         foreach ($due_dates_for_release as $i => $due_date_for_release) {
-            if (empty($due_date_for_release)){
+            if (!isset($due_date_for_release)){
                 continue;
             }
             $due_date_for_release = new Datetime($due_date_for_release);
@@ -265,13 +265,10 @@ class ItemsController extends AppController
 
         $message.= '[/info]';
 
-        $room_id = 103474903;
-        $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
-
         $this->send_message_to_chatwork($message);
     }
 
-    public function elapsed_days_alert()
+    public function send_elapsed_days_alert()
     {
         $message = '[info][title]おしらせ[/title]';
         $today_date = new Datetime(date("y-m-d"));
@@ -280,10 +277,10 @@ class ItemsController extends AppController
             'supp_release_judgement' => 'サポートリリースOK判断日',
             'sale_release_judgement' => '営業リリースOK判断日',
         );
-        $items = $this->Item->find('all');
-        $titles = Hash::extract($items, '{n}.Item[is_completed=0].content');
+        $items = $this->Item->find('all', array('conditions' => array('is_completed' => 0)));
+        $titles = Hash::extract($items, '{n}.Item.content');
         foreach ($column_name_text as $column_name=> $column_name_jp) {
-            $target_column = Hash::extract($items, "{n}.Item[is_completed=0].{$column_name}");
+            $target_column = Hash::extract($items, "{n}.Item.{$column_name}");
             foreach ($target_column as $idx => $judge_date) {
                 $judge_date = new Datetime($judge_date);
                 $elapsed_days = $judge_date->diff($today_date)->format('%r%a');
