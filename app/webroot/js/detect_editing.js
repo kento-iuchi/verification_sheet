@@ -18,12 +18,12 @@ function detectEditingItem(){
             editing_items_latest.forEach(function(id){
                 inhibitToEditItem(id);
             })
-            var no_longer_editing_items = getArrayDiff(editing_items, editing_items_latest);
-            no_longer_editing_items.forEach(function(id){
-                permitToEditItem(id);
-            })
             editing_items = editing_items_latest;
         }
+        var no_longer_editing_items = getArrayDiff(editing_items, editing_items_latest);
+        no_longer_editing_items.forEach(function(id){
+            permitToEditItem(id);
+        })
     })
 }
 
