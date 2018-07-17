@@ -416,7 +416,10 @@ if (!$completed_mode_flag) {
                 <span class="record_text"><?php echo $item['Item']['pivotal_point']; ?></span>
             </td>
             <td class = "record date-column" id="<?php echo $item['Item']['id'] . "-modified";?>" data-column="modified">
-                <span class="record_text"><?php echo $item['Item']['modified']; ?></span>
+                <span class="record_text">
+                    <?php $modified_date = new Datetime($item['Item']['modified']);?>
+                    <?php echo $modified_date->format('Y-m-d');?>
+                </span>
             </td>
             <td class= "complete_column">
                 <div class="complete">
