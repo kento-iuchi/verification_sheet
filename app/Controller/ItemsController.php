@@ -158,23 +158,29 @@ class ItemsController extends AppController
         $this->request->data['EditingItem']['item_id'] = $this->request->data['item_id'];
         $this->request->data['EditingItem']['editor_token'] = $this->request->data['editor_token'];
         if ($this->EditingItem->save($this->request->data)) {
-            return $this->EditingItem->id;
+            return $this->request->data['item_id'];
         } else {
             return false;
         }
     }
 
+    // editing_item の idではなくediting_itemのitem_idなことに注意
     function unregister_item_editing()
     {
         $this->autoRender = false;
-        if (empty($this->request->data['record_id'])) {
-            return false;
-        }
+        try{
+            if (empty($this->request->data['item_id'])) {
+                throw new Exception("item id is empty");
+            }
+            $target_editing_item = $this->EditingItem->find('first', array('conditions' => array('item_id' => $this->request->data['item_id'])));
 
-        if ($this->EditingItem->delete($this->request->data['record_id'])) {
-            return true;
-        } else {
-            return false;
+            if ($this->EditingItem->delete(Hash::get($target_editing_item, 'EditingItem.id'))) {
+                return true;
+            } else {
+                throw new Exception("failed to delete editing item");
+            }
+        }catch(Exception $e){
+            echo "error：" . $e->getMessage();
         }
     }
 

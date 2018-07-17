@@ -24,7 +24,12 @@ $(function(){
             postValue = $('#' + formId).val();
             postToEditAction(controller_name, '#' + editCellId, postValue);
             if (!$('#' + editCellId).hasClass('td-of-table-in-row')) {
-                unRegisterItemEditing(recordId);
+                unRegisterItemEditing($('#' + editCellId).parent().attr('data-id')).done(function(response){
+                    console.log('delete editing item ' + Cookies.get('my_editing_item_record_id'));
+                    Cookies.remove('my_editing_item_record_id');
+                }).fail(function(response){
+                    console.log('failed to delete editing item');
+                });
             }
         }
 
@@ -43,6 +48,17 @@ $(function(){
         if (formId == 'uneditable_cell'){
             finishEdit();
             return;
+        }
+        if (!$('#' + editCellId).hasClass('td-of-table-in-row')) {
+            registerItemEditing($(this).parent().attr('data-id')).done(function(response){
+                if (response){
+                    var editing_item_id = response;
+                    Cookies.set('my_editing_item_id', $('#' + editCellId).parent().attr('data-id'));
+                    console.log('registered editing item [item_id]:' + $('#' + editCellId).parent().attr('data-id'));
+                }
+            }).fail(function(response){
+                console.log('failed to register item editing');
+            });
         }
 
         controller_name = $(this).parent().attr('data-controller');
@@ -101,10 +117,6 @@ $(function(){
         // いくつかの項目を編集できないようにする
         if(!$(editCellSelector).hasClass('editable-cell')){
             return 'uneditable_cell';
-        }
-
-        if (!$('#' + editCellId).hasClass('td-of-table-in-row')) {
-            registerItemEditing(recordId);
         }
 
         var today = new Date();

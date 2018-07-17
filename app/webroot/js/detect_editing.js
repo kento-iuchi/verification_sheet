@@ -52,38 +52,22 @@ function generateToken(token_length){
 
 function registerItemEditing(itemId)
 {
-    $.ajax({
+    return $.ajax({
         url: WEBROOT + 'items/register_item_editing',
         type: "POST",
         data: {item_id : itemId, editor_token: editorToken},
         dataType: "text",
-    }).done(function(response){
-        if (response){
-            editing_item_record_id = response;
-            Cookies.set('my_editing_item_record_id', editing_item_record_id);
-            return editing_item_record_id
-        }
-    }).fail(function(response){
-        console.log('failed to register item editing');
-    });
+    })
 }
 
-function unRegisterItemEditing(record_id)
+function unRegisterItemEditing(itemId)
 {
-    $.ajax({
+    return $.ajax({
         url: WEBROOT + 'items/unregister_item_editing',
         type: "POST",
-        data: {record_id : record_id},
+        data: {item_id : itemId},
         dataType: "text",
-    }).done(function(response){
-        if (response){
-            console.log('delete editing record');
-        }
-        return true;
-    }).fail(function(response){
-        console.log('failed to delete editing record');
-        return false;
-    });
+    })
 }
 
 $(function(){
@@ -91,10 +75,15 @@ $(function(){
 
     // リロードしたとき、自分が編集している項目の情報を
     //　editing_itemsケーブルから消去する
-    if (Cookies.get('my_editing_item_record_id')) {
-        if (unRegisterItemEditing(Cookies.get('my_editing_item_record_id'))) {
-            Cookies.remove('my_editing_item_record_id');
-        }
+    if (Cookies.get('my_editing_item_id')) {
+        unRegisterItemEditing(Cookies.get('my_editing_item_id')).done(function(response){
+            console.log('delete editing item ' + Cookies.get('my_editing_item_id'));
+            Cookies.remove('my_editing_item_id');
+        }).fail(function(response){
+            console.log('failed to delete editing item');
+        })
+    } else {
+        console.log('failed to editing_item_id from cookie');
     }
 
     editorToken = Cookies.get('my_editor_token');
