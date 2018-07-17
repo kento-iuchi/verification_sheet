@@ -355,7 +355,6 @@ class ItemsController extends AppController
                                 'pullrequest_number' => $payload['number'],
                                 'pullrequest_id' => $pullrequest_id,
                                 'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
-                                'confirm_comment' => $payload['pull_request']['body'],
                                 'author_id' => $author_id,
                                 'pivotal_point' => 1,
                             )
