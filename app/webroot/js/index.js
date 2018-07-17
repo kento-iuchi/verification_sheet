@@ -22,7 +22,7 @@ $(function(){
             var recordId   = $(this).parent().attr('data-id');
             var columnName = $(this).attr('data-column');
             postValue = $('#' + formId).val();
-            postToEditAction(controller_name, '#' + editCellId, postValue);
+            postToEditAction(controller_name, '#' + editCellId, postValue, editStartingTime);
             if (!$('#' + editCellId).hasClass('td-of-table-in-row')) {
                 unRegisterItemEditing($('#' + editCellId).parent().attr('data-id')).done(function(response){
                     console.log('delete editing item ' + Cookies.get('my_editing_item_record_id'));
@@ -74,7 +74,7 @@ $(function(){
                 var recordId   = $('#' + editCellId).parent().attr('data-id');
                 var columnName = $('#' + editCellId).attr('data-column');
                 postValue = $('#' + formId).val();
-                postToEditAction(controller_name, '#' + editCellId, postValue);
+                postToEditAction(controller_name, '#' + editCellId, postValue, editStartingTime);
 
                 if (columnName == 'status' && !event.shiftKey){
                     var nextId = recordId + '-' + 'category';
@@ -107,6 +107,13 @@ $(function(){
 
     }
 
+    function getEditStartingTime(){
+        return $.ajax({
+            type: 'GET',
+            url: WEBROOT + 'items/get_time',
+        })
+    }
+
     var editStartingTime;
     function createEditForm(editCellId)
     {
@@ -120,109 +127,115 @@ $(function(){
         }
 
         var today = new Date();
-        editStartingTime = Math.floor(today.getTime() / 1000);
+        getEditStartingTime().done(function(response){
+            editStartingTime = response;
+            console.log('edit starting time: ' + editStartingTime);
 
-        initialText = initialText.replace(/<br>|<\/br>/g, '&&NEWLINE&&');
-        initialText = initialText.replace(/<.+?>/g, '');
-        initialText = initialText.replace(/&&NEWLINE&&/g, '\n');
-        initialText = initialText.trim();
+            initialText = initialText.replace(/<br>|<\/br>/g, '&&NEWLINE&&');
+            initialText = initialText.replace(/<.+?>/g, '');
+            initialText = initialText.replace(/&&NEWLINE&&/g, '\n');
+            initialText = initialText.trim();
 
-        formId = editCellId + '_form';
-        if (columnName == 'needs_supp_confirm') {
-            var form = "<select id = '" + formId + "'>" +
-                       "<option value='1'>必要</option>" +
-                       "<option value='0'>不要</option>" +
-                       "</select>";
-            $(editCellSelector).html(form);
-        } else if (columnName == 'division') {
-            var form = "<select id = '" + formId + "'>" +
-                       "<option value='改善' id='improvement'>改善</option>" +
-                       "<option value='機能追加' id='adding_function'>機能追加</option>" +
-                       "<option value='バグ' id = 'debug'>バグ</option>" +
-                       "</select>";
-            $(editCellSelector).html(form);
-        } else if (columnName == 'status') {
-            var form = "<select id = '" + formId + "'>" +
-                       "<option value='差し戻し'>差し戻し</option>" +
-                       "<option value='コードレビュー中'>コードレビュー中</option>" +
-                       "<option value='改修中'>改修中</option>" +
-                       "<option value='技術二重チェック中'>技術二重チェック中</option>" +
-                       "<option value='サポート・営業確認中'>サポート・営業確認中</option>" +
-                       "</select>";
-            $(editCellSelector).html(form);
-        } else if (columnName == "due_date_for_release"
-                 ||columnName == "pullrequest"
-                 ||columnName == "pullrequest_update"
-                 ||columnName == "tech_release_judgement"
-                 ||columnName == "supp_release_judgement"
-                 ||columnName == "sale_release_judgement"
-                 ||columnName == "scheduled_release_date"
-                 ||columnName == "merge_finish_date_to_master"
-        ){
-            var form = '<input type="text" id="' + formId + '" size="10" />';// textareaではダメっぽい
-            $(editCellSelector).html(form);
-            $('#'+formId).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, defaultDate: 0});
-            $('#'+formId).datepicker('setDate', initialText);
-            $('#'+formId).datepicker('show');
-        } else if (columnName == "author_id"){
-            var authorNames = $('th.author-column').attr('data-author-options');
-            authorNames = JSON.parse(authorNames);
-            var form = "<select id = '" + formId + "'>";
-            var defaultValue = 5
-            $.each(authorNames, function(index, name){
-                if(name == initialText && initialText){
-                    defaultValue = index;
-                }
-                var option = '<option value="' + (index) + '">' + name + '</option>';
-                form += option
-            });
-            form += '</select>';
-            $(editCellSelector).html(form);
-            $('#' + formId).val(defaultValue);
-        } else if (columnName == "verifier_id"){
-            var verifierNames = $('th.verifier-column').attr('data-verifier-options');
-            verifierNames = JSON.parse(verifierNames);
-            var form = "<select id = '" + formId + "'>";
-            var defaultValue = 5
-            $.each(verifierNames, function(index, name){
-                if(name == initialText && initialText != ''){
-                    defaultValue = index;
-                }
-                var option = '<option value="' + (index) + '">' + name + '</option>';
-                form += option
-            });
-            form += '</select>';
-            $(editCellSelector).html(form);
-            $('#' + formId).val(defaultValue);
-        } else if (columnName == 'manual_exists') {
-            var form = "<select id = '" + formId + "'>"
-                     + '<option value="1">◯</option>'
-                     + '<option value="0">✕</option>'
-                     + "</select>";
-            $(editCellSelector).html(form);
-            $('#' + formId).val(initialText == '◯' ? 1 : 0);
-        } else if (columnName == 'pivotal_point') {
-            var form = '<input type="number" id="' + formId + '">';
-            $(editCellSelector).html(form);
-            $('#' + formId).val(parseInt(initialText, 10));
-        } else {
-            var fontsize_div = $('<div style="display:none;font-size:1em;margin:0;padding:0;height:auto;line-height:1;border:0;">&nbsp;</div>');
-            var fontsize = fontsize_div.appendTo(editCellSelector).height();
-            var folm_cols = Math.floor(0.012 * fontsize * $(editCellSelector).width());
-            fontsize_div.remove();
-            var form = "<div style='text-align: center;'><textarea rows= '3' cols='" + folm_cols + "' " + "id ='" + formId + "'>" + initialText + "</textarea></div>";
-            $(editCellSelector).html(form);
-        }
-        syncTwoTablesHeight();
-        $('#'+formId).css('width', '90%');
-        $('#'+formId).focus();
-        // セレクトボックスの初期値設定
-        if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'差し戻し', 'コードレビュー中',
-                                    '改修中', '技術二重チェック中', 'サポート・営業確認中',]) != -1){
-            $('#' + formId).val(initialText);
-        }
+            formId = editCellId + '_form';
+            if (columnName == 'needs_supp_confirm') {
+                var form = "<select id = '" + formId + "'>" +
+                           "<option value='1'>必要</option>" +
+                           "<option value='0'>不要</option>" +
+                           "</select>";
+                $(editCellSelector).html(form);
+            } else if (columnName == 'division') {
+                var form = "<select id = '" + formId + "'>" +
+                           "<option value='改善' id='improvement'>改善</option>" +
+                           "<option value='機能追加' id='adding_function'>機能追加</option>" +
+                           "<option value='バグ' id = 'debug'>バグ</option>" +
+                           "</select>";
+                $(editCellSelector).html(form);
+            } else if (columnName == 'status') {
+                var form = "<select id = '" + formId + "'>" +
+                           "<option value='差し戻し'>差し戻し</option>" +
+                           "<option value='コードレビュー中'>コードレビュー中</option>" +
+                           "<option value='改修中'>改修中</option>" +
+                           "<option value='技術二重チェック中'>技術二重チェック中</option>" +
+                           "<option value='サポート・営業確認中'>サポート・営業確認中</option>" +
+                           "</select>";
+                $(editCellSelector).html(form);
+            } else if (columnName == "due_date_for_release"
+                     ||columnName == "pullrequest"
+                     ||columnName == "pullrequest_update"
+                     ||columnName == "tech_release_judgement"
+                     ||columnName == "supp_release_judgement"
+                     ||columnName == "sale_release_judgement"
+                     ||columnName == "scheduled_release_date"
+                     ||columnName == "merge_finish_date_to_master"
+            ){
+                var form = '<input type="text" id="' + formId + '" size="10" />';// textareaではダメっぽい
+                $(editCellSelector).html(form);
+                $('#'+formId).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, defaultDate: 0});
+                $('#'+formId).datepicker('setDate', initialText);
+                $('#'+formId).datepicker('show');
+            } else if (columnName == "author_id"){
+                var authorNames = $('th.author-column').attr('data-author-options');
+                authorNames = JSON.parse(authorNames);
+                var form = "<select id = '" + formId + "'>";
+                var defaultValue = 5
+                $.each(authorNames, function(index, name){
+                    if(name == initialText && initialText){
+                        defaultValue = index;
+                    }
+                    var option = '<option value="' + (index) + '">' + name + '</option>';
+                    form += option
+                });
+                form += '</select>';
+                $(editCellSelector).html(form);
+                $('#' + formId).val(defaultValue);
+            } else if (columnName == "verifier_id"){
+                var verifierNames = $('th.verifier-column').attr('data-verifier-options');
+                verifierNames = JSON.parse(verifierNames);
+                var form = "<select id = '" + formId + "'>";
+                var defaultValue = 5
+                $.each(verifierNames, function(index, name){
+                    if(name == initialText && initialText != ''){
+                        defaultValue = index;
+                    }
+                    var option = '<option value="' + (index) + '">' + name + '</option>';
+                    form += option
+                });
+                form += '</select>';
+                $(editCellSelector).html(form);
+                $('#' + formId).val(defaultValue);
+            } else if (columnName == 'manual_exists') {
+                var form = "<select id = '" + formId + "'>"
+                         + '<option value="1">◯</option>'
+                         + '<option value="0">✕</option>'
+                         + "</select>";
+                $(editCellSelector).html(form);
+                $('#' + formId).val(initialText == '◯' ? 1 : 0);
+            } else if (columnName == 'pivotal_point') {
+                var form = '<input type="number" id="' + formId + '">';
+                $(editCellSelector).html(form);
+                $('#' + formId).val(parseInt(initialText, 10));
+            } else {
+                var fontsize_div = $('<div style="display:none;font-size:1em;margin:0;padding:0;height:auto;line-height:1;border:0;">&nbsp;</div>');
+                var fontsize = fontsize_div.appendTo(editCellSelector).height();
+                var folm_cols = Math.floor(0.012 * fontsize * $(editCellSelector).width());
+                fontsize_div.remove();
+                var form = "<div style='text-align: center;'><textarea rows= '3' cols='" + folm_cols + "' " + "id ='" + formId + "'>" + initialText + "</textarea></div>";
+                $(editCellSelector).html(form);
+            }
+            syncTwoTablesHeight();
+            $('#'+formId).css('width', '90%');
+            $('#'+formId).focus();
+            // セレクトボックスの初期値設定
+            if ($.inArray(initialText, ['改善',　'機能追加', 'バグ',　'差し戻し', 'コードレビュー中',
+                                        '改修中', '技術二重チェック中', 'サポート・営業確認中',]) != -1){
+                $('#' + formId).val(initialText);
+            }
 
-        return formId;
+            return formId;
+        }).fail(function(response){
+            console.log('failer to get edit starting time');
+            return null;
+        });
     }
 
     function fetchLastUpdatedTime(recordId, controllerName)
@@ -235,7 +248,7 @@ $(function(){
         })
     }
 
-    function postToEditAction(controller_name, selectedTd, postValue)
+    function postToEditAction(controller_name, selectedTd, postValue, __editStartingTime)
     {
         var id   = $(selectedTd).parent().attr('data-id');
         var columnName = $(selectedTd).attr('data-column');
@@ -243,14 +256,15 @@ $(function(){
         var lastUpdatedTime
         fetchLastUpdatedTime(id, controller_name).done(function(response){
             lastUpdatedTime = response;
-            console.log(lastUpdatedTime);
+            console.log('[check]last update time: ' + lastUpdatedTime);
+            console.log('[check]edit starting time: ' + __editStartingTime);
             /*
             最終更新時間　> 編集開始時間の場合、
             ユーザが編集している最中にレコードが更新されたとみなす。
             最終更新時間 - 編集開始時間が1000以上という条件にしているのは、１ユーザーが高速で編集セルを切り替えた際に
             誤反応させないため
             */
-            if ((lastUpdatedTime - editStartingTime) > 1){
+            if ((lastUpdatedTime - __editStartingTime) > 1){
                 if(confirm('他のユーザーによってレコードが更新されたため、リロードします。入力中の内容をクリップボードにコピーしますか？')){
 
                     $('body').append('<textarea id="temp-clipboard-field"></textarea>');
@@ -277,7 +291,7 @@ $(function(){
             $.ajax({
                 url: editActionUrl,
                 type: "POST",
-                data: { id : id, column_name: columnName, content: postValue, last_updated_time : lastUpdatedTime },
+                data: { id : id, column_name: columnName, content: postValue},
                 dataType: "text",
             }).done(function(response){
                 //通信成功時
@@ -385,7 +399,7 @@ $(function(){
             var recordId   = $('#' + editCellId).parent().attr('data-id');
             var columnName = $('#' + editCellId).attr('data-column');
             postValue = $('#' + formId).val();
-            postToEditAction(controller_name, '#' + editCellId, postValue);
+            postToEditAction(controller_name, '#' + editCellId, postValue, editStartingTime);
             finishEdit();
         }
     })
