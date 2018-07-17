@@ -136,8 +136,10 @@ class ItemsController extends AppController
                 array('editor_token !=' => $this->request->data['my_editor_token'])
             )
         );
+        // 戻り値が「配列」もしくはbooleanというのはおかしいのだけれど
+        // からの配列を返したときのCakeResponseエラーの対処がわからない
         if (empty($editing_items)) {
-            return array();
+            return false;
         }
 
         $somebody_editing_item = Hash::extract($editing_items, "{n}.EditingItem");
