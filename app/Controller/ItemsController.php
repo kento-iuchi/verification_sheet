@@ -262,6 +262,9 @@ class ItemsController extends AppController
         $incomplete_items = $this->Item->find('all', array('conditions' => array('is_completed' => 0)));
         $contents = Hash::extract($incomplete_items, '{n}.Item.content');
         $due_dates_for_release = Hash::extract($incomplete_items, '{n}.Item.due_date_for_release');
+        if (empty(array_filter($due_dates_for_release))){
+            return null;
+        }
         foreach ($due_dates_for_release as $i => $due_date_for_release) {
             if (!isset($due_date_for_release)){
                 continue;
