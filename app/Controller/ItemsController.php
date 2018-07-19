@@ -362,7 +362,7 @@ class ItemsController extends AppController
                                 'pivotal_point' => 1,
                             )
                         );
-                        $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
+                        // $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
                     } else {
 
                         $items = $this->Item->find('all');
