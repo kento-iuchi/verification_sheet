@@ -97,7 +97,7 @@ class ItemsController extends AppController
                 $room_id = self::CONFIRM_CHATROOM_ID;
                 $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
-                $this->send_message_to_chatwork(self::CONFIRM_CHATROOM_ID);
+                $this->send_message_to_chatwork($message, $room_id);
             }
         }
 
@@ -240,7 +240,7 @@ class ItemsController extends AppController
         include(__DIR__.'/../Config/chatwork_api_token.php');
 
         $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API UR
-
+$this->log($url);
         $params = array(
             'body' => $message // メッセージ内容
         );
@@ -390,7 +390,7 @@ class ItemsController extends AppController
                     $message .= '[/info]';
 
                     $message_id = $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
-                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!ridself::CONFIRM_CHATROOM_ID-{$message_id}";
+                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid" . self::CONFIRM_CHATROOM_ID . "-{$message_id}";
                     if ($this->Item->save($new_item)) {
                         $this->log('save from github: successed');
                     } else {
