@@ -11,6 +11,8 @@ class ItemsController extends AppController
 
     public $helpers = array('Html', 'Form', 'Flash', 'Js', 'DatePicker');
 
+    const CONFIRM_CHATROOM_ID = 59632848;
+
     public $paginate =  array(
         'limit' => 15,
         'order' => array('Item.modified' => 'desc'),
@@ -92,10 +94,10 @@ class ItemsController extends AppController
                 $message .= $column_name_text[$column_name]. 'が更新されました[/info]';
 
 
-                $room_id = 103474903;
+                $room_id = self::CONFIRM_CHATROOM_ID;
                 $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
-                $this->send_message_to_chatwork($message);
+                $this->send_message_to_chatwork(self::CONFIRM_CHATROOM_ID);
             }
         }
 
@@ -226,14 +228,14 @@ class ItemsController extends AppController
 
             $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]確認コメントが記載されました"
                        ."[code]{$this->request->data['comment']}[/code][/info]";
-            $this->send_message_to_chatwork($message);
+            $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
             echo $this->VerificationHistory->id;
         } else {
             echo 'failed to save verification history';
         }
     }
 
-    public function send_message_to_chatwork($message, $room_id = 103474903)
+    public function send_message_to_chatwork($message, $room_id = self::CONFIRM_CHATROOM_ID)
     {
         include(__DIR__.'/../Config/chatwork_api_token.php');
 
@@ -283,7 +285,7 @@ class ItemsController extends AppController
 
         $message.= '[/info]';
 
-        $this->send_message_to_chatwork($message);
+        $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
     }
 
     public function send_elapsed_days_alert()
@@ -314,7 +316,7 @@ class ItemsController extends AppController
         $room_id = 103474903;
         $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
-        $this->send_message_to_chatwork($message);
+        $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
     }
 
     public function retrieve_github_push()
@@ -387,8 +389,8 @@ class ItemsController extends AppController
                     $message .= 'by ' . $payload['pull_request']['user']['login'];
                     $message .= '[/info]';
 
-                    $message_id = $this->send_message_to_chatwork($message);
-                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid103474903-{$message_id}";
+                    $message_id = $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
+                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!ridself::CONFIRM_CHATROOM_ID-{$message_id}";
                     if ($this->Item->save($new_item)) {
                         $this->log('save from github: successed');
                     } else {
