@@ -240,7 +240,6 @@ class ItemsController extends AppController
         include(__DIR__.'/../Config/chatwork_api_token.php');
 
         $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API UR
-$this->log($url);
         $params = array(
             'body' => $message // メッセージ内容
         );
