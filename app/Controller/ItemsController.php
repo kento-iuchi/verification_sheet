@@ -77,14 +77,46 @@ class ItemsController extends AppController
         $column_name = $this->request->data['column_name'];
         $content = $this->request->data['content'];
 
+        $target_item = $this->Item->find('first', array('conditions' => array('Item.id' => $this->request->data['id'])));
+        $title = Hash::get($target_item, 'Item.content');
+
         // 「～～リリースOK判断日」が新たに入力されたときの処理
-        if (in_array(
+        if ($column_name == 'status') {
+            if ($content = 'サポート・営業確認中'){
+                $target_chatwork_id = $this->Verifier->find('first', array(
+                    'fields' => array('Verifier.chatwork_id', 'Item.id'),
+                    'joins' => array(array(
+                        'type' => 'LEFT',
+                        'table' => 'items',
+                        'alias' => 'Item',
+                        'conditions' => "Verifier.id = Item.verifier_id",
+                    )),
+                    'conditions' => array('Item.id' => $this->request->data['id']),
+                ));
+                $target_chatwork_id = Hash::get($target_chatwork_id, 'Verifier.chatwork_id');
+            }
+            if ($content = '差し戻し'){
+                $target_chatwork_id = $this->Author->find('first', array(
+                    'fields' => array('Author.chatwork_id', 'Item.id'),
+                    'joins' => array(array(
+                        'type' => 'LEFT',
+                        'table' => 'items',
+                        'alias' => 'Item',
+                        'conditions' => "Author.id = Item.author_id",
+                    )),
+                    'conditions' => array('Item.id' => $this->request->data['id']),
+                ));
+                $target_chatwork_id = Hash::get($target_chatwork_id, 'Author.chatwork_id');
+            }
+            $message = "[to:{$target_chatwork_id}][info][title]No.{$this->request->data['id']} {$title}[/title]";
+            $message .= 'ステータスが【' . $content . '】になりました[/info]';
+            $this->send_message_to_chatwork($message);
+        }
+        else if (in_array(
                 $column_name,
                 array('tech_release_judgement', 'supp_release_judgement', 'sale_release_judgement')
         )){
             if ($content !== null){
-                $target_item = $this->Item->find('first', array('conditions' => array('Item.id' => $this->request->data['id'])));
-                $title = Hash::get($target_item, 'Item.content');
                 $column_name_text = array(
                     'tech_release_judgement' => '技術リリースOK判断日',
                     'supp_release_judgement' => 'サポートリリースOK判断日',
@@ -92,10 +124,6 @@ class ItemsController extends AppController
                 );
                 $message = '[info][title]'. $title.'[/title]';
                 $message .= $column_name_text[$column_name]. 'が更新されました[/info]';
-
-
-                $room_id = self::CONFIRM_CHATROOM_ID;
-                $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
                 $this->send_message_to_chatwork($message, $room_id);
             }
@@ -226,9 +254,6 @@ class ItemsController extends AppController
             $result = $this->Author->read('chatwork_id', $author_id);
             $author_chatwork_id = Hash::get($result, 'Author.chatwork_id');
 
-            $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]確認コメントが記載されました"
-                       ."[code]{$this->request->data['comment']}[/code][/info]";
-            $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
             echo $this->VerificationHistory->id;
         } else {
             echo 'failed to save verification history';
@@ -311,9 +336,6 @@ class ItemsController extends AppController
         }
 
         $message.= '[/info]';
-
-        $room_id = self::CONFIRM_CHATROOM_ID;
-        $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
         $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
     }
