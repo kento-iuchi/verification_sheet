@@ -312,7 +312,7 @@ class ItemsController extends AppController
 
         $message.= '[/info]';
 
-        $room_id = 103474903;
+        $room_id = self::CONFIRM_CHATROOM_ID;
         $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API URL
 
         $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
