@@ -329,7 +329,7 @@ class ItemsController extends AppController
 
         if ($this->request->is('post') && $key == $GITHUB_WEBHOOK_KEY) {
             if (array_key_exists('pull_request', $payload)){
-                $this->log($payload['######## pull_request ########']);
+                $this->log('######## pull_request ########');
                 $this->log($payload['action']);
                 $this->log($payload['pull_request']['title']);
                 $pullrequest_id = $payload['pull_request']['id'];
@@ -400,7 +400,7 @@ class ItemsController extends AppController
                 if($payload['action'] == 'closed'){
                     $result = $this->Item->find('first', array('conditions' => array('pullrequest_number' => $payload['pull_request']['number'])));
                     if (!empty($result)){
-                        $this->toggle_complete_state(Hash::get('Item.id'), true);
+                        $this->toggle_complete_state(Hash::get($result, 'Item.id'), true);
                     }
                     $this->check_all_open_pullrequests_mergeability();
                 }
