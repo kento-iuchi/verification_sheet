@@ -408,6 +408,8 @@ class ItemsController extends AppController
             if (array_key_exists('issue', $payload) || array_key_exists('comment', $payload)) {
                 $this->tell_code_review_comment($payload);
             }
+        } else {
+            $this->log('invalid webhook key');
         }
     }
 
