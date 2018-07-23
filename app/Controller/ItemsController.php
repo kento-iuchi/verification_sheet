@@ -7,7 +7,7 @@ include(CONFIG. 'github_api_token.php');
 
 class ItemsController extends AppController
 {
-    public $uses = array('Item', 'Author', 'Verifier', 'VerificationHistory', 'EditingItem');
+    public $uses = array('Item', 'Author', 'Verifier', 'VerificationHistory', 'EditingItem', 'SystemVariable');
 
     public $helpers = array('Html', 'Form', 'Flash', 'Js', 'DatePicker');
 
@@ -130,9 +130,20 @@ class ItemsController extends AppController
         }
 
         $this->request->data = $this->Item->read();
-        if ($column_name == 'tech_release_judgement'){
-            $this->request->data['Item']['status'] = 'サポート・営業確認中';
+        if ($column_name == 'merge_finish_date_to_master') {
+            // 日付が正しいフォーマット化確認
+            if ($this->Item->isValidDateFormat($content)) {
+                // 次回リリース予定日をDBから取得
+                $next_release_date = $this->SystemVariable->find('first', array('fields' => 'SystemVariable.next_release_date'));
+                $next_release_date = Hash::get($next_release_date, 'SystemVariable.next_release_date');
+                $this->log($next_release_date);
+                // リリース予定日を記録
+                $this->request->data['Item']['scheduled_release_date'] = $next_release_date;
+            }
         }
+        // if ($column_name == 'tech_release_judgement'){
+        //     $this->request->data['Item']['status'] = 'サポート・営業確認中';
+        // }
         $this->request->data['Item'][$column_name] = $content;
         if ($this->request->is(['ajax'])) {
             if ($this->Item->save($this->request->data)) {
