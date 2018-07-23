@@ -14,7 +14,7 @@ class ItemsController extends AppController
     const CONFIRM_CHATROOM_ID = 59632848;
 
     public $paginate =  array(
-        'limit' => 15,
+        'limit' => 25,
         'order' => array('Item.modified' => 'desc'),
     );
 
