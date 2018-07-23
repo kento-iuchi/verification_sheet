@@ -70,7 +70,7 @@ class ItemsController extends AppController
     {
         $this->autoRender = false;
 
-        $this->log('aaa');
+        $this->log('####### edit #######');
         $this->Item->id = $this->request->data['id'];
         $column_name = $this->request->data['column_name'];
         $content = $this->request->data['content'];
@@ -154,6 +154,7 @@ class ItemsController extends AppController
 
     function register_item_editing()
     {
+        $this->log('####### register editing item [id:'. $this->request->data['item_id'] . '] #######');
         $this->autoRender = false;
         if (empty($this->request->data['item_id']) || empty($this->request->data['editor_token'])) {
             return false;
@@ -172,6 +173,7 @@ class ItemsController extends AppController
     // editing_item の idではなくediting_itemのitem_idなことに注意
     function unregister_item_editing()
     {
+        $this->log('####### unregister editing item [id:'. $this->request->data['item_id'] . '] #######');
         $this->autoRender = false;
         try{
             if (empty($this->request->data['item_id'])) {
@@ -191,6 +193,7 @@ class ItemsController extends AppController
 
     public function toggle_complete_state($id = null, $state = null)
     {
+        $this->log('####### toggle item complete status [id:'. $id . '] #######');
         $this->autoRender = false;
 
         $this->Item->id = $id;
@@ -211,6 +214,7 @@ class ItemsController extends AppController
 
     public function save_verification_history()
     {
+        $this->log('####### save verification history #######');
         $this->autoRender = false;
         $this->VerificationHistory->create();
         if ($this->VerificationHistory->save($this->request->data)) {
