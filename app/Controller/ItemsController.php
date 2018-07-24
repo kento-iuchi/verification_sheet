@@ -49,7 +49,7 @@ class ItemsController extends AppController
         $items = $this->paginate('Item', $conditions);
         $verifier_names = Hash::combine($this->Verifier->find('all'), '{n}.Verifier.id', '{n}.Verifier.name');
         $author_names = Hash::combine($this->Author->find('all'), '{n}.Author.id', '{n}.Author.name');
-        $next_release_date = Hash::get($this->SystemVariable->find('first'), 'SystemVariable.next_release_date');
+        $next_release_date = Hash::get($this->SystemVariable->find('first', array('order' => array('id' => 'desc'))), 'SystemVariable.next_release_date');
         $this->set(compact('query', 'items', 'completed_mode_flag', 'verifier_names', 'author_names', 'next_release_date'));
     }
 

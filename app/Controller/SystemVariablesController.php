@@ -7,7 +7,9 @@ class SystemVariablesController extends AppController
         $this->autoRender = false;
 
         try {
-            $this->SystemVariable->id = 1;
+            $newest_variables = $this->SystemVariable->find('first', array('order' => array('SystemVariable.id' => 'desc')));
+            $newest_id = Hash::get($newest_variables, 'SystemVariable.id');
+            $this->SystemVariable->id = $newest_id;
             $save_data = $this->SystemVariable->read();
 
             if ($this->SystemVariable->isValidDateFormat($this->request->data['next_release_date'])) {
