@@ -416,7 +416,7 @@ class ItemsController extends AppController
                         $message .= "\nプルリクが更新されました\n";
                     }
 
-                    $message .= 'by ' . $payload['pull_request']['user']['login'];
+                    $message .= "\nby " . $payload['pull_request']['user']['login'];
                     $message .= '[/info]';
 
                     $message_id = $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
