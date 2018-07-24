@@ -10,4 +10,5 @@ class SystemVariable extends AppModel
 
         return date("Y-m-{$second_mon}");
     }
+
 }
