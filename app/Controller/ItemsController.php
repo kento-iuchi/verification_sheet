@@ -34,8 +34,7 @@ class ItemsController extends AppController
         $conditions = array(
             'is_completed' => $completed_mode_flag,
         );
-
-        $query_data = array(
+        $query = array(
             'status' => '',
             'from_created' => '',
             'to_created' => '',
@@ -43,16 +42,15 @@ class ItemsController extends AppController
             'to_merge_finish_date_to_master' => '',
         );
         if(!empty($this->request->query)){
-            $query_data = $this->request->query['data'];
-            $conditions = array_merge($conditions, $this->Item->parseCriteria($query_data));
+            $query = $this->request->query['data'];
+            $conditions = array_merge($conditions, $this->Item->parseCriteria($query));
         }
-        $this->set('query', $query_data);
-        $this->set('items', $this->paginate('Item', $conditions));
-        $this->set('completed_mode_flag', $completed_mode_flag);
+
+        $items = $this->paginate('Item', $conditions);
         $verifier_names = Hash::combine($this->Verifier->find('all'), '{n}.Verifier.id', '{n}.Verifier.name');
-        $this->set('verifier_names', $verifier_names);
         $author_names = Hash::combine($this->Author->find('all'), '{n}.Author.id', '{n}.Author.name');
-        $this->set('author_names', $author_names);
+        $next_release_date = Hash::get($this->SystemVariable->find('first'), 'SystemVariable.next_release_date');
+        $this->set(compact('query', 'items', 'completed_mode_flag', 'verifier_names', 'author_names', 'next_release_date'));
     }
 
     public function add()

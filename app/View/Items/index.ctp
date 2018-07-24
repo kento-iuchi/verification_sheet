@@ -24,91 +24,97 @@ if (!$completed_mode_flag) {
 }
 ?>
 </button>
-<div id="search-form">
-    <?php
-        echo $this->form->create('Item', array(
-            'url' => '/items/index/' . $completed_mode_flag,
-            'type'  => 'GET',
-        ));
-    ?>
-    <table class="search-form <?php echo $completed_mode_flag ? "completed-item" : ''?>">
-        <tr>
-            <td>
-                <label>作成日</label>
-            </td>
-            <td><div class="input">
-            <?php echo $this->Datepicker->datepicker(
-                'from_created',
-                array(
-                    'div' => false,
-                    'label' => false,
-                    'default' => $query['from_created'],
-                    'class' => 'search-input',
-                    )
-                );
-            ?>
-            </div></td>
-            <td><div class="input">
-            <?php echo $this->Datepicker->datepicker(
-                'to_created',
-                array(
-                    'div' => false,
-                    'label' => false,
-                    'default' => $query['to_created'],
-                    'class' => 'search-input',
-                    )
-                );
-            ?>
-            </div></td>
-            <?php if ($completed_mode_flag) :?>
-            <td>
-                <label>masterマージ完了日</label>
-            </td>
-            <td><div class="input">
-            <?php echo $this->Datepicker->datepicker(
-                'from_merge_finish_date_to_master',
-                array(
-                    'div' => false,
-                    'label' => false,
-                    'default' => $query['from_merge_finish_date_to_master'],
-                    'class' => 'search-input',
-                    )
-                );
-            ?>
-            </div></td>
-            <td><div class="input">
-            <?php echo $this->Datepicker->datepicker(
-                'to_merge_finish_date_to_master',
-                array(
-                    'div' => false,
-                    'label' => false,
-                    'default' => $query['to_merge_finish_date_to_master'],
-                    'class' => 'search-input',
-                    )
-                );
-            ?>
-            </div></td>
-            <?php else:?>
-            <td><label>ステータス</label></td>
-            <td><div class="input">
-            <?php echo $this->Form->input('status', array(
-                    'label' => false,
-                    'options' => array(
-                        'コードレビュー中' => 'コードレビュー中',
-                        '改修中' => '改修中',
-                        '技術二重チェック中' => '技術二重チェック中',
-                        '差し戻し' => '差し戻し',
-                    ),
-                ));
-            ?>
-            </div></td>
-            <?php endif?>
-            <td>
-                <?php echo $this->form->submit('検索', array('name' => 'search_condition'))?>
-            </td>
-        </tr>
-    </table>
-    <?php echo $this->form->end();?>
+<div class="float-container clearfix">
+    <div id="search-form">
+        <?php
+            echo $this->form->create('Item', array(
+                'url' => '/items/index/' . $completed_mode_flag,
+                'type'  => 'GET',
+            ));
+        ?>
+        <table class="search-form <?php echo $completed_mode_flag ? "completed-item" : ''?>">
+            <tr>
+                <td>
+                    <label>作成日</label>
+                </td>
+                <td><div class="input">
+                <?php echo $this->Datepicker->datepicker(
+                    'from_created',
+                    array(
+                        'div' => false,
+                        'label' => false,
+                        'default' => $query['from_created'],
+                        'class' => 'search-input',
+                        )
+                    );
+                ?>
+                </div></td>
+                <td><div class="input">
+                <?php echo $this->Datepicker->datepicker(
+                    'to_created',
+                    array(
+                        'div' => false,
+                        'label' => false,
+                        'default' => $query['to_created'],
+                        'class' => 'search-input',
+                        )
+                    );
+                ?>
+                </div></td>
+                <?php if ($completed_mode_flag) :?>
+                <td>
+                    <label>masterマージ完了日</label>
+                </td>
+                <td><div class="input">
+                <?php echo $this->Datepicker->datepicker(
+                    'from_merge_finish_date_to_master',
+                    array(
+                        'div' => false,
+                        'label' => false,
+                        'default' => $query['from_merge_finish_date_to_master'],
+                        'class' => 'search-input',
+                        )
+                    );
+                ?>
+                </div></td>
+                <td><div class="input">
+                <?php echo $this->Datepicker->datepicker(
+                    'to_merge_finish_date_to_master',
+                    array(
+                        'div' => false,
+                        'label' => false,
+                        'default' => $query['to_merge_finish_date_to_master'],
+                        'class' => 'search-input',
+                        )
+                    );
+                ?>
+                </div></td>
+                <?php else:?>
+                <td><label>ステータス</label></td>
+                <td><div class="input">
+                <?php echo $this->Form->input('status', array(
+                        'label' => false,
+                        'options' => array(
+                            'コードレビュー中' => 'コードレビュー中',
+                            '改修中' => '改修中',
+                            '技術二重チェック中' => '技術二重チェック中',
+                            '差し戻し' => '差し戻し',
+                        ),
+                    ));
+                ?>
+                </div></td>
+                <?php endif?>
+                <td>
+                    <?php echo $this->form->submit('検索', array('name' => 'search_condition'))?>
+                </td>
+            </tr>
+        </table>
+        <?php echo $this->form->end();?>
+    </div>
+    <div id="next-release-date-box">
+        <span>次回リリース日</span>
+        <span id="next-release-date"><?php echo $next_release_date?></span>
+    </div>
 </div>
 <span id="hide-column-for-dev">
     <input type="checkbox"><span class="body-text">開発部用の項目を表示しない</span>

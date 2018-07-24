@@ -26,6 +26,15 @@ table th,td {
     word-break : break-all;
 }
 
+.float-container {
+    overflow: hidden;
+}
+
+#search-form {
+    float: left;
+    height: 52px;
+}
+
 /* 検索フォーム */
 .search-form td {
     font-size: 16px;
@@ -35,6 +44,26 @@ table th,td {
 
 table.search-form.completed-item td {
     background: #2E9AFE !important;
+}
+
+#next-release-date-box {
+    height: 52px;
+    width: 380px;
+    float: left;
+    position: relative;
+}
+
+#next-release-date-box span{
+    bottom: 0;
+    height: 20px;
+    color: #FFFFFF;
+    /* position: absolute; */
+}
+
+#next-release-date {
+    height: 32px;
+    width: 200px;
+    font-size: 32px;
 }
 
 .body-text {
