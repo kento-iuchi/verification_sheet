@@ -8,6 +8,7 @@ error_reporting(E_ALL);
 
 <?php
 echo $this->Html->script('index_common.js');
+echo $this->Html->script('next_release_date.js');
 if (!$completed_mode_flag) {
     echo $this->Html->script('detect_editing.js');
     echo $this->Html->script('index.js');

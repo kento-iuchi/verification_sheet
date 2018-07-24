@@ -357,6 +357,11 @@ $(function(){
                     }
                     $(selectedTd).html(recordtext(needs_supp_confirm_char));
                 }
+                if (columnName = 'merge_finish_date_to_master') {
+                    if (textEdited.length != 0){
+                        $('#' + id + '-scheduled_release_date').html(recordtext($('#next-release-date').text()));
+                    }
+                }
                 var table_id = $(selectedTd).parents('table').attr('id');
                 syncTwoTablesHeight(table_id);
                 updateStyles(id);
