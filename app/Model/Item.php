@@ -59,16 +59,4 @@ class Item extends AppModel
         return parent::save($this->data, $validate, $fieldList);
     }
 
-    public function isValidDateFormat($date){
-        $date_str = strtotime($date);
-        if (empty($date_str)) {
-            return false;
-        }
-        if ($date === date("Y-m-d", strtotime($date))){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }

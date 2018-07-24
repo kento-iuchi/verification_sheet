@@ -30,4 +30,18 @@ App::uses('Model', 'Model');
  * @package       app.Model
  */
 class AppModel extends Model {
+
+    public function isValidDateFormat($date)
+    {
+        $date_str = strtotime($date);
+        if (empty($date_str)) {
+            return false;
+        }
+        if ($date === date("Y-m-d", strtotime($date))){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
