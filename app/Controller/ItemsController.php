@@ -80,7 +80,7 @@ class ItemsController extends AppController
 
         // 「～～リリースOK判断日」が新たに入力されたときの処理
         if ($column_name == 'status') {
-            if ($content = 'サポート・営業確認中'){
+            if ($content == 'サポート・営業確認中'){
                 $target_chatwork_id = $this->Verifier->find('first', array(
                     'fields' => array('Verifier.chatwork_id', 'Item.id'),
                     'joins' => array(array(
@@ -93,7 +93,7 @@ class ItemsController extends AppController
                 ));
                 $target_chatwork_id = Hash::get($target_chatwork_id, 'Verifier.chatwork_id');
             }
-            if ($content = '差し戻し'){
+            if ($content == '差し戻し'){
                 $target_chatwork_id = $this->Author->find('first', array(
                     'fields' => array('Author.chatwork_id', 'Item.id'),
                     'joins' => array(array(
@@ -106,7 +106,11 @@ class ItemsController extends AppController
                 ));
                 $target_chatwork_id = Hash::get($target_chatwork_id, 'Author.chatwork_id');
             }
-            $message = "[to:{$target_chatwork_id}][info][title]No.{$this->request->data['id']} {$title}[/title]";
+            $message = '';
+            if ($target_chatwork_id) {
+                $message .= "[to:{$target_chatwork_id}]";
+            }
+            $message .= "[info][title]No.{$this->request->data['id']} {$title}[/title]";
             $message .= 'ステータスが【' . $content . '】になりました[/info]';
             $this->send_message_to_chatwork($message);
         }
