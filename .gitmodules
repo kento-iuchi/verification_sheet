@@ -7,3 +7,6 @@
 [submodule "app/Plugin/Migrations"]
 	path = app/Plugin/Migrations
 	url = https://github.com/CakeDC/migrations
+[submodule "app/Plugin/TwitterBootstrap"]
+	path = app/Plugin/TwitterBootstrap
+	url = https://github.com/slywalker/TwitterBootstrap
