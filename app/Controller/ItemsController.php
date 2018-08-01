@@ -15,7 +15,7 @@ class ItemsController extends AppController
 
     public $paginate =  array(
         'limit' => 25,
-        'order' => array('Item.modified' => 'desc'),
+        'order' => array('Item.id' => 'asc'),
     );
 
     public $components = array(
