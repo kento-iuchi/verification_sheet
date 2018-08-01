@@ -92,6 +92,17 @@ class ItemsController extends AppController
                     'conditions' => array('Item.id' => $this->request->data['id']),
                 ));
                 $target_chatwork_id = Hash::get($target_chatwork_id, 'Verifier.chatwork_id');
+                if (!$target_chatwork_id) {
+                    $verification_assigner_id = Configure::read('SystemSettings.verificationAssignerId');
+                    $verification_assigner_chatwork_id = $this->Verifier->find('first', array(
+                        'conditions' => array(
+                            'id' => $verification_assigner_id,
+                        ),
+                        'fields' => array('chatwork_id'),
+                    ));
+                    $verification_assigner_chatwork_id = Hash::get($verification_assigner_chatwork_id, 'Verifier.chatwork_id');
+                    $target_chatwork_id = $verification_assigner_chatwork_id;
+                }
             }
             if ($content == '差し戻し'){
                 $target_chatwork_id = $this->Author->find('first', array(
