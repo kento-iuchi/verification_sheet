@@ -496,3 +496,4 @@ if (!$completed_mode_flag) {
     ?>
 </span>
 </div>
+</div>
