@@ -1,0 +1,170 @@
+.sticky_table {
+  display: block;
+  position: relative;
+  overflow: scroll;
+  width: calc(100vw - 3.0rem);
+  height: calc(75vh);
+  border: 1px solid #000;
+  border-collapse: collapse;
+  border-color: #000;
+  font-size: 0;
+}
+
+.sticky_table thead,
+.sticky_table tbody {
+  display: block;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.sticky_table th,
+.sticky_table td {
+    border: 1px solid #000;
+    border-collapse: collapse;
+  display: inline-block;
+  vertical-align: top;
+  /* width: 8.0rem; /* html要素のフォントサイズ*/
+  background: #fff;
+  font-size: 0.5rem;
+}
+
+.sticky_table tbody td.header {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.sticky_table thead {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.sticky_table thead th.header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+/* テーブルのレイアウト設定 */
+.sticky_table tbody td.header-column-2 {
+  left: 42px;
+}
+.sticky_table tbody td.header-column-3 {
+  left: 136px;
+}
+.sticky_table tbody td.header-column-4 {
+  left: 280px;
+}
+.sticky_table tbody td.header-column-5 {
+  left: 374px;
+}
+.sticky_table tbody td.header-column-6 {
+  left: 538px;
+}
+
+.sticky_table thead th.header-column-2 {
+  left: 42px;
+}
+.sticky_table thead th.header-column-3 {
+  left: 136px;
+}
+.sticky_table thead th.header-column-4 {
+  left: 280px;
+}
+.sticky_table thead th.header-column-5 {
+  left: 374px;
+}
+.sticky_table thead th.header-column-6 {
+  left: 538px;
+}
+/* 各カラムの属性ごとの設定 */
+.id-column {
+    width: 38px;
+}
+
+.needs-supp-confirm-column {
+    width: 90px;
+}
+
+.content-column {
+    width: 140px;
+}
+
+.date-column {
+    width: 90px;
+}
+
+.status-column {
+    width: 160px;
+}
+
+.day_count-column {
+    width: 56px;
+}
+
+.grace-column {
+    width: 50px;
+}
+
+.category-column {
+    width: 90px;
+}
+
+.division-column {
+    width: 90px;
+}
+
+.url-column {
+    width: 224px;
+}
+
+.date-column {
+    width: 90px;
+}
+
+.day_count-column {
+    width: 56px;
+}
+
+.comment-column {
+    width: 300px;
+}
+
+.verification-history-column {
+    width : 200px;
+}
+
+.author-column, .verifier-column {
+    width: 150px;
+}
+
+.priority-column {
+    width:  70px;
+    text-align: center;
+}
+
+.point-column {
+    width: 50px;
+}
+
+.complete_column {
+    width: 80px;
+}
+
+/* 列タイトル行の設定 */
+.sort_button {
+    width: 16px;
+    height: 16px;
+    bottom: 0px;
+    padding: 0px;
+    font-size: 8px;
+}
+
+.sticky_table thead th{
+    height: 45px;
+}
