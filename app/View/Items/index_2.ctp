@@ -1,6 +1,7 @@
-<link rel="stylesheet" type="text/css" href="table.css">
+<!-- <link rel="stylesheet" type="text/css" href="table.css"> -->
 <?php echo $this->Html->css('items_table.css');?>
 <?php echo $this->Html->script('table_structure.js');?>
+<?php echo $this->Html->script('table_function.js');?>
 <table id="items-table" class="sticky_table">
     <thead>
         <tr class="table_titles">
@@ -119,24 +120,29 @@
     <tbody>
         <?php $today_date = new Datetime(date("y-m-d")); //経過日数、猶予日数の計算に使用?>
         <?php foreach ($items as $item): ?>
-    <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="<?php echo $item['Item']['needs_supp_confirm'] == 0 ? 'needs-no-confirm' : '' ?>"
+    <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="item-data <?php echo $item['Item']['needs_supp_confirm'] == 0 ? 'needs-no-confirm' : '' ?>"
         data-id="<?php echo h($item['Item']['id']); ?>" data-controller="items">
-        <td class="header header-column-1 record id-column" >
+        <td class="header header-column-1 record id-column" data-id="<?php echo h($item['Item']['id']); ?>" 
+            id="<?php echo $item['Item']['id'] . "-id";?>" data-column="id">
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
         </td>
-        <td class="header header-column-2 record needs-supp-confirm-column editable-cell column-for-dev">
+        <td class="header header-column-2 record needs-supp-confirm-column editable-cell column-for-dev" id="<?php echo $item['Item']['id'] . "-needs_supp_confirm";?>" data-column="needs_supp_confirm">
             <span class="record_text"><?php echo $item['Item']['needs_supp_confirm'] == 1 ? '必要' : '不要' ?></span>
         </td>
-        <td class="header header-column-3 record content-column editable-cell">
+        <td class="header header-column-3 record content-column editable-cell"
+            id="<?php echo $item['Item']['id'] . '-content';?>" data-column="content">
             <span class="record_text"><?php echo $item['Item']['content']; ?></span>
         </td>
-        <td class="header header-column-4 record date-column editable-cell">
+        <td class="header header-column-4 record date-column editable-cell"
+            id="<?php echo $item['Item']['id'] . '-due_date_for_release';?>" data-column="due_date_for_release">
             <span class="record_text"><?php echo $item['Item']['due_date_for_release']; ?></span>
         </td>
-        <td class="header header-column-5 record status-column editable-cell">
+        <td class="header header-column-5 record status-column editable-cell"
+            id="<?php echo $item['Item']['id'] . "-status";?>" data-column="status">
             <span class="record_text"><?php echo str_replace("業", "業<br>", $item['Item']['status']); ?></span>
         </td>
-        <td class="header header-column-6 record grace-column">
+        <td class="header header-column-6 record grace-column"
+            id="<?php echo $item['Item']['id'] . "-grace_days_of_verification_complete";?>" data-column="grace_days_of_verification_complete">
             <span class="record_text"><?php
                 $due_date_for_release = new Datetime($item['Item']['due_date_for_release']);
                 if (!empty($item['Item']['due_date_for_release'])) {

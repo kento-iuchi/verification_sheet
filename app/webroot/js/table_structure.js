@@ -1,11 +1,8 @@
 function syncCellsHeight()
 {
     itemsTableTr = $('#items-table >thead > tr, #items-table >tbody > tr');
-    console.log(itemsTableTr);
     for(var i=0, l=itemsTableTr.length; i<l;i++ ){
         item_id = itemsTableTr.eq(i).attr('data-id');
-        console.log(itemsTableTr.eq(i).attr('data-id'));
-        console.log(itemsTableTr.eq(i).height());
         itemRow = itemsTableTr.eq(i).height();
         var maxTdHeight = 0;
         $('#item_' + item_id + '-data > td').each(function(){
@@ -25,4 +22,9 @@ function syncCellsHeight()
 $(function(){
     'use strict';
     syncCellsHeight();
+
+    if (Cookies.get('hideColumnForDev') === 'true') {
+        $('#hide-column-for-dev input').prop('checked', true);
+        toggle_column_for_dev_show_or_hide('#hide-column-for-dev input');
+    }
 });

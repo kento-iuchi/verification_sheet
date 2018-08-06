@@ -18,8 +18,8 @@
   width: max-content;
 }
 
-.sticky_table th,
-.sticky_table td {
+.sticky_table > thead > tr > th,
+.sticky_table > tbody > tr > td {
     border: 1px solid #000;
     border-collapse: collapse;
   display: inline-block;
