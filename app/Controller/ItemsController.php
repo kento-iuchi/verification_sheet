@@ -3,6 +3,7 @@ ini_set('display_errors',1);
 
 App::uses('AppController', 'Controller');
 
+include(CONFIG. 'chatwork_room_ids.php');
 include(CONFIG. 'github_api_token.php');
 
 class ItemsController extends AppController
@@ -10,8 +11,6 @@ class ItemsController extends AppController
     public $uses = array('Item', 'Author', 'Verifier', 'VerificationHistory', 'EditingItem', 'SystemVariable');
 
     public $helpers = array('Html', 'Form', 'Flash', 'Js', 'DatePicker');
-
-    const CONFIRM_CHATROOM_ID = 59632848;
 
     public $paginate =  array(
         'limit' => 25,
@@ -30,7 +29,6 @@ class ItemsController extends AppController
     {
         $this->layout = 'IndexLayout';
         $this->header("Content-type: text/html; charset=utf-8");
-
         $conditions = array(
             'is_completed' => $completed_mode_flag,
         );
@@ -45,7 +43,6 @@ class ItemsController extends AppController
             $query = $this->request->query['data'];
             $conditions = array_merge($conditions, $this->Item->parseCriteria($query));
         }
-
         $items = $this->paginate('Item', $conditions);
         $verifier_names = Hash::combine($this->Verifier->find('all'), '{n}.Verifier.id', '{n}.Verifier.name');
         $author_names = Hash::combine($this->Author->find('all'), '{n}.Author.id', '{n}.Author.name');
@@ -165,7 +162,7 @@ class ItemsController extends AppController
                 $message = '[info][title]'. $title.'[/title]';
                 $message .= $column_name_text[$column_name]. 'が更新されました[/info]';
 
-                $this->send_message_to_chatwork($message, $room_id);
+                $this->send_message_to_chatwork($message);
             }
         }
 
@@ -311,9 +308,12 @@ class ItemsController extends AppController
         }
     }
 
-    public function send_message_to_chatwork($message, $room_id = self::CONFIRM_CHATROOM_ID)
+    public function send_message_to_chatwork($message, $room_id = null)
     {
-        include(__DIR__.'/../Config/chatwork_api_token.php');
+        if (!$room_id) {
+            $room_id = Configure::read('chatwork_confirm_room_id');
+        }
+        $this->log($room_id);
 
         $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API UR
         $params = array(
@@ -322,7 +322,7 @@ class ItemsController extends AppController
 
         $options = array(
             CURLOPT_URL => $url, // URL
-            CURLOPT_HTTPHEADER => array('X-ChatWorkToken: '. $CHATWORK_API_KEY), // APIキー
+            CURLOPT_HTTPHEADER => array('X-ChatWorkToken: '. Configure::read('chatwork_api_token')), // APIキー
             CURLOPT_RETURNTRANSFER => true, // 文字列で返却
             CURLOPT_SSL_VERIFYPEER => false, // 証明書の検証をしない
             CURLOPT_POST => true, // POST設定
@@ -360,7 +360,7 @@ class ItemsController extends AppController
 
         $message.= '[/info]';
 
-        $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
+        $this->send_message_to_chatwork($message);
     }
 
     public function send_elapsed_days_alert()
@@ -388,18 +388,17 @@ class ItemsController extends AppController
 
         $message.= '[/info]';
 
-        $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
+        $this->send_message_to_chatwork($message);
     }
 
     public function retrieve_github_push()
     {
         $this->autoRender = false;
 
-        include(__DIR__.'/../Config/webhook_key.php');
-
         $payload = json_decode($this->request->data['payload'], true);
         $key = $this->request->query['key'];
 
+        $GITHUB_WEBHOOK_KEY = Configure::read('github_webhook_key');
         if ($this->request->is('post') && $key == $GITHUB_WEBHOOK_KEY) {
             if (array_key_exists('pull_request', $payload)){
                 $this->log('######## pull_request ########');
@@ -461,8 +460,8 @@ class ItemsController extends AppController
                     $message .= "\nby " . $payload['pull_request']['user']['login'];
                     $message .= '[/info]';
 
-                    $message_id = $this->send_message_to_chatwork($message, self::CONFIRM_CHATROOM_ID);
-                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid" . self::CONFIRM_CHATROOM_ID . "-{$message_id}";
+                    $message_id = $this->send_message_to_chatwork($message);
+                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid" . $CHATWORK_CONFIRM_ROOM_ID . "-{$message_id}";
                     if ($this->Item->save($new_item)) {
                         $this->log('save from github: successed');
                     } else {
@@ -488,10 +487,8 @@ class ItemsController extends AppController
 
     public function check_all_open_pullrequests_mergeability()
     {
-        include(CONFIG. 'github_api_token.php');
-
         $this->autoRender = false;
-        $url = $PR_LIST_URL. '?access_token='. $GITHUB_API_TOKEN. '&state=open';
+        $url = Configure::read('pr_list_url'). '?access_token='. Configure::read('github_api_token'). '&state=open';
         echo $url;
         $prs = shell_exec("curl {$url}");
         if (!empty($prs)){
@@ -530,7 +527,7 @@ class ItemsController extends AppController
         $this->autoRender = false;
         include(CONFIG. 'github_api_token.php');
 
-        $url = $PR_LIST_URL. '/'. $pullrequest_number. '?access_token='. $GITHUB_API_TOKEN;
+        $url = Configure::read('pr_list_url'). '/'. $pullrequest_number. '?access_token='. Configure::read('github_api_token');
 
         $result = shell_exec("curl {$url}");
         $result = json_decode($result);
@@ -549,12 +546,10 @@ class ItemsController extends AppController
 
         $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]{$url}\n";
         if ($mergeable) {
-            // $message .= ':)マージできます（テスト用メッセージ）'. '[/info]';
-            // $this->send_message_to_chatwork($message);
             return true;
         } else if ($mergeable === false) {
             $message .= ':(コンフリクトしています'. '[/info]';
-            $this->send_message_to_chatwork($message, 94715642);
+            $this->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
             return true;
         } else {
             return false;
@@ -618,7 +613,7 @@ class ItemsController extends AppController
                         . "{$title}\n"
                         . "{$url}\n";
 
-            $this->send_message_to_chatwork($message, 94715642);
+            $this->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
         }
     }
 
