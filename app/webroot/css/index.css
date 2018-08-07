@@ -1,13 +1,6 @@
-:root {
-    --header-width: 597px;
-}
-
+/* 全体 */
 body {
     background-color: #274a78;
-}
-
-body {
-    height: 99%;
 }
 
 textarea {
@@ -15,7 +8,6 @@ textarea {
 }
 
 body {
-    padding: 0;
     margin: 0;
     font-size: 16px;
     font-family: Verdana, sans-serif;
@@ -26,6 +18,12 @@ table th,td {
     word-break : break-all;
 }
 
+.input {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* 検索フォームとリリース日の表示ブロック */
 .float-container {
     overflow: hidden;
 }
@@ -75,236 +73,16 @@ table.search-form.completed-item td {
     width: 20px;
 }
 
-/* テーブル */
-
-#view_part {
-    width: 99%;
-    height: 70%; /* 意味なし？ */
-    top: 0px;
-    left: 1%;
-    position: relative;
-}
-
-#header_table thead tr {
-    top: 25px;
-    z-index: 2;
-}
-
-#header_table {
-    position: absolute;
-    width: var(--header-width);
-    left: 0px;
-    table-layout: fixed;
-}
-
-#view_part_data {
-    position: absolute;
-    left: calc(var(--header-width) - 6px);
-    top: 0px;
-    width: calc(99% - var(--header-width));
-    overflow-x: scroll;
-}
-
-#data_table {
-    max-height: 120%;
-    width: 3500px;
-    word-wrap: break-word;
-    table-layout: fixed;
-}
-
-#header_table tbody.scrollBody::-webkit-scrollbar{
-    display: none;
-    height: 100%;
-}
-
-thead.scrollHead,tbody.scrollBody{
-  display:inline-block;
-}
-tbody.scrollBody{
-  overflow-y:scroll;
-  height:500px;
-}
-
-.view_part_item {
-    height: 32px;
-    word-wrap: break-word;
-}
-
-#view_part tbody tr:nth-child(odd) {
-    background: #e4e6c2;
-}
-
-#view_part tbody tr:nth-child(even) {
-    background: #ebefba;
-}
-
-tr.table_titles {
-    height: 75px;
-    font-size: 16px;
-    color: white;
-    background-color: #838b0d;
-}
-
-#view_part table.completed-item tbody tr:nth-child(odd) {
-    background: #E0E6F8;
-}
-
-#view_part table.completed-item tbody tr:nth-child(even) {
-    background: #EFF2FB;
-}
-
-td.somebody-editing {
-    background: #8e8e8e !important;
-}
-
-table.completed-item tr.table_titles {
-    height: 75px;
-    font-size: 16px;
-    color: white;
-    background-color: #2E9AFE;
-}
-
-tr.needs-no-confirm {
-    /* background-color: #d9dad0; */
-    background-color: #cdd29f;
-}
-
-.sort_button {
-    width: 16px;
-    height: 16px;
-    bottom: 0px;
-    padding: 0px;
-    font-size: 8px;
-}
-
-.id-column {
-    width: 38px;
-}
-
-.content-column {
-    width: 140px;
-}
-
-.status-column {
-    width: 160px;
-}
-
-.priority-column {
-    width:  70px;
-    text-align: center;
-}
-
-.needs-supp-confirm-column {
-    width: 90px;
-}
-
-.grace-column {
-    width: 50px;
-}
-
-.category-column {
-    width: 90px;
-}
-
-.division-column {
-    width: 90px;
-}
-
-.url-column {
-    width: 224px;
-}
-
-.date-column {
-    width: 90px;
-}
-
-.day_count-column {
-    width: 56px;
-}
-
-.comment-column {
-    width: 300px;
-}
-
-.verification-history-column {
-    width : 200px;
-}
-
-.author-column, .verifier-column {
-    width: 150px;
-}
-
-.point-column {
-    width: 50px;
-}
-
-.complete_column {
-    width: 80px;
-}
-
-.complete {
-    text-align: center;
-}
-
-.record_text {
-    padding-left: 4px;
-}
-
-.input_part textarea,input {
-    width: 90%;
-    height: 40px;
-    font-size: 12px;
-}
-
-.input {
-    vertical-align: middle;
-    text-align: center;
-}
-
-.submit {
-    text-align: center;
-}
-
-.comment-table {
-    width: 100%;
-}
-
-.comment-table,
-.comment-table td {
-    border: 1px #000000 solid;
-    border-collapse:collapse;
-}
-
-tr.comment-table-header td {
-    background: #838b0d;
-    color: #FFFFFF;
-}
-
-tr.comment-content td {
-    background: #e4e6c2;
-}
-
-ul > li {
-    padding: 3px 0;
-}
-
-#under-menu-dummy {
-    position: fixed;
-    top: 95%;
-    width: 100%;
-    height: 5%;
-}
-
+/* 画面下メニューの設定 */
 #under-menu {
     background: #838b0d;
-    position: fixed;
     margin-bottom: 5px;
     top: 95%;
     width: 100%;
     height: 5%;
+    z-index: 3;
 }
 
 #page_selector span {
     font-size: 16px;
 }
-comment-table-header
