@@ -42,7 +42,7 @@
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 2;
 }
 
 #items-table thead th.header {
@@ -50,7 +50,7 @@
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 3;
 }
 /* テーブルのレイアウト設定 */
 #items-table thead th {
