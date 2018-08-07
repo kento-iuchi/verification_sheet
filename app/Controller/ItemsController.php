@@ -3,9 +3,6 @@ ini_set('display_errors',1);
 
 App::uses('AppController', 'Controller');
 
-include(CONFIG. 'chatwork_room_ids.php');
-include(CONFIG. 'github_api_token.php');
-
 class ItemsController extends AppController
 {
     public $uses = array('Item', 'Author', 'Verifier', 'VerificationHistory', 'EditingItem', 'SystemVariable');
