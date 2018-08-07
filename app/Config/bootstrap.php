@@ -117,4 +117,5 @@ CakePlugin::load(array('Migrations', 'TwitterBootstrap', 'Search',));
 
 // 設定項目
 Configure::load('SystemSettings');
+Configure::load('ApiSettings');
 include(CONFIG. 'github_api_token.php');
