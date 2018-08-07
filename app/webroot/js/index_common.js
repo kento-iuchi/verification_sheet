@@ -64,6 +64,72 @@ function changeScrollTbodyHeight()
     return tbody_height;
 }
 
+function turnItemIncompleted(item_id)
+{
+    var inCompleteActionURL = WEBROOT + 'items/toggle_complete_state/' + item_id;
+    $.ajax({
+    url: inCompleteActionURL,
+    type: "POST",
+    data: { id : item_id },
+    dataType: "text",
+    success : function(response){
+        //通信成功時
+        var item_head_tr_id = '#item_' + item_id + '-head';
+        var item_data_tr_id = '#item_' + item_id + '-data';
+        $(item_head_tr_id).fadeOut(600).queue(function() {
+            $(item_head_tr_id).remove();
+        });
+        $(item_data_tr_id).fadeOut(600).queue(function() {
+            $(item_data_tr_id).remove();
+        });
+        return true;
+    },
+    error: function(){
+        //通信失敗時の処理
+        alert('通信失敗');
+        return false;
+    }
+    });
+}
+
+function toggle_column_for_dev_show_or_hide(selector)
+{
+    if ($(selector).prop('checked')) {
+        $('td.column-for-dev, th.column-for-dev').each(function(){
+            $(this).hide();
+        })
+        $('tr.needs-no-confirm').each(function(){
+            $(this).hide();
+        })
+        $('')
+        $('#data_table').width(measureTableWidth('#data_table') + 120);// スクロールバーのぶん適当に伸ばす
+        $('#header_table').width(measureTableWidth('#header_table') + 25);
+        changeScrollTbodyHeight();
+    } else {
+        $('td.column-for-dev, th.column-for-dev').each(function(){
+            $(this).show();
+        })
+        $('tr.needs-no-confirm').each(function(){
+            $(this).show();
+        })
+        $('#data_table').width(init_data_table_width);
+        $('#header_table').width(590);
+        changeScrollTbodyHeight();
+    }
+    Cookies.set('hideColumnForDev', $(selector).prop('checked'));
+    var old_view_part_data_left = $('#view_part_data').position().left;
+    $('#view_part_data').offset({left : $('#header_table').width() + 8});
+    $('#view_part_data').width($('#view_part_data').width() + (old_view_part_data_left - $('#view_part_data').position().left));
+    syncTwoTablesHeight();
+}
+
+function generateForm()
+{
+    return '<input type="text" id="next-relase-date-form" size="10"' +
+           'style="height:20px; width:160px; font-size:28px;' +
+           'display: inline; position:relative;"/>';
+}
+
 $(function(){
     'use strict';
 
@@ -111,34 +177,6 @@ $(function(){
         }
     })
 
-    function turnItemIncompleted(item_id)
-    {
-        var inCompleteActionURL = WEBROOT + 'items/toggle_complete_state/' + item_id;
-        $.ajax({
-        url: inCompleteActionURL,
-        type: "POST",
-        data: { id : item_id },
-        dataType: "text",
-        success : function(response){
-            //通信成功時
-            var item_head_tr_id = '#item_' + item_id + '-head';
-            var item_data_tr_id = '#item_' + item_id + '-data';
-            $(item_head_tr_id).fadeOut(600).queue(function() {
-                $(item_head_tr_id).remove();
-            });
-            $(item_data_tr_id).fadeOut(600).queue(function() {
-                $(item_data_tr_id).remove();
-            });
-            return true;
-        },
-        error: function(){
-            //通信失敗時の処理
-            alert('通信失敗');
-            return false;
-        }
-        });
-    }
-
     // 検証履歴詳細ボタンの処理
     var appearingHistoryIds = {};
     $(document).on('click', '.verification-history-detail-link', function()
@@ -171,39 +209,37 @@ $(function(){
         syncTwoTablesHeight();
     });
 
-    function toggle_column_for_dev_show_or_hide(selector)
-    {
-        if ($(selector).prop('checked')) {
-            $('td.column-for-dev, th.column-for-dev').each(function(){
-                $(this).hide();
-            })
-            $('tr.needs-no-confirm').each(function(){
-                $(this).hide();
-            })
-            $('')
-            $('#data_table').width(measureTableWidth('#data_table') + 120);// スクロールバーのぶん適当に伸ばす
-            $('#header_table').width(measureTableWidth('#header_table') + 25);
-            changeScrollTbodyHeight();
-        } else {
-            $('td.column-for-dev, th.column-for-dev').each(function(){
-                $(this).show();
-            })
-            $('tr.needs-no-confirm').each(function(){
-                $(this).show();
-            })
-            $('#data_table').width(init_data_table_width);
-            $('#header_table').width(590);
-            changeScrollTbodyHeight();
-        }
-        Cookies.set('hideColumnForDev', $(selector).prop('checked'));
-        var old_view_part_data_left = $('#view_part_data').position().left;
-        $('#view_part_data').offset({left : $('#header_table').width() + 8});
-        $('#view_part_data').width($('#view_part_data').width() + (old_view_part_data_left - $('#view_part_data').position().left));
-        syncTwoTablesHeight();
-    }
-
     $('#hide-column-for-dev').click(function(){
         toggle_column_for_dev_show_or_hide('#' + $(this).attr('id') + ' input');
     });
 
+    var isEditingNextReleaseDate = false;
+    $('#next-release-date').dblclick(function(){
+        var currentReleaseDate = $(this).text();
+        $(this).html(generateForm());
+        $('#next-relase-date-form').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, defaultDate: 0, minDate: 0});
+        $('#next-relase-date-form').datepicker('setDate', currentReleaseDate);
+        $('#next-relase-date-form').datepicker('show');
+        isEditingNextReleaseDate = true;
+    })
+
+    $(window).keydown(function(e)
+    {
+        if (e.keyCode == 13) {
+            if (isEditingNextReleaseDate) {
+                $.ajax({
+                    url: WEBROOT + '/system_variables/save_next_release_date',
+                    type: "POST",
+                    data: {next_release_date : $('#next-relase-date-form').val()},
+                    dataType: "text",
+                }).done(()=>{
+                    alert('次回リリース日を変更しました。');
+                    $('#next-release-date').html($('#next-relase-date-form').val());
+                }).fail(()=>{
+                    alert('リリース日の変更に失敗しました。');
+                })
+                isEditingNextReleaseDate = false;
+            }
+        }
+    })
 })

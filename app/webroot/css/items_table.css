@@ -1,49 +1,51 @@
-.sticky_table {
+#items-table {
   display: block;
   position: relative;
+  margin: 0 auto;
   overflow: scroll;
-  width: calc(100vw - 3.0rem);
+  width: calc(100vw - 1.0rem);
   height: calc(75vh);
   border: 1px solid #000;
   border-collapse: collapse;
-  border-color: #000;
+  border-color: #274a78;
   font-size: 0;
+  word-wrap: break-word;
 }
 
-.sticky_table thead,
-.sticky_table tbody {
+#items-table thead,
+#items-table tbody {
   display: block;
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
 }
 
-.sticky_table > thead > tr > th,
-.sticky_table > tbody > tr > td {
-    border: 1px solid #000;
+#items-table > thead > tr > th,
+#items-table > tbody > tr > td {
+    border: 1px solid #274a78;
     border-collapse: collapse;
-  display: inline-block;
-  vertical-align: top;
-  /* width: 8.0rem; /* html要素のフォントサイズ*/
-  background: #fff;
-  font-size: 0.5rem;
+    display: inline-block;
+    vertical-align: top;
 }
 
-.sticky_table tbody td.header {
+#items-table > tbody > tr > td {
+  font-size: 0.7rem;
+}
+
+#items-table > tbody > tr > td.header {
   position: -webkit-sticky;
   position: sticky;
-  left: 0;
   z-index: 1;
 }
 
-.sticky_table thead {
+#items-table thead {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 2;
 }
 
-.sticky_table thead th.header {
+#items-table thead th.header {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -51,37 +53,56 @@
   z-index: 3;
 }
 /* テーブルのレイアウト設定 */
-.sticky_table tbody td.header-column-2 {
+#items-table thead th {
+    color: #FFFFFF;
+    background-color: #838b0d;
+}
+
+#items-table > tbody > tr > td.header-column-1 {
+  left: 0px;
+}
+
+#items-table > tbody > tr > td.header-column-2 {
   left: 42px;
 }
-.sticky_table tbody td.header-column-3 {
+#items-table tbody td.header-column-3 {
   left: 136px;
 }
-.sticky_table tbody td.header-column-4 {
+#items-table tbody td.header-column-4 {
   left: 280px;
 }
-.sticky_table tbody td.header-column-5 {
+#items-table tbody td.header-column-5 {
   left: 374px;
 }
-.sticky_table tbody td.header-column-6 {
+#items-table tbody td.header-column-6 {
   left: 538px;
 }
 
-.sticky_table thead th.header-column-2 {
+#items-table thead th.header-column-2 {
   left: 42px;
 }
-.sticky_table thead th.header-column-3 {
+#items-table thead th.header-column-3 {
   left: 136px;
 }
-.sticky_table thead th.header-column-4 {
+#items-table thead th.header-column-4 {
   left: 280px;
 }
-.sticky_table thead th.header-column-5 {
+#items-table thead th.header-column-5 {
   left: 374px;
 }
-.sticky_table thead th.header-column-6 {
+#items-table thead th.header-column-6 {
   left: 538px;
 }
+
+/* テーブルの色設定 */
+#items-table tbody tr:nth-child(odd) {
+    background: #e4e6c2;
+}
+
+#items-table tbody tr:nth-child(even) {
+    background: #ebefba;
+}
+
 /* 各カラムの属性ごとの設定 */
 .id-column {
     width: 38px;
@@ -165,6 +186,58 @@
     font-size: 8px;
 }
 
-.sticky_table thead th{
-    height: 45px;
+#items-table thead th{
+    height: 70px;
+    font-size: 0.7rem;
+}
+
+/* セル内の設定 */
+.record_text {
+    padding-left: 4px;
+}
+
+.input_part textarea,input {
+    width: 90%;
+    height: 40px;
+    font-size: 12px;
+}
+
+.submit {
+    text-align: center;
+}
+
+/* コメントテーブルの設定 */
+.comment-table {
+    width: 290px;
+}
+
+.comment-table tr {
+    width: 290px;
+}
+
+.comment-table,
+.comment-table td {
+    border: 1px #000000 solid;
+    border-collapse:collapse;
+}
+
+tr.comment-table-header td {
+    background: #838b0d;
+    color: #FFFFFF;
+}
+
+tr.comment-content td {
+    background: #e4e6c2;
+}
+
+#items-table tbody tr td tr.comment-table-header td {
+    background: #838b0d;
+    color: #FFFFFF;
+}
+
+#items-table tr.comment-content td {
+    width: 290px;
+    background: #e4e6c2;
+    word-break : break-all;
+    overflow:hidden;
 }

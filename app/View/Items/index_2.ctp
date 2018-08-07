@@ -1,8 +1,116 @@
 <!-- <link rel="stylesheet" type="text/css" href="table.css"> -->
+<?php echo $this->Html->css('index_2.css');?>
 <?php echo $this->Html->css('items_table.css');?>
+<?php echo $this->Html->script('next_release_date.js');?>
 <?php echo $this->Html->script('table_structure.js');?>
+<?php echo $this->Html->script('table_function_common.js');?>
 <?php echo $this->Html->script('table_function.js');?>
-<table id="items-table" class="sticky_table">
+<button>
+<?php
+if (!$completed_mode_flag) {
+    echo $this->Html->link('完了済みの項目を表示', '/items/index_2/1', array('class' => 'button',));
+} else {
+    echo $this->Html->link('未完了の項目を表示', '/items/index_2/0', array('class' => 'button',));
+    echo $this->Html->css('items_table_completed.css');
+}
+?>
+</button>
+<div class="float-container clearfix">
+    <div id="search-form">
+        <?php
+            echo $this->form->create('Item', array(
+                'url' => '/items/index_2/' . $completed_mode_flag,
+                'type'  => 'GET',
+            ));
+        ?>
+        <table class="search-form <?php echo $completed_mode_flag ? "completed-item" : ''?>">
+            <tr>
+                <td>
+                    <label>作成日</label>
+                </td>
+                <td><div class="input">
+                <?php echo $this->Datepicker->datepicker(
+                    'from_created',
+                    array(
+                        'div' => false,
+                        'label' => false,
+                        'default' => $query['from_created'],
+                        'class' => 'search-input',
+                        )
+                    );
+                ?>
+                </div></td>
+                <td><div class="input">
+                <?php echo $this->Datepicker->datepicker(
+                    'to_created',
+                    array(
+                        'div' => false,
+                        'label' => false,
+                        'default' => $query['to_created'],
+                        'class' => 'search-input',
+                        )
+                    );
+                ?>
+                </div></td>
+                <?php if ($completed_mode_flag) :?>
+                <td>
+                    <label>masterマージ完了日</label>
+                </td>
+                <td><div class="input">
+                <?php echo $this->Datepicker->datepicker(
+                    'from_merge_finish_date_to_master',
+                    array(
+                        'div' => false,
+                        'label' => false,
+                        'default' => $query['from_merge_finish_date_to_master'],
+                        'class' => 'search-input',
+                        )
+                    );
+                ?>
+                </div></td>
+                <td><div class="input">
+                <?php echo $this->Datepicker->datepicker(
+                    'to_merge_finish_date_to_master',
+                    array(
+                        'div' => false,
+                        'label' => false,
+                        'default' => $query['to_merge_finish_date_to_master'],
+                        'class' => 'search-input',
+                        )
+                    );
+                ?>
+                </div></td>
+                <?php else:?>
+                <td><label>ステータス</label></td>
+                <td><div class="input">
+                <?php echo $this->Form->input('status', array(
+                        'label' => false,
+                        'options' => array(
+                            'コードレビュー中' => 'コードレビュー中',
+                            '改修中' => '改修中',
+                            '技術二重チェック中' => '技術二重チェック中',
+                            '差し戻し' => '差し戻し',
+                        ),
+                    ));
+                ?>
+                </div></td>
+                <?php endif?>
+                <td>
+                    <?php echo $this->form->submit('検索', array('name' => 'search_condition'))?>
+                </td>
+            </tr>
+        </table>
+        <?php echo $this->form->end();?>
+    </div>
+    <div id="next-release-date-box">
+        <span>次回リリース日</span>
+        <span id="next-release-date"><?php echo $next_release_date?></span>
+    </div>
+</div>
+<span id="hide-column-for-dev">
+    <input type="checkbox"><span class="body-text">開発部用の項目を表示しない</span>
+</span>
+<table id="items-table" class="sticky_table <?php echo $completed_mode_flag ? 'completed-item' : ''?>">
     <thead>
         <tr class="table_titles">
             <th class="id-column header header-column1">
@@ -122,7 +230,7 @@
         <?php foreach ($items as $item): ?>
     <tr id="item_<?php echo h($item['Item']['id'] . '-data'); ?>" class="item-data <?php echo $item['Item']['needs_supp_confirm'] == 0 ? 'needs-no-confirm' : '' ?>"
         data-id="<?php echo h($item['Item']['id']); ?>" data-controller="items">
-        <td class="header header-column-1 record id-column" data-id="<?php echo h($item['Item']['id']); ?>" 
+        <td class="header header-column-1 record id-column" data-id="<?php echo h($item['Item']['id']); ?>"
             id="<?php echo $item['Item']['id'] . "-id";?>" data-column="id">
             <span class="record_text"><?php echo $item['Item']['id']; ?></span>
         </td>
@@ -218,7 +326,9 @@
                     <tr class="comment-content" data-id="<?php echo $verification_history['id']?>" data-controller="verification_histories">
                         <td class="editable-comment td-of-table-in-row record editable-cell" colspan="2" id="<?php echo $verification_history['id']?>-verification_history-comment"
                             data-column = "verification_history">
-                            <?php echo str_replace('\n', '<br>', $verification_history['comment']);?>
+                            <span class="record_text">
+                                <?php echo str_replace(array("\r\n", "\r", "\n"), '<br>', $verification_history['comment']);?>
+                            </span>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -243,7 +353,9 @@
                     <tr class="comment-content" data-id="<?php echo $confirm_comment_response['id']?>" data-controller="confirm_comment_responses">
                         <td class="editable-comment td-of-table-in-row record editable-cell" colspan="2" id="<?php echo $confirm_comment_response['id']?>-verification_history-comment"
                             data-column = "verification_history">
-                            <?php echo str_replace('\n', '<br>', $confirm_comment_response['comment']);?>
+                            <span class="record_text">
+                                <?php echo str_replace(array("\r\n", "\r", "\n"), '<br>', $confirm_comment_response['comment']);?>
+                            </span>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -277,6 +389,84 @@
         </td>
     </tr>
     <?php endforeach?>
+    <?php if(!$completed_mode_flag):?>
+    <tr class="input_part">
+        <td class="id-column header header-column-1"></td>
+        <td class="needs-supp-confirm-column column-for-dev header header-column-2">
+            <?php echo $this->Form->input('needs_supp_confirm', array(
+                    'label' => false,
+                    'options' => array(1 => '必要', 0 => '不要')
+                ));
+            ?>
+        </td>
+        <td class="content-column header header-column-3"><?php echo $this->Form->input('content', array('label' => false,));?></td>
+        <td class="date-column header header-column-4"><?php echo $this->Datepicker->datepicker('due_date_for_release', array('type' => 'text', 'label' => false));?></td>
+        <td class="status-column header header-column-5">
+            <?php echo $this->Form->input('status',array(
+                  'label' => false,
+                  'options' => array(
+                      '差し戻し' => '差し戻し',
+                      'コードレビュー中' => 'コードレビュー中',
+                      '改修中' => '改修中',
+                      '技術二重チェック中' => '技術二重チェック中',
+                      'サポート・営業確認中' => 'サポート・営業確認中',
+                  )
+              ));
+            ?>
+        </td>
+        <td class="grace-column"><!-- 検証完了猶予日数 --></td>
+        <td class="category-column"><?php echo $this->Form->input('category', array('label' => false));?></td>
+        <td class="division-column"><?php echo $this->Form->input('division', array(
+                'label' => false,
+                'options' => array(
+                    '改善' => '改善',
+                    '機能追加' => '機能追加',
+                    'バグ' => 'バグ',
+                    )
+                ));
+            ?>
+        </td>
+        <td class="url-column"><?php echo $this->Form->input('chatwork_url', array('label' => false));?></td>
+        <td class="url-column column-for-dev"><?php echo $this->Form->input('github_url', array('label' => false));?></td>
+        <td class="url-column"><?php echo $this->Form->input('verification_enviroment_url', array('label' => false));?></td>
+        <td class="date-column"><?php echo $this->Datepicker->datepicker('pullrequest', array('type' => 'text', 'label' => false));?></td>
+        <td class="date-column"><!-- プルリク更新日 --></td>
+        <td class="date-column"><!-- 技術リリースOK判断日 --></td>
+        <td class="date-column"><!-- サポートリリースOK判断日 --></td>
+        <td class="author-column">
+        <td class="priority-column"><!-- 手順書有無 --></td>
+        <td class="date-column"><!-- 営業リリースOK判断日 --></td>
+        <td class="day_count-column"><!-- 経過日数 --></td>
+        <td class="date-column"><?php echo $this->Datepicker->datepicker('scheduled_release_date', array('type' => 'text', 'label' => false));?></td>
+        <td class="date-column"><!-- masterマージ完了日 --></td>
+        <td class="comment-column"><?php echo $this->Form->input('confirm_points', array('label' => false));?></td>
+        <td class="comment-column"><?php echo $this->Form->input('confirm_comment', array('label' => false));?></td>
+        <td class="comment-column"><!--確認コメント対応 --></td>
+        <td class="author-column">
+            <?php echo $this->Form->input('author_id', array(
+                'label' => false,
+                'options' => $author_names,
+                'empty' => '選択してください',
+                ));
+            ?>
+        </td>
+        <td class="point-column column-for-dev"><?php echo $this->Form->input('pivotal_point', array('type'=>'number', 'label' => false));?></td>
+        <td class="date-column"><?php echo $this->Form->end('送信', array('name' => 'add_item'));?></td>
+    </tr>
+    <?php endif?>
     <!-- ... -->
   </tbody>
 </table>
+<div id="under-menu">
+<div id="page_selector">
+    <?php echo $this->Paginator->numbers(
+        array (
+            'before' => $this->Paginator->hasPrev() ? $this->Paginator->first('<<', array('tag' => 'first')).' | ' : '',
+            'after' => $this->Paginator->hasNext() ? ' | '.$this->Paginator->last('>>', array('tag' => 'first')) : '',
+            'tag' => 'span',
+        )
+    );
+    ?>
+</span>
+</div>
+</div>

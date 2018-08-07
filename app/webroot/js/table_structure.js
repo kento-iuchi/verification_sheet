@@ -1,7 +1,7 @@
 function syncCellsHeight()
 {
     itemsTableTr = $('#items-table >thead > tr, #items-table >tbody > tr');
-    for(var i=0, l=itemsTableTr.length; i<l;i++ ){
+    for(var i=1, l=itemsTableTr.length; i<l;i++ ){
         item_id = itemsTableTr.eq(i).attr('data-id');
         itemRow = itemsTableTr.eq(i).height();
         var maxTdHeight = 0;
@@ -10,18 +10,25 @@ function syncCellsHeight()
                 maxTdHeight = $(this).height();
             }
         });
-        $('#item_' + item_id + '-data > td, ' + '#item_' + item_id + '-data > th').each(function(){
+        maxTdHeight = maxTdHeight < 25 ? 25 : maxTdHeight;
+        if ( i == l-1 ) { // 新規作成フォーム
+            maxTdHeight = 45;
+        }
+        console.log(maxTdHeight);
+        // $('#item_' + item_id + '-data > td, ' + '#item_' + item_id + '-data > th').each(function(){
+        //     $(this).height(maxTdHeight);
+        // });
+        itemsTableTr.eq(i).children().each(function(){
             $(this).height(maxTdHeight);
         });
-        // itemRowsTd = itemsTableTr.eq(i).child('td').each(function(){
-        //     console.log($(this).outerHeight())
-        // })
     }
 }
 
 $(function(){
     'use strict';
+
     syncCellsHeight();
+    $()
 
     if (Cookies.get('hideColumnForDev') === 'true') {
         $('#hide-column-for-dev input').prop('checked', true);

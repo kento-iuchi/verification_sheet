@@ -336,7 +336,7 @@ function updateItemLineStyle(itemId = null)
         tdColor = '#f5e56b';
     }
 
-    $('#item_' + itemId + '-data td').each(function(){
+    $('#item_' + itemId + '-data > td').each(function(){
         $(this).css('background', tdColor);
         $(this).children('span').css('color', fontColor);
     });
@@ -373,11 +373,11 @@ function detectEditingItem(){
 }
 
 function inhibitToEditItem(item_id){
-    $('#item_' + item_id + '-data td').addClass('somebody-editing');
+    $('#item_' + item_id + '-data > td').addClass('somebody-editing');
 }
 
 function permitToEditItem(item_id){
-    $('#item_' + item_id + '-data td').removeClass('somebody-editing');
+    $('#item_' + item_id + '-data > td').removeClass('somebody-editing');
 }
 
 function generateToken(token_length){
@@ -413,6 +413,110 @@ function unRegisterItemEditing(itemId)
         data: {item_id : itemId},
         dataType: "text",
     })
+}
+
+function turnItemCompleted(item_id)
+{
+    var completeActionURL = WEBROOT + 'items/toggle_complete_state/' + item_id;
+    $.ajax({
+    url: completeActionURL,
+    type: "POST",
+    data: { id : item_id },
+    dataType: "text",
+    success : function(response){
+        //通信成功時
+        alert("'完了'にしました");
+        var item_head_tr_id = '#item_' + item_id + '-head';
+        var item_data_tr_id = '#item_' + item_id + '-data';
+        $(item_head_tr_id).fadeOut(600).queue(function() {
+            $(item_head_tr_id).remove();
+        });
+        $(item_data_tr_id).fadeOut(600).queue(function() {
+            $(item_data_tr_id).remove();
+        });
+    },
+    error: function(){
+        //通信失敗時の処理
+        alert('通信失敗');
+    }
+    });
+}
+
+// 検証履歴(確認コメント)新規作成フォーム生成
+function createAddVerifivationHistoryForm(item_id, dataColumn)
+{
+    if (dataColumn == 'verification_history') {
+        var controllerName = 'verification_histories';
+        var options = $('th.verifier-column').attr('data-verifier-options');
+    } else if (dataColumn == 'response_to_confirm_comment') {
+        var controllerName = 'confirm_comment_responses';
+        var options = $('th.author-column').attr('data-author-options');
+    }
+    options = JSON.parse(options);
+    var name_selector =  '<div><select id = "' + item_id + '-' + dataColumn + '-name-selector">';
+    $.each(options, function(index, name){
+        index = parseInt(index);
+        name_selector += '<option value="' + index + '">' + name + '</option>';
+    });
+    name_selector += '</select></div>';
+    $('#' + item_id + '-' + dataColumn + ' div.comment-input-area').append(name_selector);
+
+    var comment_form = '<div><textarea rows = 5 id = "' + item_id + '-' + dataColumn + '-comment_form"></textarea></div>';
+    $('#' + item_id + '-' + dataColumn + ' div.comment-input-area').append(comment_form);
+
+    var submit_button = '<div><button type = "button" class = "add-comment-button">保存</button></div>';
+    $('#' + item_id + '-' + dataColumn + ' div.comment-input-area').append($(submit_button).click(() => {saveConfirmComment(item_id, dataColumn, controllerName)}));
+
+    $('#' + item_id + '-' + dataColumn + '-name-selector').focus();
+}
+
+// 検証履歴(確認コメント)保存ボタンが押されたときの処理
+function saveConfirmComment(itemId, dataColumn, controllerName)
+{
+    var commenterId = $('#' + itemId + '-' + dataColumn + '-name-selector').val();
+    var comment = $('#' + itemId + '-' + dataColumn + '-comment_form').val();
+    var editActionUrl = WEBROOT + controllerName + '/save';
+
+    var targetTdId = itemId + '-' + dataColumn
+    // tdのidがitemId とdata-columnでできていることが暗黙のルールになってしまっているが、他にいいやり方を思いつかなかた…
+    $.ajax({
+    url: editActionUrl,
+    type: "POST",
+    data: { item_id : itemId, commenter_id: commenterId, comment: comment },
+    dataType: "text",
+    success : function(response)
+    {
+        if($('#' + targetTdId + ' table').length == 0){
+            $('#' + targetTdId).append('<table class="comment-table"><tbody></tbody></table>');
+        }
+        var verifierName = $('#' + itemId + '-' + dataColumn  + '-name-selector option:selected').text();
+        var today = new Date();
+        console.log(today);
+        var todayMonth = ('0' + (today.getMonth() + 1)).slice(-2);
+        var todayDate = ('0' + today.getDate()).slice(-2);
+        var newHistory =   '<tr class="comment-table-header">'
+                         + '<td class="comment-table-header" style="background:#838b0d; color:white">' + verifierName + '</td>'
+                         + '<td class="comment-table-header" style="background:#838b0d; color:white">'
+                         + today.getFullYear() + '-' + todayMonth + '-' + todayDate + ' ' + today.toLocaleTimeString() //' ' + + ':' + + ':' +
+                         + '</td>'
+                         + '</tr>'
+                         + '<tr class="comment-content" data-id="' + response+ '" data-controller="' + controllerName + '">'
+                         + '<td class="editable-comment td-of-table-in-row record editable-cell" colspan="2" data-column="' + dataColumn + '"'
+                         + 'id="' + response + '-' + dataColumn + '-comment">' + recordtext(comment) + '</td>'
+                         + '</tr>';
+        console.log(newHistory);
+        $('#' + targetTdId + ' table').append(newHistory).trigger('create');
+        // $('#verification-history-table td').css('background', '#838b0d');
+        $('#' + itemId + '-add-comment').show();
+        $('#' + itemId + '-' + dataColumn + ' div.comment-input-area').empty();
+        syncCellsHeight();
+        // syncTwoTablesHeight();
+    },
+    error: function()
+    {
+        alert('通信失敗');
+    }
+    });
 }
 
 $(function(){
@@ -480,5 +584,38 @@ console.log('hoge');
         isEditing = true;
     });
 
+    // 検証履歴新規作成
+    $('.add-comment').click(function(object)
+    {
+        createAddVerifivationHistoryForm($(this).parents('tr').attr('data-id'), $(this).parent().attr('data-column'));
+        var button_id = $(this).attr('id');
+        $('#' + button_id).hide();
+        $(this).parent('td').height($(this).parent('td').height() + 120);
+        syncCellsHeight();
+        // syncTwoTablesHeight();
+    })
 
+    // リロードしたとき、自分が編集している項目の情報を
+    //　editing_itemsケーブルから消去する
+    if (Cookies.get('my_editing_item_id')) {
+        unRegisterItemEditing(Cookies.get('my_editing_item_id')).done(function(response){
+            console.log('delete editing item ' + Cookies.get('my_editing_item_id'));
+            Cookies.remove('my_editing_item_id');
+        }).fail(function(response){
+            console.log('failed to delete editing item');
+        })
+    } else {
+        console.log('failed to editing_item_id from cookie');
+    }
+
+    editorToken = Cookies.get('my_editor_token');
+    //　cookieにトークンがなければ新しく生成して取得する
+    if (!editorToken) {
+        editorToken = generateToken(8);
+        Cookies.set('my_editor_token', editorToken, { expires: 7 });
+    }
+    console.log(editorToken)
+
+    detectEditingItem(editorToken);
+    setInterval(function(){detectEditingItem(editorToken)}, 3000);
 });

@@ -1,0 +1,88 @@
+/* 全体 */
+body {
+    background-color: #274a78;
+}
+
+textarea {
+    resize: none;
+}
+
+body {
+    margin: 0;
+    font-size: 16px;
+    font-family: Verdana, sans-serif;
+}
+
+table th,td {
+    font-size: 12px;
+    word-break : break-all;
+}
+
+.input {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* 検索フォームとリリース日の表示ブロック */
+.float-container {
+    overflow: hidden;
+}
+
+#search-form {
+    float: left;
+    height: 52px;
+}
+
+/* 検索フォーム */
+.search-form td {
+    font-size: 16px;
+    color: white;
+    background: #838b0d;
+}
+
+table.search-form.completed-item td {
+    background: #2E9AFE !important;
+}
+
+#next-release-date-box {
+    height: 52px;
+    width: 380px;
+    float: left;
+    position: relative;
+}
+
+#next-release-date-box span{
+    bottom: 0;
+    height: 20px;
+    color: #FFFFFF;
+    /* position: absolute; */
+}
+
+#next-release-date {
+    height: 32px;
+    width: 200px;
+    font-size: 32px;
+}
+
+.body-text {
+    color: #FFFFFF;
+}
+
+#hide-column-for-dev input {
+    height: 20px;
+    width: 20px;
+}
+
+/* 画面下メニューの設定 */
+#under-menu {
+    background: #838b0d;
+    margin-bottom: 5px;
+    top: 95%;
+    width: 100%;
+    height: 5%;
+    z-index: 3;
+}
+
+#page_selector span {
+    font-size: 16px;
+}
