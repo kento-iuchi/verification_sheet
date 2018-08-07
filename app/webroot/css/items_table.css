@@ -30,19 +30,20 @@
 
 #items-table > tbody > tr > td {
   font-size: 0.7rem;
+  z-index: -1;
 }
 
 #items-table > tbody > tr > td.header {
   position: -webkit-sticky;
   position: sticky;
-  z-index: 1;
+  z-index: 0;
 }
 
 #items-table thead {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 1;
 }
 
 #items-table thead th.header {
@@ -50,7 +51,7 @@
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 3;
+  z-index: 1;
 }
 /* テーブルのレイアウト設定 */
 #items-table thead th {
