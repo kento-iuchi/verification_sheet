@@ -50,33 +50,6 @@ class ItemsController extends AppController
         $this->set(compact('query', 'items', 'completed_mode_flag', 'verifier_names', 'author_names', 'next_release_date'));
     }
 
-    public function index_2($completed_mode_flag = 0)
-    {
-        $this->layout = 'IndexLayout';
-        $this->header("Content-type: text/html; charset=utf-8");
-
-        $conditions = array(
-            'is_completed' => $completed_mode_flag,
-        );
-        $query = array(
-            'status' => '',
-            'from_created' => '',
-            'to_created' => '',
-            'from_merge_finish_date_to_master' => '',
-            'to_merge_finish_date_to_master' => '',
-        );
-        if(!empty($this->request->query)){
-            $query = $this->request->query['data'];
-            $conditions = array_merge($conditions, $this->Item->parseCriteria($query));
-        }
-
-        $items = $this->paginate('Item', $conditions);
-        $verifier_names = Hash::combine($this->Verifier->find('all'), '{n}.Verifier.id', '{n}.Verifier.name');
-        $author_names = Hash::combine($this->Author->find('all'), '{n}.Author.id', '{n}.Author.name');
-        $next_release_date = Hash::get($this->SystemVariable->find('first', array('order' => array('id' => 'desc'))), 'SystemVariable.next_release_date');
-        $this->set(compact('query', 'items', 'completed_mode_flag', 'verifier_names', 'author_names', 'next_release_date'));
-    }
-
     public function add()
     {
         if ($this->request->is('post')) {

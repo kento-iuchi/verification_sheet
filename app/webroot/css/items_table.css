@@ -1,0 +1,243 @@
+#items-table {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  overflow: scroll;
+  width: calc(100vw - 1.0rem);
+  height: calc(75vh);
+  border: 1px solid #000;
+  border-collapse: collapse;
+  border-color: #274a78;
+  font-size: 0;
+  word-wrap: break-word;
+}
+
+#items-table thead,
+#items-table tbody {
+  display: block;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+#items-table > thead > tr > th,
+#items-table > tbody > tr > td {
+    border: 1px solid #274a78;
+    border-collapse: collapse;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#items-table > tbody > tr > td {
+  font-size: 0.7rem;
+}
+
+#items-table > tbody > tr > td.header {
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 1;
+}
+
+#items-table thead {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+#items-table thead th.header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+/* テーブルのレイアウト設定 */
+#items-table thead th {
+    color: #FFFFFF;
+    background-color: #838b0d;
+}
+
+#items-table > tbody > tr > td.header-column-1 {
+  left: 0px;
+}
+
+#items-table > tbody > tr > td.header-column-2 {
+  left: 42px;
+}
+#items-table tbody td.header-column-3 {
+  left: 136px;
+}
+#items-table tbody td.header-column-4 {
+  left: 280px;
+}
+#items-table tbody td.header-column-5 {
+  left: 374px;
+}
+#items-table tbody td.header-column-6 {
+  left: 538px;
+}
+
+#items-table thead th.header-column-2 {
+  left: 42px;
+}
+#items-table thead th.header-column-3 {
+  left: 136px;
+}
+#items-table thead th.header-column-4 {
+  left: 280px;
+}
+#items-table thead th.header-column-5 {
+  left: 374px;
+}
+#items-table thead th.header-column-6 {
+  left: 538px;
+}
+
+/* テーブルの色設定 */
+#items-table tbody tr:nth-child(odd) {
+    background: #e4e6c2;
+}
+
+#items-table tbody tr:nth-child(even) {
+    background: #ebefba;
+}
+
+/* 各カラムの属性ごとの設定 */
+.id-column {
+    width: 38px;
+}
+
+.needs-supp-confirm-column {
+    width: 90px;
+}
+
+.content-column {
+    width: 140px;
+}
+
+.date-column {
+    width: 90px;
+}
+
+.status-column {
+    width: 160px;
+}
+
+.day_count-column {
+    width: 56px;
+}
+
+.grace-column {
+    width: 50px;
+}
+
+.category-column {
+    width: 90px;
+}
+
+.division-column {
+    width: 90px;
+}
+
+.url-column {
+    width: 224px;
+}
+
+.date-column {
+    width: 90px;
+}
+
+.day_count-column {
+    width: 56px;
+}
+
+.comment-column {
+    width: 300px;
+}
+
+.verification-history-column {
+    width : 200px;
+}
+
+.author-column, .verifier-column {
+    width: 150px;
+}
+
+.priority-column {
+    width:  70px;
+    text-align: center;
+}
+
+.point-column {
+    width: 50px;
+}
+
+.complete_column {
+    width: 80px;
+}
+
+/* 列タイトル行の設定 */
+.sort_button {
+    width: 16px;
+    height: 16px;
+    bottom: 0px;
+    padding: 0px;
+    font-size: 8px;
+}
+
+#items-table thead th{
+    height: 70px;
+    font-size: 0.7rem;
+}
+
+/* セル内の設定 */
+.record_text {
+    padding-left: 4px;
+}
+
+.input_part textarea,input {
+    width: 90%;
+    height: 40px;
+    font-size: 12px;
+}
+
+.submit {
+    text-align: center;
+}
+
+/* コメントテーブルの設定 */
+.comment-table {
+    width: 290px;
+}
+
+.comment-table tr {
+    width: 290px;
+}
+
+.comment-table,
+.comment-table td {
+    border: 1px #000000 solid;
+    border-collapse:collapse;
+}
+
+tr.comment-table-header td {
+    background: #838b0d;
+    color: #FFFFFF;
+}
+
+tr.comment-content td {
+    background: #e4e6c2;
+}
+
+#items-table tbody tr td tr.comment-table-header td {
+    background: #838b0d;
+    color: #FFFFFF;
+}
+
+#items-table tr.comment-content td {
+    width: 290px;
+    background: #e4e6c2;
+    word-break : break-all;
+    overflow:hidden;
+}
