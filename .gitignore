@@ -32,3 +32,4 @@ Thumbs.db
 app/Config/github_api_token.php
 app/Config/chatwork_api_token.php
 app/Config/chatwork_room_ids.php
+app/Config/ApiSettings.php
