@@ -1,0 +1,18 @@
+{
+  "name": "verification_sheet",
+  "version": "0.0.0",
+  "description": "[![Latest Stable Version](https://poser.pugx.org/cakephp/cakephp/v/stable.svg)](https://packagist.org/packages/cakephp/cakephp) [![License](https://poser.pugx.org/cakephp/cakephp/license.svg)](https://packagist.org/packages/cakephp/cakephp) [![Bake Status](https://secure.travis-ci.org/cakephp/cakephp.png?branch=master)](https://travis-ci.org/cakephp/cakephp) [![Code consistency](https://squizlabs.github.io/PHP_CodeSniffer/analysis/cakephp/cakephp/grade.svg)](https://squizlabs.github.io/PHP_CodeSniffer/analysis/cakephp/cakephp/)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/kento-iuchi/verification_sheet.git"
+  },
+  "author": "kento_iuchi",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/kento-iuchi/verification_sheet/issues"
+  }
+}
