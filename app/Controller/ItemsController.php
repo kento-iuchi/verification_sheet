@@ -370,7 +370,7 @@ class ItemsController extends AppController
 
         $GITHUB_WEBHOOK_KEY = Configure::read('github_webhook_key');
         if ($this->request->is('post') && $key == $GITHUB_WEBHOOK_KEY) {
-            if (array_key_exists('pull_request', $payload)){
+            if ($this->request->header('X-GitHub-Event') == 'pull_request'){
                 $this->log('######## pull_request ########');
                 $this->log($payload['action']);
                 $this->log($payload['pull_request']['title']);
