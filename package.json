@@ -8,11 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com/kento-iuchi/verification_sheet.git"
+    "url": "git+ssh://git@github.com/kento-iuchi/verification_sheet.git"
   },
   "author": "kento_iuchi",
-  "license": "BSD",
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/kento-iuchi/verification_sheet/issues"
-  }
+  },
+  "homepage": "https://github.com/kento-iuchi/verification_sheet#readme",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "axios": "^0.18.0"
+  },
+  "devDependencies": {}
 }
