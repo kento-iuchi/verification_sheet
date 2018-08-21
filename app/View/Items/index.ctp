@@ -4,7 +4,7 @@
 <?php echo $this->Html->script('next_release_date.js');?>
 <?php echo $this->Html->script('table_structure.js');?>
 <?php echo $this->Html->script('table_function_common.js');?>
-<?php echo $this->Html->script('table_function.js');?>
+<?php echo $this->Html->script('table_function_bundle.js');?>
 <button>
 <?php
 if (!$completed_mode_flag) {

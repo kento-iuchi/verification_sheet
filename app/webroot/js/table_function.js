@@ -1,3 +1,4 @@
+const axios = require('axios');
 var uneditableColumnNames = ['id', 'elapsed', 'grace_days_of_verification_complete', 'created', 'modified', 'confirm_comment', 'author_id'];
 var controller_name;
 var editCellId; //
@@ -154,8 +155,13 @@ function postToEditAction(controller_name, selectedTd, postValue, __editStarting
     var columnName = $(selectedTd).attr('data-column');
 
     var lastUpdatedTime
-    fetchLastUpdatedTime(id, controller_name).done(function(response){
-        lastUpdatedTime = response;
+    let params = new URLSearchParams();
+    params.append('id', id);
+    axios.post(
+        WEBROOT + controller_name + '/fetch_last_updated_time',
+        params,
+    ).then((response) => {
+        lastUpdatedTime = response.data;
         console.log('[check]last update time: ' + lastUpdatedTime);
         console.log('[check]edit starting time: ' + __editStartingTime);
         /*
@@ -267,7 +273,7 @@ function postToEditAction(controller_name, selectedTd, postValue, __editStarting
             //通信失敗時の処理
             alert('通信失敗');
         })
-    }).fail(function(response){
+    }).catch(function(response){
         alert('最終編集時間の取得に失敗しました');
         return;
     })
