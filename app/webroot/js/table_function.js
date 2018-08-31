@@ -214,8 +214,8 @@ function postToEditAction(controller_name, selectedTd, postValue, __editStarting
             }
 
             $(selectedTd).html(recordtext(textEdited));
-            if (columnName == 'pullrequest_update') {
-                var pullrequestDate = new Date($('#' + id + '-pullrequest_update').text());
+            if (columnName == 'pullrequest') {
+                var pullrequestDate = new Date($('#' + id + '-pullrequest').text());
                 var todayDate = new Date();
 
                 $('#' + id + '-elapsed').html(recordtext(Math.round((todayDate - pullrequestDate)/86400000)));
