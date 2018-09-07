@@ -246,18 +246,18 @@ class ItemsController extends AppController
         $this->autoRender = false;
 
         $this->Item->id = $id;
-        $this->request->data = $this->Item->read();
+        $update_item = $this->Item->read();
+        $this->log($update_item);
         if (isset($state)){
-            $this->request->data['Item']['is_completed'] = $state;
+            $update_item['Item']['is_completed'] = $state;
         } else {
-            $this->request->data['Item']['is_completed'] = $this->request->data['Item']['is_completed'] == 0 ? 1 : 0;
+            $update_item['Item']['is_completed'] = $update_item['Item']['is_completed'] == 0 ? 1 : 0;
         }
-        if ($this->request->is(['ajax'])) {
-            if ($this->Item->save($this->request->data)) {
-                echo 'successfully switched complete status';
-            } else {
-                echo 'failed to switch complete status';
-            }
+        $this->log($update_item);
+        if ($this->Item->save($update_item)) {
+            $this->log('Successfully switched complete status');
+        } else {
+            $this->log('Failed to switch complete status');
         }
     }
 
@@ -398,7 +398,7 @@ class ItemsController extends AppController
                             'Item' => array(
                                 'content' => $payload['number'] . $payload['pull_request']['title'],
                                 'github_url' => $payload['pull_request']['html_url'],
-                                'chatwork_url' => '',
+                                'chatwork_url' => "https://www.chatwork.com/#!rid" . $CHATWORK_CONFIRM_ROOM_ID . "-{$message_id}",
                                 'status' => 'コードレビュー中',
                                 'category' => '未設定',
                                 'division' => '改善',
@@ -432,7 +432,6 @@ class ItemsController extends AppController
                     $message .= '[/info]';
 
                     $message_id = $this->send_message_to_chatwork($message);
-                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid" . $CHATWORK_CONFIRM_ROOM_ID . "-{$message_id}";
                     if ($this->Item->save($new_item)) {
                         $this->log('save from github: successed');
                     } else {
@@ -440,10 +439,19 @@ class ItemsController extends AppController
                     }
 
                 }
-                if($payload['action'] == 'closed'){
-                    $result = $this->Item->find('first', array('conditions' => array('pullrequest_number' => $payload['pull_request']['number'])));
-                    if (!empty($result)){
-                        $this->toggle_complete_state(Hash::get($result, 'Item.id'), true);
+                if ($payload['action'] == 'closed'){
+                    $this->log('pull request closed [number: ' . $payload['pull_request']['number'] . ']');
+                    $result = $this->Item->find('first', array(
+                            'conditions' => array(
+                                'pullrequest_number' => $payload['pull_request']['number'],
+                                'is_completed' => 0,
+                            )
+                        )
+                    );
+                    if (!empty($result)) {
+                        $this->toggle_complete_state(Hash::get($result, 'Item.id'), 1);
+                    } else {
+                        $this->log('Failed to fetch closed pull request data');
                     }
                     $this->check_all_open_pullrequests_mergeability();
                 }
