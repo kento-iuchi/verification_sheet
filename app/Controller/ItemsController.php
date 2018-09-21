@@ -393,12 +393,12 @@ class ItemsController extends AppController
                     }
 
                     if ($payload['action'] == 'opened') {
+                        $confirm_room_id = Configure::read('chatwork_confirm_room_id');
                         $this->Item->create();
                         $new_item = array(
                             'Item' => array(
                                 'content' => $payload['number'] . $payload['pull_request']['title'],
                                 'github_url' => $payload['pull_request']['html_url'],
-                                'chatwork_url' => "https://www.chatwork.com/#!rid" . $CHATWORK_CONFIRM_ROOM_ID . "-{$message_id}",
                                 'status' => 'コードレビュー中',
                                 'category' => '未設定',
                                 'division' => '改善',
@@ -432,6 +432,7 @@ class ItemsController extends AppController
                     $message .= '[/info]';
 
                     $message_id = $this->send_message_to_chatwork($message);
+                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid" . $confirm_room_id . "-{$message_id}";
                     if ($this->Item->save($new_item)) {
                         $this->log('save from github: successed');
                     } else {
