@@ -77,7 +77,7 @@ class AppSchema extends CakeSchema {
 		'response_to_confirm_comment' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'author_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'pivotal_point' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-		'created' => array('type' => 'date', 'null' => true, 'default' => null),
+		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'is_completed' => array('type' => 'boolean', 'null' => true, 'default' => '0'),
 		'last_updated_time' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
