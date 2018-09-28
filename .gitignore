@@ -12,7 +12,7 @@
 /tags
 *.mo
 /backup
-
+backup.sh
 # IDE and editor specific files #
 #################################
 /nbproject
