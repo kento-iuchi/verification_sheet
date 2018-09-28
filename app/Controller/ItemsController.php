@@ -407,9 +407,24 @@ class ItemsController extends AppController
                                 'pullrequest_id' => $pullrequest_id,
                                 'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
                                 'author_id' => $author_id,
-                                'pivotal_point' => 1,
+                                'pivotal_point' => 0,
                             )
                         );
+                        // pivotalのポイントを取得
+                        preg_match('/\[#[0-9]+\]/', $payload['pull_request']['title'], $title_head);
+                        preg_match('/[0-9]+/', $title_head[0], $pivotal_id);
+                        $pivotal_tracker_token = Configure::read('pivotal_tracker_token');
+                        $story = shell_exec("curl -X GET -H 'X-TrackerToken: {$pivotal_tracker_token}' 'https://www.pivotaltracker.com/services/v5/stories/{$pivotal_id[0]}'");
+
+                        $story = json_decode($story, true);
+                        if ($story['kind'] == 'error') {
+                            $this->log('failed to fetch pivotal story');
+                            $this->log($story['error']);
+                        } else {
+                            if (isset($story['estimate'])) {
+                                $new_item['Item']['pivotal_point'] = $story['estimate'];
+                            }
+                        }
                         // $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
                     } else {
 
