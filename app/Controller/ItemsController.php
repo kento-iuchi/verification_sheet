@@ -2,6 +2,7 @@
 ini_set('display_errors',1);
 
 App::uses('AppController', 'Controller');
+App::import('Controller', 'ReviewerAssignings');
 
 class ItemsController extends AppController
 {
@@ -394,6 +395,7 @@ class ItemsController extends AppController
 
                     if ($payload['action'] == 'opened') {
                         $confirm_room_id = Configure::read('chatwork_confirm_room_id');
+
                         $this->Item->create();
                         $new_item = array(
                             'Item' => array(
@@ -425,7 +427,6 @@ class ItemsController extends AppController
                                 $new_item['Item']['pivotal_point'] = $story['estimate'];
                             }
                         }
-                        // $message .= '[code]'.  $payload['pull_request']['body']. "[/code]\n";
                     } else {
 
                         $items = $this->Item->find('all');
@@ -448,8 +449,14 @@ class ItemsController extends AppController
 
                     $message_id = $this->send_message_to_chatwork($message);
                     $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid" . $confirm_room_id . "-{$message_id}";
-                    if ($this->Item->save($new_item)) {
-                        $this->log('save from github: successed');
+                    $result = $this->Item->save($new_item);
+                    if ($result) {
+                        // 新規作成時はレビュワーをアサインする
+                        if ($payload['action'] == 'opened') {
+                            $ReviewerAssigningsController = new ReviewerAssigningsController;
+                            $ReviewerAssigningsController->assign_reviewer(Hash::get($result, 'Item.id');
+                        }
+                        $this->log('save from github: succeeded');
                     } else {
                         $this->log('save from github: failed');
                     }
