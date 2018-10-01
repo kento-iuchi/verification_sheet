@@ -87,6 +87,21 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
 	);
 
+	public $reviewer_assignings = array(
+		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
+		'item_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
+		'item_closed' => array('type' => 'tinyinteger', 'null' => false, 'default' => '0', 'unsigned' => false),
+		'reviewing_author_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
+		'review_stage' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
+		'is_reviewed' => array('type' => 'tinyinteger', 'null' => false, 'default' => '0', 'unsigned' => false),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'modified' => array('type' => 'datetime', 'null' => false, 'default' => null),
+		'indexes' => array(
+			'PRIMARY' => array('column' => 'id', 'unique' => 1)
+		),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+	);
+
 	public $schema_migrations = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
 		'class' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
@@ -102,6 +117,8 @@ class AppSchema extends CakeSchema {
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
 		'name' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 50, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'next_release_date' => array('type' => 'date', 'null' => true, 'default' => null),
+		'stage1_next_reviewer' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
+		'stage2_next_reviewer' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
