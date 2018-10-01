@@ -427,6 +427,9 @@ class ItemsController extends AppController
                                 $new_item['Item']['pivotal_point'] = $story['estimate'];
                             }
                         }
+                        // //レビュワーのアサイン
+                        // $ReviewerAssigningsController = new ReviewerAssigningsController;
+                        // $ReviewerAssigningsController->assign_reviewer($payload['pull_request'], $story['estimate']);
                     } else {
 
                         $items = $this->Item->find('all');
@@ -454,7 +457,7 @@ class ItemsController extends AppController
                         // 新規作成時はレビュワーをアサインする
                         if ($payload['action'] == 'opened') {
                             $ReviewerAssigningsController = new ReviewerAssigningsController;
-                            $ReviewerAssigningsController->assign_reviewer(Hash::get($result, 'Item.id');
+                            $ReviewerAssigningsController->assign_reviewer(Hash::get($result, 'Item.id'));
                         }
                         $this->log('save from github: succeeded');
                     } else {

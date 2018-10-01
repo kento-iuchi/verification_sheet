@@ -56,7 +56,7 @@ class ReviewerAssigningsController extends AppController
         // APIを叩く
         if (! empty($this->request->data['payload'])) {
             $pull_request_number = $this->request->data['payload']['pull_request']['number'];
-            $target_item = $Item->find('first' array(
+            $target_item = $Item->find('first', array(
                 'conditions' => array('pullrequest_number' => $pullrequest_number)
             ));
             $item_id = Hash::get($Item->find('first', array('conditions' => '')), 'Item.pullrequest_number');
