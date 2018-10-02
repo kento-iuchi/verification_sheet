@@ -427,9 +427,6 @@ class ItemsController extends AppController
                                 $new_item['Item']['pivotal_point'] = $story['estimate'];
                             }
                         }
-                        // //レビュワーのアサイン
-                        // $ReviewerAssigningsController = new ReviewerAssigningsController;
-                        // $ReviewerAssigningsController->assign_reviewer($payload['pull_request'], $story['estimate']);
                     } else {
 
                         $items = $this->Item->find('all');
@@ -483,6 +480,28 @@ class ItemsController extends AppController
                 }
             }
             if (array_key_exists('issue', $payload) || array_key_exists('comment', $payload)) {
+                // is_reviewedの更新
+                // $item_idの取得
+                if (array_key_exists('issue', $payload)) {
+                    $pull_request_number = Hash::get($payload, 'issue.number');
+                };
+                if (array_key_exists('comment', $payload)) {
+                    $pull_request_number = Hash::get($payload, 'pull_request.number');
+                };
+                $target_item = $this->Item->find('first', array(
+                    'conditions' => array(
+                        'pullrequest_number' => $pull_request_number,
+                    ),
+                ));
+                $target_item_id = Hash::get($target_item, 'Item.id');
+                // このアイテムidに該当するreviewer_assiningsのis_reviewedを１にする
+                if ($target_item_id) {
+                    $ReviewerAssigning = ClassRegistry::init('ReviewerAssigning');
+                    $ReviewerAssigning->updateAll(
+                        array('is_reviewed' => 1),
+                        array('item_id =' => $target_item_id)
+                    );
+                }
                 $this->tell_code_review_comment($payload);
             }
         } else {
