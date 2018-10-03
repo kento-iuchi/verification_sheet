@@ -102,6 +102,16 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
 	);
 
+	public $reviewer_tasks = array(
+		'reviewer_id' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
+		'review_count' => array('type' => 'biginteger', 'null' => false, 'default' => '0', 'length' => 21, 'unsigned' => false),
+		'total_pivotal_point' => array('type' => 'decimal', 'null' => true, 'default' => null, 'length' => '32,0', 'unsigned' => false),
+		'indexes' => array(
+			
+		),
+		'tableParameters' => array('comment' => 'VIEW')
+	);
+
 	public $schema_migrations = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
 		'class' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
