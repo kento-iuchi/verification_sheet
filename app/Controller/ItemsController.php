@@ -154,7 +154,7 @@ class ItemsController extends AppController
         // }
         $this->request->data['Item'][$column_name] = $content;
         if ($this->request->is(['ajax'])) {
-            if ($this->Item->save($this->request->data)) {
+            if ($this->Item->save()) {
                 $this->log("Edit suceed [id:{$this->Item->id} field:{$column_name}]");
                 echo true;
             } else {
@@ -598,6 +598,8 @@ class ItemsController extends AppController
                 $pullrequest_number = $payload['pull_request']['number'];
             }
 
+            // [to:]の宛先の人
+            $target_chatwork_id = null;
             // コメントした人のid
             $reviewer_github_name = $payload['comment']['user']['login'];
             $reviewer = $this->Author->find('first', array('conditions' => array('Author.github_account_name' => $reviewer_github_name)));
@@ -605,9 +607,14 @@ class ItemsController extends AppController
 
             // コメントされたプルリクid
             $reviewed_item = $this->Item->find('first', array('conditions' => array('Item.pullrequest_number' => $pullrequest_number)));
-            $last_reviewr_id = $reviewed_item['Item']['last_reviewed_author_id'];
+            if (empty($reviewed_item)) {
+                $this->log("Item not found (pull reqquest number = {$pullrequest_number})");
+                return false;
+            }
+            $this->Item->id = $reviewed_item['Item']['id'];
+            $this->Item->read();
+            $last_reviewer_id = $reviewed_item['Item']['last_reviewed_author_id'];
 
-            $target_chatwork_id = null;
             if ($target_github_name == $reviewer_github_name) { // 自分で自分のプルリクにコメントした場合、最後にレビューした人にメッセージを飛ばす
                 $author_cw_ids = Hash::combine($this->Author->find('all'), '{n}.Author.id', '{n}.Author.chatwork_id');
                 $target_chatwork_id = $author_cw_ids[$last_reviewr_id];
@@ -643,7 +650,7 @@ class ItemsController extends AppController
             }
 
             // メッセージの作成
-            $message = "[To:{$target_chatwork_id}]";
+            $target_ids = array($target_chatwork_id);
             // コメント本文に@で宛先が指定されていた場合はチャットワークの通知先に追加する
             $body = $payload['comment']['body'];
             preg_match_all('/@[a-zA-Z0-9\-]+/', $body, $github_account_names);
@@ -661,13 +668,16 @@ class ItemsController extends AppController
                 );
                 $addition_target_chatwork_ids = Hash::extract($addition_target_chatwork_ids, '{n}.Author.chatwork_id');
 
-                $message = "[To:{$target_chatwork_id}]";
-                if (!empty($addition_target_chatwork_ids)) {
-                    foreach ($addition_target_chatwork_ids as $addition_target_chatwork_id) {
-                        $message .= "[To:{$addition_target_chatwork_id}]";
-                    }
+                foreach ($addition_target_chatwork_ids as $addition_target_chatwork_id) {
+                    $target_ids[] = $addition_target_chatwork_id;
                 }
             }
+            $message = '';
+            $target_ids = array_unique($target_ids);
+            foreach ($target_ids as $target_id){
+                $message .= "[To:{$target_id}]";
+            }
+
             $message .= "\nレビューコメントが投稿されました\n\n"
                         . "{$title}\n"
                         . "{$url}\n";
