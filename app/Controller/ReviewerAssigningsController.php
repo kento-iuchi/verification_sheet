@@ -92,6 +92,8 @@ class ReviewerAssigningsController extends AppController
         if (isset($response['message'])) {
             $this->log('Reviewer assignings: failed to assigning review');
             return false;
+        } else {
+            $this->log('Reviewer assignings: assigning review succeed');
         }
 
         // アサイン情報をDBに保存
