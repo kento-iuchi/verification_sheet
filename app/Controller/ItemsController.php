@@ -635,7 +635,7 @@ class ItemsController extends AppController
                     )
                 ),
                 'Item.last_reviewed_author_id');
-                if (! isset($last_reviewer_id)) {
+                if (isset($last_reviewer_id)) {
                     $target_github_names[] = Hash::get(
                         $this->Author->find('first', array(
                             'fields' => 'github_account_name',
