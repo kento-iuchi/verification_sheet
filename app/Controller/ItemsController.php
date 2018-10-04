@@ -477,6 +477,13 @@ class ItemsController extends AppController
                         $this->log('Failed to fetch closed pull request data');
                     }
                     $this->check_all_open_pullrequests_mergeability();
+
+                    // レビューのアサイン解除
+                    $ReviewerAssigning = ClassRegistry::init('ReviewerAssigning');
+                    $ReviewerAssigning->updateAll(
+                        array('ReviewerAssigning.item_closed' => 1),
+                        array('ReviewerAssigning.item_id' => Hash::get($result, 'Item.id'))
+                    );
                 }
             }
             if (array_key_exists('issue', $payload) || array_key_exists('comment', $payload)) {
