@@ -29,7 +29,8 @@ class ReviewerAssigningsController extends AppController
             WHERE
                 reviewer_id IN ({$first_reviewer_ids})
             ORDER BY
-                total_pivotal_point ASC
+                total_pivotal_point ASC,
+                review_count
             LIMIT
                 1
         ";
@@ -46,7 +47,8 @@ class ReviewerAssigningsController extends AppController
             WHERE
                 reviewer_id IN ({$second_reviewer_ids})
             ORDER BY
-                total_pivotal_point ASC
+                total_pivotal_point ASC,
+                review_count
             LIMIT
                 1
         ";
