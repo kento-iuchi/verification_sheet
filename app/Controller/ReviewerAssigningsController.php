@@ -88,9 +88,8 @@ class ReviewerAssigningsController extends AppController
         );
         $ch = curl_init();
         curl_setopt_array($ch, $options);
-        $response = curl_exec($ch);
+        $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
-        $response = json_decode($response, true);
         if (isset($response['message'])) {
             $this->log('Reviewer assignings: failed to assigning review');
             return false;
