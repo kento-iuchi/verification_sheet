@@ -189,8 +189,7 @@ class ItemsController extends AppController
                 array('editor_token !=' => $this->request->data['my_editor_token'])
             )
         );
-        // 戻り値が「配列」もしくはbooleanというのはおかしいのだけれど
-        // からの配列を返したときのCakeResponseエラーの対処がわからない
+
         if (empty($editing_items)) {
             return false;
         }
@@ -363,159 +362,199 @@ class ItemsController extends AppController
         $this->send_message_to_chatwork($message);
     }
 
-    public function retrieve_github_push()
+    /**
+     * GitHub WEBHOOKでのリクエストは基本的にここで受け取る
+     */
+    public function accept_github_webhook()
     {
         $this->autoRender = false;
 
-        $payload = json_decode($this->request->data['payload'], true);
-        $key = $this->request->query['key'];
+        if (! isset($this->request->data['payload'])) {
+            $this->log('failed to accept github webhook payload');
+            return false;
+        }
 
-        $GITHUB_WEBHOOK_KEY = Configure::read('github_webhook_key');
-        if ($this->request->is('post') && $key == $GITHUB_WEBHOOK_KEY) {
+        if ($key = $this->request->query['key'] == Configure::read('github_webhook_key')) {
+            $payload = json_decode($this->request->data['payload'], true);
             if ($this->request->header('X-GitHub-Event') == 'pull_request'){
-                $this->log('######## pull_request ########');
-                $this->log($payload['action']);
-                $this->log($payload['pull_request']['title']);
-                $pullrequest_id = $payload['pull_request']['id'];
-
-                if ($payload['action'] == 'opened' ||
-                    $payload['action'] == 'synchronize'){
-
-                    $message = '[info][title]'.  $payload['number'] . ' ' . $payload['pull_request']['title']. "[/title]";
-                    $message .=  $payload['pull_request']['html_url'];
-
-                    $author_github_name = $payload['pull_request']['user']['login'];
-
-                    $author_names_and_ids = Hash::combine($this->Author->find('all'), '{n}.Author.github_account_name', '{n}.Author.id');
-                    if (in_array($author_github_name, array_keys($author_names_and_ids))) {
-                        $author_id = $author_names_and_ids[$author_github_name];
-                    } else {
-                        $author_id = null;
-                    }
-
-                    if ($payload['action'] == 'opened') {
-                        $confirm_room_id = Configure::read('chatwork_confirm_room_id');
-
-                        $this->Item->create();
-                        $new_item = array(
-                            'Item' => array(
-                                'content' => $payload['number'] . $payload['pull_request']['title'],
-                                'github_url' => $payload['pull_request']['html_url'],
-                                'status' => 'コードレビュー中',
-                                'category' => '未設定',
-                                'division' => '改善',
-                                'verification_enviroment_url' => '',
-                                'pullrequest_number' => $payload['number'],
-                                'pullrequest_id' => $pullrequest_id,
-                                'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
-                                'author_id' => $author_id,
-                                'pivotal_point' => 0,
-                            )
-                        );
-                        // pivotalのポイントを取得
-                        preg_match('/\[#[0-9]+\]/', $payload['pull_request']['title'], $title_head);
-                        preg_match('/[0-9]+/', $title_head[0], $pivotal_id);
-                        $pivotal_tracker_token = Configure::read('pivotal_tracker_token');
-                        $story = shell_exec("curl -X GET -H 'X-TrackerToken: {$pivotal_tracker_token}' 'https://www.pivotaltracker.com/services/v5/stories/{$pivotal_id[0]}'");
-
-                        $story = json_decode($story, true);
-                        if ($story['kind'] == 'error') {
-                            $this->log('failed to fetch pivotal story');
-                            $this->log($story['error']);
-                        } else {
-                            if (isset($story['estimate'])) {
-                                $new_item['Item']['pivotal_point'] = $story['estimate'];
-                            }
-                        }
-                    } else {
-
-                        $items = $this->Item->find('all');
-                        $update_item_id = null;
-                        foreach ($items as $item_info) {
-                            if ($item_info['Item']['pullrequest_id'] == $pullrequest_id){
-                                $update_item_id = $item_info['Item']['id'];
-                                break;
-                            }
-                        }
-                        $this->Item->id = $update_item_id;
-                        $new_item = $this->Item->read();
-                        $new_item['Item']['pullrequest_update'] = explode('T', $payload['pull_request']['updated_at'])[0];
-
-                        $message .= "\nプルリクが更新されました\n";
-                    }
-
-                    $message .= "\nby " . $payload['pull_request']['user']['login'];
-                    $message .= '[/info]';
-
-                    $message_id = $this->send_message_to_chatwork($message);
-                    $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid" . $confirm_room_id . "-{$message_id}";
-                    $result = $this->Item->save($new_item);
-                    if ($result) {
-                        // 新規作成時はレビュワーをアサインする
-                        if ($payload['action'] == 'opened') {
-                            $ReviewerAssigningsController = new ReviewerAssigningsController;
-                            $ReviewerAssigningsController->assign_reviewer(Hash::get($result, 'Item.id'));
-                        }
-                        $this->log('save from github: succeeded');
-                    } else {
-                        $this->log('save from github: failed');
-                    }
-
+                if ($payload['action'] == 'opened') {
+                    return $this->createItemFromGitHubRequest($payload);
+                } else if ($payload['action'] == 'synchronize') {
+                    return $this->updateItemFromGitHubRequest($payload);
+                } else if ($payload['action'] == 'closed') {
+                    return $this->completeItemFromGitHubRequest($payload);
                 }
-                if ($payload['action'] == 'closed'){
-                    $this->log('pull request closed [number: ' . $payload['pull_request']['number'] . ']');
-                    $result = $this->Item->find('first', array(
-                            'conditions' => array(
-                                'pullrequest_number' => $payload['pull_request']['number'],
-                                'is_completed' => 0,
-                            )
-                        )
-                    );
-                    if (!empty($result)) {
-                        $this->toggle_complete_state(Hash::get($result, 'Item.id'), 1);
-                    } else {
-                        $this->log('Failed to fetch closed pull request data');
-                    }
-                    $this->check_all_open_pullrequests_mergeability();
-
-                    // レビューのアサイン解除
+            } else if ($this->request->header('X-GitHub-Event') == 'issue_comment'
+                    || $this->request->header('X-GitHub-Event') == 'pull_request_review_comment') {
+                if ($payload['action'] == 'created') {
+                    $this->NoticeCodeReviewComment($payload);
                     $ReviewerAssigning = ClassRegistry::init('ReviewerAssigning');
-                    $ReviewerAssigning->updateAll(
-                        array('ReviewerAssigning.item_closed' => 1),
-                        array('ReviewerAssigning.item_id' => Hash::get($result, 'Item.id'))
-                    );
+                    return $ReviewerAssigning->turnReviewedFromGitHubRequest($payload);
                 }
-            }
-            if (array_key_exists('issue', $payload) || array_key_exists('comment', $payload)) {
-                // is_reviewedの更新
-                // $item_idの取得
-                if (array_key_exists('issue', $payload)) {
-                    $pull_request_number = Hash::get($payload, 'issue.number');
-                };
-                if (array_key_exists('comment', $payload)) {
-                    $pull_request_number = Hash::get($payload, 'pull_request.number');
-                };
-                $target_item = $this->Item->find('first', array(
-                    'conditions' => array(
-                        'pullrequest_number' => $pull_request_number,
-                    ),
-                ));
-                $target_item_id = Hash::get($target_item, 'Item.id');
-                // このアイテムidに該当するreviewer_assiningsのis_reviewedを１にする
-                if ($target_item_id) {
-                    $ReviewerAssigning = ClassRegistry::init('ReviewerAssigning');
-                    $ReviewerAssigning->updateAll(
-                        array('is_reviewed' => 1),
-                        array('item_id =' => $target_item_id)
-                    );
-                }
-                $this->tell_code_review_comment($payload);
             }
         } else {
             $this->log('invalid webhook key');
+            return false;
         }
     }
 
+    /**
+     * @param array $payload github webhookで送られてきたリクエスト内容
+     */
+    private function createItemFromGitHubRequest($payload)
+    {
+        $this->log('##### create #####');
+
+        // 保存するデータを生成
+        $new_item = array(
+            'content' => $payload['number'] . $payload['pull_request']['title'],
+            'github_url' => $payload['pull_request']['html_url'],
+            'status' => 'コードレビュー中',
+            'category' => '未設定',
+            'division' => '改善',
+            'verification_enviroment_url' => '',
+            'pullrequest_number' => $payload['number'],
+            'pullrequest_id' => $payload['pull_request']['id'],
+            'pullrequest' => explode('T', $payload['pull_request']['created_at'])[0], // payloadの中身をformatする
+        );
+
+        // author_idの取得
+        $Author = ClassRegistry::init('Author');
+        $new_item['author_id'] = $Author->getIdByGitHubAccountName($payload['pull_request']['user']['login']);
+
+        // pivotalのポイントを取得
+        preg_match('/\[#[0-9]+\]/', $payload['pull_request']['title'], $title_head);
+        preg_match('/[0-9]+/', $title_head[0], $pivotal_id);
+        $pivotal_tracker_token = Configure::read('pivotal_tracker_token');
+        $story = shell_exec("curl -X GET -H 'X-TrackerToken: {$pivotal_tracker_token}' 'https://www.pivotaltracker.com/services/v5/stories/{$pivotal_id[0]}'");
+        $story = json_decode($story, true);
+        if (isset($story['estimate'])) {
+            $new_item['pivotal_point'] = $story['estimate'];
+        } else {
+            if ($story['kind'] == 'error') {
+                $this->log('failed to fetch pivotal story');
+                $this->log($story['error']);
+            }
+            $new_item['pivotal_point'] = 0;
+        }
+
+        // 保存
+        $this->Item->create();
+        $new_item = array('Item' => $new_item);
+        $saved_item = $this->Item->save($new_item);
+        if (! $saved_item){
+            $this->log('save from github: failed');
+            return false;
+        }
+        $this->log('save from github: succeeded');
+
+        // 通知メッセージの生成
+        $title = $payload['number'] . ' ' . $payload['pull_request']['title'];
+        $body = $payload['pull_request']['html_url'] . "\nby " . $payload['pull_request']['user']['login'];
+        $message = $this->Item->generate_chatwork_message($title, $body);
+
+        // 通知
+        $message_id = $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_confirm_room_id'));
+
+        // 後処理
+        // チャットワークのメッセージURLを保存
+        $saved_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid" . Configure::read('chatwork_confirm_room_id') . "-{$message_id}";
+        if (! $this->Item->save($saved_item)){
+            $this->log('failed to save chatwork_url');
+        }
+        $this->log($saved_item);
+
+        // 後処理２
+        // レビュワーのアサイン
+        $ReviewerAssigningsController = new ReviewerAssigningsController;
+        $ReviewerAssigningsController->assign_reviewer(Hash::get($saved_item, 'Item.id'));
+
+        return true;
+    }
+
+    /**
+     * @param array $payload github webhookで送られてきたリクエスト内容
+     */
+    private function updateItemFromGitHubRequest($payload)
+    {
+        $this->log('##### update #####');
+        // 保存するデータを用意
+        $update_item = $this->Item->find('first', array(
+                'conditions' => array(
+                    'pullrequest_id' => $payload['pull_request']['id'],
+                ),
+            )
+        );
+        if (empty($update_item)) {
+            $this->log('Item not found');
+            return false;
+        }
+        $update_item['Item']['pullrequest_update'] = explode('T', $payload['pull_request']['updated_at'])[0];
+
+        // 保存
+        if (! $this->Item->save($update_item)) {
+            $this->log('update from github: failed');
+            return false;
+        }
+
+        // 通知メッセージの生成
+        $title = $payload['number'] . ' ' . $payload['pull_request']['title'];
+        $body = "{$payload['pull_request']['html_url']}\nプルリクが更新されました by {$payload['pull_request']['user']['login']}";
+        $message = $this->Item->generate_chatwork_message($title, $body);
+
+        // 通知
+        $message_id = $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_confirm_room_id'));
+
+        return true;
+    }
+
+    /**
+     * @param array $payload github webhookで送られてきたリクエスト内容
+     */
+    private function completeItemFromGitHubRequest($payload)
+    {
+        $this->log('##### closed #####');
+
+        // クローズするデータの取得
+        $close_item = $this->Item->find('first', array(
+                'conditions' => array(
+                    'pullrequest_number' => $payload['pull_request']['number'],
+                    'is_completed' => 0,
+                )
+            )
+        );
+        if (empty($close_item)) {
+            $this->log('Item not found');
+        }
+        $close_item['Item']['merge_finish_date_to_master'] = explode('T', $payload['pull_request']['merged_at'])[0];
+        $close_item['Item']['is_completed'] = 1;
+
+        // 保存
+        if (! $this->Item->save($close_item)) {
+            $this->log('close from github: failed');
+            return false;
+        }
+
+        // 後処理
+        // マージ可能かどうかを通知
+        $this->check_all_open_pullrequests_mergeability();
+
+        // レビューのアサイン解除
+        $ReviewerAssigning = ClassRegistry::init('ReviewerAssigning');
+        $withdraw_suceed = $ReviewerAssigning->updateAll(
+            array('ReviewerAssigning.item_closed' => 1),
+            array('ReviewerAssigning.item_id' => $close_item['Item']['id'])
+        );
+        if (! $withdraw_suceed) {
+            $this->log('failed to withdraw review asignings');
+        }
+
+        return true;
+    }
+
+    /**
+     *
+    */
     public function check_all_open_pullrequests_mergeability()
     {
         $this->autoRender = false;
@@ -541,19 +580,19 @@ class ItemsController extends AppController
 
         $null_pr_numbers = array();
         foreach ($prs as $pr) {
-            if(!$this->alert_mergeable($pr->number)){
+            if(!$this->AlertMergeable($pr->number)){
                 $null_pr_numbers[] = $pr->number;
             }
         }
         // 一度APIを叩いた時点では$mergeableがnullの場合があるので、一度だけリトライする
         if (!empty($null_pr_numbers)) {
             foreach ($null_pr_numbers as $pr_number) {
-                $this->alert_mergeable($pr_number);
+                $this->AlertMergeable($pr_number);
             }
         }
     }
 
-    public function alert_mergeable($pullrequest_number)
+    private function AlertMergeable($pullrequest_number)
     {
         $this->autoRender = false;
         include(CONFIG. 'github_api_token.php');
@@ -570,24 +609,24 @@ class ItemsController extends AppController
         $author_cw_ids = Hash::combine($this->Author->find('all'), '{n}.Author.github_account_name', '{n}.Author.chatwork_id');
         $author_chatwork_id = $author_cw_ids[$result->user->login];
 
-        echo $title. "<br>";
-        echo $mergeable. "<br>";
-        echo $url. "<br>";
-        echo $author_chatwork_id. "<br>";
+        // echo $title. "<br>";
+        // echo $mergeable. "<br>";
+        // echo $url. "<br>";
+        // echo $author_chatwork_id. "<br>";
 
         $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]{$url}\n";
         if ($mergeable) {
             return true;
         } else if ($mergeable === false) {
             $message .= ':(コンフリクトしています'. '[/info]';
-            $this->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
+            $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
             return true;
         } else {
             return false;
         }
     }
 
-    public function tell_code_review_comment($payload)
+    public function NoticeCodeReviewComment($payload)
     {
         $this->autoRender = false;
         $this->log('######## issue_comment ########');
@@ -688,10 +727,10 @@ class ItemsController extends AppController
             $target_chatwork_ids = Hash::extract($target_chatwork_ids, '{n}.Author.chatwork_id');
 
             // メッセージを作成
-            $message = '';
+            $body = '';
             // 宛先追加
             foreach ($target_chatwork_ids as $target_chatwork_id) {
-                $message .= "[To:{$target_chatwork_id}]";
+                $body .= "[To:{$target_chatwork_id}]";
             }
             // その他を追加
             if (isset($payload['issue'])) {
@@ -701,11 +740,9 @@ class ItemsController extends AppController
                 $url = $payload['pull_request']['html_url'];
                 $title = $payload['pull_request']['title'];
             }
-            $message .= "\nレビューコメントが投稿されました\n\n"
-                        . "{$title}\n"
-                        . "{$url}\n";
-            $this->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
-
+            $body .= "\nレビューコメントが投稿されました\n\n{$title}\n{$url}\n";
+            $message = $this->Item->generate_chatwork_message(null, $body);
+            $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
         }
     }
 
