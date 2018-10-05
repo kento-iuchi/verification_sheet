@@ -42,4 +42,40 @@ class ReviewerAssigning extends AppModel
             }
         }
     }
+
+    /**
+     * @param $payload github webhookでレビューコメントをトリガーにして送られるリクエスト
+     */
+    public function turnReviewedFromGitHubRequest($payload)
+    {
+        if (array_key_exists('issue', $payload) || array_key_exists('comment', $payload)) {
+            //
+            if (array_key_exists('issue', $payload)) {
+                $pull_request_number = Hash::get($payload, 'issue.number');
+            };
+            if (array_key_exists('comment', $payload)) {
+                $pull_request_number = Hash::get($payload, 'pull_request.number');
+            };
+            $Item = ClassRegistry::init('Item');
+            $target_item = $Item->find('first', array(
+                'conditions' => array(
+                    'pullrequest_number' => $pull_request_number,
+                ),
+            ));
+            if (empty($target_item)) {
+                $this->log("item not found [pullrequest_number:{$pull_request_number}]");
+            }
+            $target_item_id = Hash::get($target_item, 'Item.id');
+            if ($target_item_id) {
+                $result = $this->updateAll(
+                    array('is_reviewed' => 1),
+                    array('item_id =' => $target_item_id)
+                );
+                return $result ? true : false;
+            }
+        } else {
+            $this->log('"issue" or "comment" was not found in payload');
+            return false;
+        }
+    }
 }

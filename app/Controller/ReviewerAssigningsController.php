@@ -74,7 +74,7 @@ class ReviewerAssigningsController extends AppController
         $first_reviewer_name = Hash::get($Authors->read('github_account_name', $first_reviewer_id), 'Authors.github_account_name');
         $second_reviewer_name = Hash::get($Authors->read('github_account_name', $second_reviewer_id), 'Authors.github_account_name');
 
-        $url = Configure::read('pr_list_url'). '/' . $pull_request_number .'/requested_reviewers?access_token='. Configure::read('github_api_token');
+        $url = Configure::read('pr_list_url_for_assign'). '/' . $pull_request_number .'/requested_reviewers?access_token='. Configure::read('github_api_token');
         $params = array(
             'reviewers' => array($first_reviewer_name, $second_reviewer_name),
         );
