@@ -61,6 +61,10 @@ class ItemsController extends AppController
         return $this->redirect(array('action' => 'index'));
     }
 
+
+    /**
+     *
+     */
     public function edit()
     {
         $this->autoRender = false;
@@ -137,7 +141,7 @@ class ItemsController extends AppController
             }
         }
 
-        $this->request->data = $this->Item->read();
+        $edit_item = $this->Item->read();
         if ($column_name == 'merge_finish_date_to_master') {
             // 日付が正しいフォーマット化確認
             if ($this->Item->isValidDateFormat($content)) {
@@ -146,20 +150,18 @@ class ItemsController extends AppController
                 $next_release_date = Hash::get($next_release_date, 'SystemVariable.next_release_date');
                 $this->log($next_release_date);
                 // リリース予定日を記録
-                $this->request->data['Item']['scheduled_release_date'] = $next_release_date;
+                $edit_item['Item']['scheduled_release_date'] = $next_release_date;
             }
         }
-        // if ($column_name == 'tech_release_judgement'){
-        //     $this->request->data['Item']['status'] = 'サポート・営業確認中';
-        // }
-        $this->request->data['Item'][$column_name] = $content;
-        if ($this->request->is(['ajax'])) {
-            if ($this->Item->save()) {
+        $edit_item['Item'][$column_name] = $content;
+        $result = $this->Item->save($edit_item);
+        if ($this->request->is(['ajax']) || $this->request->is(['post'])) {
+            if ($result) {
                 $this->log("Edit suceed [id:{$this->Item->id} field:{$column_name}]");
-                echo true;
+                return $result;
             } else {
                 $this->log("Edit failed [id:{$this->Item->id} field:{$column_name}]");
-                echo false;
+                return false;
             }
         }
     }
