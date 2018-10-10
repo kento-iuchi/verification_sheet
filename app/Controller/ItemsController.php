@@ -461,7 +461,7 @@ class ItemsController extends AppController
         $message = $this->Item->generate_chatwork_message($title, $body);
 
         // 通知
-        $message_id = $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_confirm_room_id'));
+        $message_id = $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_confirm_room_id'))['message_id'];
 
         // 後処理
         // チャットワークのメッセージURLを保存

@@ -78,6 +78,14 @@ class AppModel extends Model {
         curl_setopt_array($ch, $options);
         $response = curl_exec($ch);
         curl_close($ch);
-        return json_decode($response)->message_id;
+        $response = json_decode($response, true);
+        if (isset($response['message_id'])) {
+            return array(
+                'message_id' => $response['message_id'],
+                'body' => $message
+            );
+        } else {
+            return false;
+        }
     }
 }
