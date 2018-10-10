@@ -44,6 +44,14 @@ class AppModel extends Model {
         }
     }
 
+    /**
+     * チャットワークにメッセージを送信する
+     * デフォルトでは確認ルームに送信する
+     *
+     * @param string $message
+     * @param int $room_id
+     * @return mixed array | boolean
+     */
     public function send_message_to_chatwork($message, $room_id = null)
     {
         if (!$room_id) {
@@ -68,6 +76,15 @@ class AppModel extends Model {
         curl_setopt_array($ch, $options);
         $response = curl_exec($ch);
         curl_close($ch);
-        return json_decode($response)->message_id;
+        $result = json_decode($response, true);
+        $this->log($result);
+        if (isset($result['message_id'])) {
+            return array(
+                'message_id' => $result['message_id'],
+                'body' => $message,
+            );
+        } else {
+            return false;
+        }
     }
 }

@@ -280,33 +280,33 @@ class ItemsController extends AppController
         }
     }
 
-    public function send_message_to_chatwork($message, $room_id = null)
-    {
-        if (!$room_id) {
-            $room_id = Configure::read('chatwork_confirm_room_id');
-        }
-        $this->log($room_id);
-
-        $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API UR
-        $params = array(
-            'body' => $message // メッセージ内容
-        );
-
-        $options = array(
-            CURLOPT_URL => $url, // URL
-            CURLOPT_HTTPHEADER => array('X-ChatWorkToken: '. Configure::read('chatwork_api_token')), // APIキー
-            CURLOPT_RETURNTRANSFER => true, // 文字列で返却
-            CURLOPT_SSL_VERIFYPEER => false, // 証明書の検証をしない
-            CURLOPT_POST => true, // POST設定
-            CURLOPT_POSTFIELDS => http_build_query($params, '', '&'), // POST内容
-        );
-
-        $ch = curl_init();
-        curl_setopt_array($ch, $options);
-        $response = curl_exec($ch);
-        curl_close($ch);
-        return json_decode($response)->message_id;
-    }
+    // public function send_message_to_chatwork($message, $room_id = null)
+    // {
+    //     if (!$room_id) {
+    //         $room_id = Configure::read('chatwork_confirm_room_id');
+    //     }
+    //     $this->log($room_id);
+    //
+    //     $url = "https://api.chatwork.com/v2/rooms/{$room_id}/messages"; // API UR
+    //     $params = array(
+    //         'body' => $message // メッセージ内容
+    //     );
+    //
+    //     $options = array(
+    //         CURLOPT_URL => $url, // URL
+    //         CURLOPT_HTTPHEADER => array('X-ChatWorkToken: '. Configure::read('chatwork_api_token')), // APIキー
+    //         CURLOPT_RETURNTRANSFER => true, // 文字列で返却
+    //         CURLOPT_SSL_VERIFYPEER => false, // 証明書の検証をしない
+    //         CURLOPT_POST => true, // POST設定
+    //         CURLOPT_POSTFIELDS => http_build_query($params, '', '&'), // POST内容
+    //     );
+    //
+    //     $ch = curl_init();
+    //     curl_setopt_array($ch, $options);
+    //     $response = curl_exec($ch);
+    //     curl_close($ch);
+    //     return json_decode($response)->message_id;
+    // }
 
     public function send_grace_days_alert()
     {
@@ -447,7 +447,7 @@ class ItemsController extends AppController
                     $message .= "\nby " . $payload['pull_request']['user']['login'];
                     $message .= '[/info]';
 
-                    $message_id = $this->send_message_to_chatwork($message);
+                    $message_id = $this->send_message_to_chatwork($message)['message_id'];
                     $new_item['Item']['chatwork_url'] = "https://www.chatwork.com/#!rid" . $confirm_room_id . "-{$message_id}";
                     $result = $this->Item->save($new_item);
                     if ($result) {
