@@ -36,6 +36,10 @@ class ReviewerAssigningsController extends AppController
         ";
         $result = $this->ReviewerAssigning->query($sql);
         $first_reviewer_id = Hash::get($result, '0.reviewer_tasks.reviewer_id');
+        if (! isset($first_reviewer_id)) {
+            $this->log('failed to select first reviewer');
+            return false;
+        }
         // 二次レビュワー決定
         $second_reviewer_ids = Configure::read('stage_2_reviewr_ids');
         $second_reviewer_ids = implode(',', $second_reviewer_ids);
@@ -54,6 +58,10 @@ class ReviewerAssigningsController extends AppController
         ";
         $result = $this->ReviewerAssigning->query($sql);
         $second_reviewer_id = Hash::get($result, '0.reviewer_tasks.reviewer_id');
+        if (! isset($second_reviewer_id)) {
+            $this->log('failed to select second reviewer');
+            return false;
+        }
         // レビュワーのアサイン
         // APIを叩く
         if (! empty($this->request->data['payload'])) {

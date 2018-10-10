@@ -397,6 +397,7 @@ class ItemsController extends AppController
             $this->log('invalid webhook key');
             return false;
         }
+        return false;
     }
 
     /**
@@ -425,18 +426,23 @@ class ItemsController extends AppController
 
         // pivotalのポイントを取得
         preg_match('/\[#[0-9]+\]/', $payload['pull_request']['title'], $title_head);
-        preg_match('/[0-9]+/', $title_head[0], $pivotal_id);
-        $pivotal_tracker_token = Configure::read('pivotal_tracker_token');
-        $story = shell_exec("curl -X GET -H 'X-TrackerToken: {$pivotal_tracker_token}' 'https://www.pivotaltracker.com/services/v5/stories/{$pivotal_id[0]}'");
-        $story = json_decode($story, true);
-        if (isset($story['estimate'])) {
-            $new_item['pivotal_point'] = $story['estimate'];
-        } else {
-            if ($story['kind'] == 'error') {
-                $this->log('failed to fetch pivotal story');
-                $this->log($story['error']);
-            }
+        if (empty($title_head)) {
+            $this->log('failed to extract story id');
             $new_item['pivotal_point'] = 0;
+        } else {
+            preg_match('/[0-9]+/', $title_head[0], $pivotal_id);
+            $pivotal_tracker_token = Configure::read('pivotal_tracker_token');
+            $story = shell_exec("curl -X GET -H 'X-TrackerToken: {$pivotal_tracker_token}' 'https://www.pivotaltracker.com/services/v5/stories/{$pivotal_id[0]}'");
+            $story = json_decode($story, true);
+            if (isset($story['estimate'])) {
+                $new_item['pivotal_point'] = $story['estimate'];
+            } else {
+                if ($story['kind'] == 'error') {
+                    $this->log('failed to fetch pivotal story');
+                    $this->log($story['error']);
+                }
+                $new_item['pivotal_point'] = 0;
+            }
         }
 
         // 保存
@@ -525,6 +531,7 @@ class ItemsController extends AppController
         );
         if (empty($close_item)) {
             $this->log('Item not found');
+            return false;
         }
         $close_item['Item']['merge_finish_date_to_master'] = explode('T', $payload['pull_request']['merged_at'])[0];
         $close_item['Item']['is_completed'] = 1;
@@ -535,8 +542,7 @@ class ItemsController extends AppController
             return false;
         }
 
-        // 後処理
-        // マージ可能かどうかを通知
+        ob_clean();
         $this->check_all_open_pullrequests_mergeability();
 
         // レビューのアサイン解除
@@ -559,36 +565,41 @@ class ItemsController extends AppController
     {
         $this->autoRender = false;
         $url = Configure::read('pr_list_url'). '?access_token='. Configure::read('github_api_token'). '&state=open';
-        echo $url;
-        $prs = shell_exec("curl {$url}");
-        if (!empty($prs)){
-            ignore_user_abort(true);       // ブラウザから切断されても処理を中断しないようにする
-            set_time_limit(0);             // 処理時間を無制限にする
-            $response = 'OK';              // レスポンスに含める文字列
-            $length = strlen($response );
+        // echo $url;
+        try {
+            $prs = shell_exec("curl {$url}");
+            if (!empty($prs)){
+                ignore_user_abort(true);       // ブラウザから切断されても処理を中断しないようにする
+                set_time_limit(0);             // 処理時間を無制限にする
+                $response = 'OK';              // レスポンスに含める文字列
+                $length = strlen($response );
 
-            ob_start();                    // 出力をバッファにためる
-            echo $response ;
+                ob_start();                    // 出力をバッファにためる
+                echo $response ;
 
-            header("Content-Length: $length");
-            header("Connection: close");   // HTTP接続を切る
-            ob_end_flush();
-            ob_flush();
-            flush();                       // 溜めてあった出力を解放しフラッシュする
-        }
-        $prs = json_decode($prs);
-
-        $null_pr_numbers = array();
-        foreach ($prs as $pr) {
-            if(!$this->AlertMergeable($pr->number)){
-                $null_pr_numbers[] = $pr->number;
+                header("Content-Length: $length");
+                header("Connection: close");   // HTTP接続を切る
+                ob_end_flush();
+                ob_flush();
+                flush();                       // 溜めてあった出力を解放しフラッシュする
             }
-        }
-        // 一度APIを叩いた時点では$mergeableがnullの場合があるので、一度だけリトライする
-        if (!empty($null_pr_numbers)) {
-            foreach ($null_pr_numbers as $pr_number) {
-                $this->AlertMergeable($pr_number);
+            $prs = json_decode($prs);
+
+            $null_pr_numbers = array();
+            foreach ($prs as $pr) {
+                if(!$this->AlertMergeable($pr->number)){
+                    $null_pr_numbers[] = $pr->number;
+                }
             }
+            // 一度APIを叩いた時点では$mergeableがnullの場合があるので、一度だけリトライする
+            if (!empty($null_pr_numbers)) {
+                foreach ($null_pr_numbers as $pr_number) {
+                    $this->AlertMergeable($pr_number);
+                }
+            }
+        } catch (Exception $e) {
+            $this->log('failed to check margeability');
+            $this->log($e->getMessage());
         }
     }
 
@@ -741,7 +752,7 @@ class ItemsController extends AppController
             }
             $body .= "\nレビューコメントが投稿されました\n\n{$title}\n{$url}\n";
             $message = $this->Item->generate_chatwork_message(null, $body);
-            $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
+            return $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
         }
     }
 
