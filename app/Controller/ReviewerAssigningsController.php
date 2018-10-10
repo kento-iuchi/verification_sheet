@@ -74,7 +74,7 @@ class ReviewerAssigningsController extends AppController
         $first_reviewer_name = Hash::get($Authors->read('github_account_name', $first_reviewer_id), 'Authors.github_account_name');
         $second_reviewer_name = Hash::get($Authors->read('github_account_name', $second_reviewer_id), 'Authors.github_account_name');
 
-        $url = Configure::read('pr_list_url'). '/' . $pull_request_number .'/requested_reviewers?access_token='. Configure::read('github_api_token');
+        $url = Configure::read('pr_list_url_for_assign'). '/' . $pull_request_number .'/requested_reviewers?access_token='. Configure::read('github_api_token');
         $params = array(
             'reviewers' => array($first_reviewer_name, $second_reviewer_name),
         );
@@ -88,12 +88,13 @@ class ReviewerAssigningsController extends AppController
         );
         $ch = curl_init();
         curl_setopt_array($ch, $options);
-        $response = curl_exec($ch);
+        $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
-        $response = json_decode($response, true);
         if (isset($response['message'])) {
             $this->log('Reviewer assignings: failed to assigning review');
             return false;
+        } else {
+            $this->log('Reviewer assignings: assigning review succeed');
         }
 
         // アサイン情報をDBに保存
