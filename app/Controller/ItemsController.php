@@ -148,7 +148,6 @@ class ItemsController extends AppController
                 // 次回リリース予定日をDBから取得
                 $next_release_date = $this->SystemVariable->find('first', array('fields' => 'SystemVariable.next_release_date'));
                 $next_release_date = Hash::get($next_release_date, 'SystemVariable.next_release_date');
-                $this->log($next_release_date);
                 // リリース予定日を記録
                 $edit_item['Item']['scheduled_release_date'] = $next_release_date;
             }
@@ -464,7 +463,6 @@ class ItemsController extends AppController
         if (! $this->Item->save($saved_item)){
             $this->log('failed to save chatwork_url');
         }
-        $this->log($saved_item);
 
         // 後処理２
         // レビュワーのアサイン
@@ -718,7 +716,6 @@ class ItemsController extends AppController
             }
             // 重複している宛先を削除
             $target_github_names = array_unique($target_github_names);
-            $this->log($target_github_names);
             // 宛先のチャットワークid取得
             $target_chatwork_ids = $this->Author->find('all', array(
                     'conditions' => array(
