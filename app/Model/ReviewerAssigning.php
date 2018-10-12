@@ -12,8 +12,10 @@ class ReviewerAssigning extends AppModel
         $not_reviewd_assignings = $this->find('all', array(
             'fields' => array(
                 'ReviewerAssigning.created',
+                'Author.chatwork_name',
                 'Author.chatwork_id',
                 'Item.content',
+                'Item.github_url',
             ),
             'joins' => array(
                 array(
@@ -49,8 +51,9 @@ class ReviewerAssigning extends AppModel
             }
             if ($business_days_count > 5) {
                 // メッセージ送信
-                $message = "[to:{$not_reviewd_assigning['Author']['chatwork_id']}]\n";
+                $message = "[to:{$not_reviewd_assigning['Author']['chatwork_id']}]{$not_reviewd_assigning['Author']['chatwork_name']}さん\n";
                 $message .= "[{$not_reviewd_assigning['Item']['content']}]\n";
+                $message .= "[{$not_reviewd_assigning['Item']['github_url']}]\n";
                 $message .="レビュワーにアサインされてから {$business_days_count} 日経過しています";
                 $result = $this->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
                 if (! $result) {

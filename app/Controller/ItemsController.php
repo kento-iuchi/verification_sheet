@@ -80,8 +80,8 @@ class ItemsController extends AppController
         // 「～～リリースOK判断日」が新たに入力されたときの処理
         if ($column_name == 'status') {
             if ($content == 'サポート・営業確認中'){
-                $target_chatwork_id = $this->Verifier->find('first', array(
-                    'fields' => array('Verifier.chatwork_id', 'Item.id'),
+                $target_chatwork_info = $this->Verifier->find('first', array(
+                    'fields' => array('Verifier.name', 'Verifier.chatwork_id', 'Item.id'),
                     'joins' => array(array(
                         'type' => 'LEFT',
                         'table' => 'items',
@@ -90,22 +90,24 @@ class ItemsController extends AppController
                     )),
                     'conditions' => array('Item.id' => $this->request->data['id']),
                 ));
-                $target_chatwork_id = Hash::get($target_chatwork_id, 'Verifier.chatwork_id');
+                $target_chatwork_id = Hash::get($target_chatwork_info, 'Verifier.chatwork_id');
+                $target_chatwork_name = Hash::get($target_chatwork_info, 'Verifier.name');
                 if (!$target_chatwork_id) {
                     $verification_assigner_id = Configure::read('SystemSettings.verificationAssignerId');
-                    $verification_assigner_chatwork_id = $this->Verifier->find('first', array(
+                    $verification_assigner_chatwork_info = $this->Verifier->find('first', array(
                         'conditions' => array(
                             'id' => $verification_assigner_id,
                         ),
-                        'fields' => array('chatwork_id'),
+                        'fields' => array('name', 'chatwork_id'),
                     ));
-                    $verification_assigner_chatwork_id = Hash::get($verification_assigner_chatwork_id, 'Verifier.chatwork_id');
+                    $verification_assigner_chatwork_id = Hash::get($verification_assigner_chatwork_info, 'Verifier.chatwork_id');
                     $target_chatwork_id = $verification_assigner_chatwork_id;
+                    $target_chatwork_name = Hash::get($verification_assigner_chatwork_info, 'Verifier.name');
                 }
             }
             if ($content == '差し戻し'){
-                $target_chatwork_id = $this->Author->find('first', array(
-                    'fields' => array('Author.chatwork_id', 'Item.id'),
+                $target_chatwork_info = $this->Author->find('first', array(
+                    'fields' => array('Author.chatwork_name', 'Author.chatwork_id', 'Item.id'),
                     'joins' => array(array(
                         'type' => 'LEFT',
                         'table' => 'items',
@@ -114,11 +116,15 @@ class ItemsController extends AppController
                     )),
                     'conditions' => array('Item.id' => $this->request->data['id']),
                 ));
-                $target_chatwork_id = Hash::get($target_chatwork_id, 'Author.chatwork_id');
+                $target_chatwork_id = Hash::get($target_chatwork_info, 'Author.chatwork_id');
+                $target_chatwork_name = Hash::get($target_chatwork_info, 'Author.chatwork_name');
             }
             $message = '';
             if ($target_chatwork_id) {
                 $message .= "[to:{$target_chatwork_id}]";
+            }
+            if ($target_chatwork_name) {
+                $message .= "{$target_chatwork_name}さん";
             }
             $message .= "[info][title]No.{$this->request->data['id']} {$title}[/title]";
             $message .= 'ステータスが【' . $content . '】になりました[/info]';
@@ -617,15 +623,12 @@ class ItemsController extends AppController
         $mergeable = $result->mergeable;
         $url = $result->html_url;
 
-        $author_cw_ids = Hash::combine($this->Author->find('all'), '{n}.Author.github_account_name', '{n}.Author.chatwork_id');
-        $author_chatwork_id = $author_cw_ids[$result->user->login];
+        $target_author = $this->Author->find('first', array(
+            'fields' => array('chatwork_name', 'chatwork_id'),
+            'conditions' => array('github_account_name' => $result->user->login),
+        ));
 
-        // echo $title. "<br>";
-        // echo $mergeable. "<br>";
-        // echo $url. "<br>";
-        // echo $author_chatwork_id. "<br>";
-
-        $message = "[To:{$author_chatwork_id}][info][title]{$title}[/title]{$url}\n";
+        $message = "[To:{$target_author['Author']['chatwork_id']}]{$target_author['Author']['chatwork_name']}さん[info][title]{$title}[/title]{$url}\n";
         if ($mergeable) {
             return true;
         } else if ($mergeable === false) {
@@ -652,7 +655,7 @@ class ItemsController extends AppController
             $target_github_names = array();
 
             // @マークで指定されてるgithubアカウント名を追加する
-            preg_match_all('/@[a-zA-Z0-9\-]+/', $payload['comment']['body'], $github_account_names);
+            preg_match_all('/@[a-zA-Z0-9\-_]+/', $payload['comment']['body'], $github_account_names);
             if ($github_account_names) {
                 foreach ($github_account_names[0] as $github_account_name) {
                     $github_account_name = ltrim($github_account_name, '@'); // 先頭の@を削除
@@ -734,13 +737,13 @@ class ItemsController extends AppController
                     ),
                 )
             );
-            $target_chatwork_ids = Hash::extract($target_chatwork_ids, '{n}.Author.chatwork_id');
-
+            $target_chatwork_ids = Hash::combine($target_chatwork_ids, '{n}.Author.chatwork_id', '{n}.Author.chatwork_name');
             // メッセージを作成
             $body = '';
             // 宛先追加
-            foreach ($target_chatwork_ids as $target_chatwork_id) {
-                $body .= "[To:{$target_chatwork_id}]";
+            // echo $target_chatwork_name;
+            foreach ($target_chatwork_ids as $target_chatwork_id => $target_chatwork_name ) {
+                $body .= "[To:{$target_chatwork_id}]{$target_chatwork_name}さん";
             }
             // その他を追加
             if (isset($payload['issue'])) {
