@@ -99,7 +99,7 @@ class ReviewerAssigningsController extends AppController
         $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
         if (isset($response['message'])) {
-            $this->log('Reviewer assignings: failed to assigning review');
+            $this->log('Reviewer assignings: [API Error] failed to assigning review');
             $this->log($ch);
             $this->log($response);
             return false;
@@ -125,6 +125,7 @@ class ReviewerAssigningsController extends AppController
             return true;
         } else {
             $this->log('Reviewer assignings: failed to save reviewer_assigning');
+            $this->log($new_reviewer_assignings);
             return false;
         }
     }
