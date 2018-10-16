@@ -527,23 +527,39 @@ class ItemsController extends AppController
     {
         $this->log('##### closed #####');
 
-        // クローズするデータの取得
-        $close_item = $this->Item->find('first', array(
-                'conditions' => array(
-                    'pullrequest_number' => $payload['pull_request']['number'],
-                    'is_completed' => 0,
-                )
+        // // クローズするデータの取得
+        // $close_item = $this->Item->find('first', array(
+        //         'conditions' => array(
+        //             'pullrequest_number' => $payload['pull_request']['number'],
+        //             'is_completed' => 0,
+        //         )
+        //     )
+        // );
+        // print_r($close_item);
+        // if (empty($close_item)) {
+        //     $this->log('Item not found');
+        //     return false;
+        // }
+        // $close_item['Item']['merge_finish_date_to_master'] = explode('T', $payload['pull_request']['merged_at'])[0];
+        // $close_item['Item']['is_completed'] = 1;
+
+        // // 保存
+        // if (! $this->Item->save($close_item)) {
+        //     $this->log('close from github: failed');
+        //     return false;
+        // }
+        $result = $this->Item->UpdateAll(
+            array(
+                'merge_finish_date_to_master' => explode('T', $payload['pull_request']['merged_at'])[0],
+                'is_completed' => 1,
+            ),
+            array(
+                'pullrequest_number' => $payload['pull_request']['number'],
             )
         );
-        if (empty($close_item)) {
-            $this->log('Item not found');
-            return false;
-        }
-        $close_item['Item']['merge_finish_date_to_master'] = explode('T', $payload['pull_request']['merged_at'])[0];
-        $close_item['Item']['is_completed'] = 1;
-
-        // 保存
-        if (! $this->Item->save($close_item)) {
+        if ($result) {
+            $this->log('close from github: succeed');
+        } else {
             $this->log('close from github: failed');
             return false;
         }
