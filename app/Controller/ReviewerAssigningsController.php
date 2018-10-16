@@ -100,6 +100,8 @@ class ReviewerAssigningsController extends AppController
         curl_close($ch);
         if (isset($response['message'])) {
             $this->log('Reviewer assignings: failed to assigning review');
+            $this->log($ch);
+            $this->log($response);
             return false;
         } else {
             $this->log('Reviewer assignings: assigning review succeed');

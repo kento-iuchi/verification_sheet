@@ -249,22 +249,25 @@ class ItemsController extends AppController
 
     public function toggle_complete_state($id = null, $state = null)
     {
-        $this->log('####### toggle item complete status [id:'. $id . '] #######');
         $this->autoRender = false;
 
         $this->Item->id = $id;
         $update_item = $this->Item->read();
         $this->log($update_item);
-        if (isset($state)){
-            $update_item['Item']['is_completed'] = $state;
-        } else {
-            $update_item['Item']['is_completed'] = $update_item['Item']['is_completed'] == 0 ? 1 : 0;
+        if (! isset($state)) {
+            $state = $update_item['Item']['is_completed'] == 1 ? 0 : 1;
         }
+        $update_item['Item']['is_completed'] = $state;
+        // if (isset($state)){
+        //     $update_item['Item']['is_completed'] = $state;
+        // } else {
+        //     $update_item['Item']['is_completed'] = $update_item['Item']['is_completed'] == 0 ? 1 : 0;
+        // }
         $this->log($update_item);
         if ($this->Item->save($update_item)) {
-            $this->log('Successfully switched complete status');
+            $this->log('Successfully switched complete status [id:'. $id . '] [status:' . $state . ']');
         } else {
-            $this->log('Failed to switch complete status');
+            $this->log('Failed to switch complete status [id:'. $id . '] [status:' . $state . ']');
         }
     }
 
@@ -467,7 +470,8 @@ class ItemsController extends AppController
         $message = $this->Item->generate_chatwork_message($title, $body);
 
         // 通知
-        $message_id = $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_confirm_room_id'))['message_id'];
+        $message_id = $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_confirm_room_id'));
+        $message_id = $message_id['message_id'];
 
         // 後処理
         // チャットワークのメッセージURLを保存
@@ -552,6 +556,7 @@ class ItemsController extends AppController
             array(
                 'merge_finish_date_to_master' => explode('T', $payload['pull_request']['merged_at'])[0],
                 'is_completed' => 1,
+                'modified' => "'" . date('Y-m-d H:i:s') . "'",
             ),
             array(
                 'pullrequest_number' => $payload['pull_request']['number'],
