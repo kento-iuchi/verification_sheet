@@ -52,7 +52,7 @@ class ReviewerAssigningsController extends AppController
                 reviewer_id IN ({$second_reviewer_ids})
             ORDER BY
                 total_pivotal_point ASC,
-                review_count
+                review_count ASC
             LIMIT
                 1
         ";
