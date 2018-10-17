@@ -52,8 +52,8 @@ class ReviewerAssigning extends AppModel
             if ($business_days_count > 5) {
                 // メッセージ送信
                 $message = "[to:{$not_reviewd_assigning['Author']['chatwork_id']}]{$not_reviewd_assigning['Author']['chatwork_name']}さん\n";
-                $message .= "[{$not_reviewd_assigning['Item']['content']}]\n";
-                $message .= "[{$not_reviewd_assigning['Item']['github_url']}]\n";
+                $message .= "{$not_reviewd_assigning['Item']['content']}\n";
+                $message .= "{$not_reviewd_assigning['Item']['github_url']}\n";
                 $message .="レビュワーにアサインされてから {$business_days_count} 日経過しています";
                 $result = $this->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
                 if (! $result) {
@@ -71,15 +71,25 @@ class ReviewerAssigning extends AppModel
      */
     public function turnReviewedFromGitHubRequest($payload)
     {
-        if (array_key_exists('issue', $payload) || array_key_exists('comment', $payload)) {
+        if (array_key_exists('issue', $payload) || array_key_exists('pull_request', $payload)) {
             //
             if (array_key_exists('issue', $payload)) {
-                $pull_request_number = Hash::get($payload, 'issue.number');
-            };
-            if (array_key_exists('comment', $payload)) {
-                $pull_request_number = Hash::get($payload, 'pull_request.number');
+                if (isset($payload['issue']['number'])) {
+                    $pull_request_number = $payload['issue']['number'];
+                } else {
+                    $this->log("issue number not found in payload");
+                    return false;
+                }
+            } else if (array_key_exists('pull_request', $payload)) {
+                if (isset($payload['pull_request']['number'])) {
+                    $pull_request_number = $payload['pull_request']['number'];
+                } else {
+                    $this->log("pull_request_number not found in payload");
+                    return false;
+                }
             };
             $Item = ClassRegistry::init('Item');
+            $Item->recursive = -1;
             $target_item = $Item->find('first', array(
                 'conditions' => array(
                     'pullrequest_number' => $pull_request_number,
