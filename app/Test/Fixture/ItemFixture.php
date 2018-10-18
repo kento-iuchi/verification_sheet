@@ -23,8 +23,10 @@ class ItemFixture extends CakeTestFixture
                 'pullrequest_id' => 1,
                 // 'content' => 'テスト1',
                 // 'error_code' => '550',
+                'confirm_points' => '確認ポイント',
                 'created' => '2012-11-01 00:00:01',
                 'modified' => '2012-11-01 00:00:01',
+                'is_completed' => 0,
             ),
             // array(
             //     'id'         => 2,

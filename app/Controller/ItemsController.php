@@ -63,7 +63,7 @@ class ItemsController extends AppController
 
 
     /**
-     *
+     * @return mixed
      */
     public function edit()
     {
@@ -75,7 +75,12 @@ class ItemsController extends AppController
         $content = $this->request->data['content'];
 
         $target_item = $this->Item->find('first', array('conditions' => array('Item.id' => $this->request->data['id'])));
-        $title = Hash::get($target_item, 'Item.content');
+        // 現在の内容と更新したい内容に差異があるか判定
+        $current_field = ! empty($target_item['Item'][$column_name]) ? $target_item['Item'][$column_name] : '*EMPTY*';
+        if ($current_field == $content) {
+            $this->log("No difference [id:{$this->Item->id} field:{$column_name}]");
+            return false;
+        }
 
         // 「～～リリースOK判断日」が新たに入力されたときの処理
         if ($column_name == 'status') {
@@ -126,6 +131,7 @@ class ItemsController extends AppController
             if ($target_chatwork_name) {
                 $message .= "{$target_chatwork_name}さん";
             }
+            $title = Hash::get($target_item, 'Item.content');
             $message .= "[info][title]No.{$this->request->data['id']} {$title}[/title]";
             $message .= 'ステータスが【' . $content . '】になりました[/info]';
             $this->send_message_to_chatwork($message);
@@ -140,6 +146,7 @@ class ItemsController extends AppController
                     'supp_release_judgement' => 'サポートリリースOK判断日',
                     'sale_release_judgement' => '営業リリースOK判断日',
                 );
+                $title = Hash::get($target_item, 'Item.content');
                 $message = '[info][title]'. $title.'[/title]';
                 $message .= $column_name_text[$column_name]. 'が更新されました[/info]';
 
@@ -163,7 +170,7 @@ class ItemsController extends AppController
         if ($this->request->is(['ajax']) || $this->request->is(['post'])) {
             if ($result) {
                 $this->log("Edit suceed [id:{$this->Item->id} field:{$column_name}]");
-                return $result;
+                return json_encode($result);
             } else {
                 $this->log("Edit failed [id:{$this->Item->id} field:{$column_name}]");
                 return false;
@@ -573,6 +580,17 @@ class ItemsController extends AppController
         $this->check_all_open_pullrequests_mergeability();
 
         // レビューのアサイン解除
+        $close_item = $this->Item->find('first', array(
+                'conditions' => array(
+                    'pullrequest_number' => $payload['pull_request']['number'],
+                    'is_completed' => 1,
+                )
+            )
+        );
+        if (empty($close_item)) {
+            $this->log('Item not found');
+            return false;
+        }
         $ReviewerAssigning = ClassRegistry::init('ReviewerAssigning');
         $withdraw_suceed = $ReviewerAssigning->updateAll(
             array('ReviewerAssigning.item_closed' => 1),
