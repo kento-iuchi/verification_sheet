@@ -30,7 +30,42 @@ class ItemsControllerTest extends ControllerTestCase
             '/items/edit',
             array('data' => $data, 'method' => 'post')
         );
+        $result = json_decode($result, true);
         $this->assertTrue(! empty($result['Item']['scheduled_release_date']));
+    }
+
+    public function test_edit_現在の内容とフォームの入力内容が同じである為、何も更新されないこと(){
+        $data = array(
+            'id' => 1,
+            'content' => '確認ポイント',
+            'column_name' => 'confirm_points',
+        );
+        $result = $this->testAction(
+            '/items/edit',
+            array('data' => $data, 'method' => 'post')
+        );
+        $this->assertFalse($result);
+        $target_item = $this->Item->find('first', array(
+            'conditions' => array('id' => 1 ),
+        ));
+        $this->assertEqual('2012-11-01 00:00:01', $target_item['Item']['modified']);
+    }
+
+    public function test_edit_現在の内容とフォームの入力内容がどちらも空白である為、何も更新されないこと(){
+        $data = array(
+            'id' => 1,
+            'content' => '*EMPTY*',
+            'column_name' => 'tech_release_judgement',
+        );
+        $result = $this->testAction(
+            '/items/edit',
+            array('data' => $data, 'method' => 'post')
+        );
+        $this->assertFalse($result);
+        $target_item = $this->Item->find('first', array(
+            'conditions' => array('id' => 1 ),
+        ));
+        $this->assertEqual('2012-11-01 00:00:01', $target_item['Item']['modified']);
     }
 
     public function test_accept_github_webhook()
@@ -180,6 +215,16 @@ class ItemsControllerTest extends ControllerTestCase
         $this->assertTrue($result);
         $saved_item = $this->Item->find('first', array('order' => array('modified' => 'desc')));
         $this->assertEqual($saved_item['Item']['is_completed'], 1);
+
+        // reviewr_assigningの item_closedを確認
+        $reviwer_assignings = $this->ReviewerAssigning->find('all', array(
+            'conditions' => array(
+                'item_id' => '1',
+            )
+        ));
+        foreach ($reviwer_assignings as $reviwer_assigning){
+            $this->assertEqual($reviwer_assigning['ReviewerAssigning']['item_closed'], 1);
+        }
     }
 
     public function test_accept_github_webhook_コメント通知とレビュワーのアサイン解除が正しく行われること()
