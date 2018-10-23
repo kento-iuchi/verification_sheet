@@ -16,15 +16,15 @@ class ConfirmCommentResponsesController extends AppController
         $last_updated_time = $this->request->data['last_updated_time'];
         $this->request->data = $this->ConfirmCommentResponse->read();
 
-        $this->request->data['ConfirmCommentResponse']['comment'] = str_replace('&&NEWLINE&&', '\n', $content);
+        $this->request->data['ConfirmCommentResponse']['comment'] = str_replace('&&NEWLINE&&', "\n", $content);
         $this->request->data['ConfirmCommentResponse']['last_updated_time'] = $last_updated_time;
 
-        if ($this->request->is(['ajax'])) {
+        if ($this->request->is(['ajax']) || $this->request->is(['post'])) {
             if ($this->ConfirmCommentResponse->save($this->request->data)) {
-                $this->log("Edit verification history suceed [id:{$this->ConfirmCommentResponse->id}");
+                $this->log("Edit response to confirm comment suceed [id:{$this->ConfirmCommentResponse->id}");
                 echo true;
             } else {
-                $this->log("Edit verification history failed [id:{$this->ConfirmCommentResponse->id}");
+                $this->log("Edit response to confirm comment failed [id:{$this->ConfirmCommentResponse->id}");
                 echo false;
             }
         }
@@ -38,6 +38,7 @@ class ConfirmCommentResponsesController extends AppController
         if ($this->ConfirmCommentResponse->save($this->request->data)) {
             $result = $this->Item->find('first', array('conditions' => array('id' => $this->request->data['item_id'])));
             $title = Hash::get($result, 'Item.content');
+            
             $verifier_id = Hash::get($result, 'Item.verifier_id');
             $result = $this->Verifier->read('chatwork_id', $verifier_id);
             $verifier_chatwork_id = Hash::get($result, 'Verifier.chatwork_id');
@@ -48,7 +49,7 @@ class ConfirmCommentResponsesController extends AppController
             $ItemsController->send_message_to_chatwork($message);
             echo $this->ConfirmCommentResponse->id;
         } else {
-            echo 'failed to save verification history';
+            echo 'failed to save response to confirm comment';
         }
     }
 
