@@ -39,3 +39,4 @@ app/View/Items/index_old.ctp
 app/webroot/js/index_old.js
 app/webroot/js/index_common_old.js
 app/webroot/css/index_old.css
+coverage
