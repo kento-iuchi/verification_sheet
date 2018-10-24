@@ -559,9 +559,11 @@ class ItemsController extends AppController
         //     $this->log('close from github: failed');
         //     return false;
         // }
+        $this->log($payload['pull_request']['merged_at']);
+        $this->log(explode('T', $payload['pull_request']['merged_at']));
         $result = $this->Item->UpdateAll(
             array(
-                'merge_finish_date_to_master' => explode('T', $payload['pull_request']['merged_at'])[0],
+                'merge_finish_date_to_master' => "'" . explode('T', $payload['pull_request']['merged_at'])[0] . "'",
                 'is_completed' => 1,
                 'modified' => "'" . date('Y-m-d H:i:s') . "'",
             ),
@@ -569,6 +571,7 @@ class ItemsController extends AppController
                 'pullrequest_number' => $payload['pull_request']['number'],
             )
         );
+        $this->log($result);
         if ($result) {
             $this->log('close from github: succeed');
         } else {
@@ -788,11 +791,19 @@ class ItemsController extends AppController
             if (isset($payload['issue'])) {
                 $url = $payload['issue']['html_url'];
                 $title = $payload['issue']['title'];
-                $comment_body = mb_substr($payload['issue']['body'], 0, 40);
+                if (mb_strlen($payload['issue']['body']) > 40) {
+                    $comment_body = mb_substr($payload['issue']['body'], 0, 40) . '...';
+                } else {
+                    $comment_body = $payload['issue']['body'];
+                }
             } else if (isset($payload['comment'])){
                 $url = $payload['pull_request']['html_url'];
                 $title = $payload['pull_request']['title'];
-                $comment_body = mb_substr($payload['comment']['body'], 0, 40);
+                if (mb_strlen($payload['comment']['body']) > 40) {
+                    $comment_body = mb_substr($payload['comment']['body'], 0, 40) . '...';
+                } else {
+                    $comment_body = $payload['comment']['body'];
+                }
             }
             $commenter = $this->Author->find('first', array(
                     'fields' => 'name',
@@ -804,7 +815,7 @@ class ItemsController extends AppController
 
             $body .= "\nレビューコメントが投稿されました\n\n{$title}\n{$url}\n";
             $body .= "From:" . Hash::get($commenter, 'Author.name') . "さん\n";
-            $body .= "[code]{$comment_body}...[/code]";
+            $body .= "[code]{$comment_body}[/code]";
 
             $message = $this->Item->generate_chatwork_message($body);
             return $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
