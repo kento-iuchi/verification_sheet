@@ -474,7 +474,7 @@ class ItemsController extends AppController
         // 通知メッセージの生成
         $title = $payload['number'] . ' ' . $payload['pull_request']['title'];
         $body = $payload['pull_request']['html_url'] . "\nby " . $payload['pull_request']['user']['login'];
-        $message = $this->Item->generate_chatwork_message($title, $body);
+        $message = $this->Item->generate_chatwork_message($body, $title);
 
         // 通知
         $message_id = $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_confirm_room_id'));
@@ -523,7 +523,7 @@ class ItemsController extends AppController
         // 通知メッセージの生成
         $title = $payload['number'] . ' ' . $payload['pull_request']['title'];
         $body = "{$payload['pull_request']['html_url']}\nプルリクが更新されました by {$payload['pull_request']['user']['login']}";
-        $message = $this->Item->generate_chatwork_message($title, $body);
+        $message = $this->Item->generate_chatwork_message($body, $title);
 
         // 通知
         $message_id = $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_confirm_room_id'));
@@ -788,12 +788,25 @@ class ItemsController extends AppController
             if (isset($payload['issue'])) {
                 $url = $payload['issue']['html_url'];
                 $title = $payload['issue']['title'];
+                $comment_body = mb_substr($payload['issue']['body'], 0, 40);
             } else if (isset($payload['comment'])){
                 $url = $payload['pull_request']['html_url'];
                 $title = $payload['pull_request']['title'];
+                $comment_body = mb_substr($payload['comment']['body'], 0, 40);
             }
+            $commenter = $this->Author->find('first', array(
+                    'fields' => 'name',
+                    'conditions' => array(
+                        'github_account_name' => $payload['comment']['user']['login'],
+                    ),
+                )
+            );
+
             $body .= "\nレビューコメントが投稿されました\n\n{$title}\n{$url}\n";
-            $message = $this->Item->generate_chatwork_message(null, $body);
+            $body .= "From:" . Hash::get($commenter, 'Author.name') . "さん\n";
+            $body .= "[code]{$comment_body}...[/code]";
+
+            $message = $this->Item->generate_chatwork_message($body);
             return $this->Item->send_message_to_chatwork($message, Configure::read('chatwork_review_room_id'));
         }
     }

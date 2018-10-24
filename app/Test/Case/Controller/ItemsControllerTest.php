@@ -245,7 +245,7 @@ class ItemsControllerTest extends ControllerTestCase
                         }
                     },
                     "comment" : {
-                        "body" : "コメントテスト @test_github_author3",
+                        "body" : "コメントテストコメントテストコメントテスト\nコメントテストコメントテストコメントテストコメントテスト",
                         "user" : {
                             "login" : "test_github_author2"
                         }
