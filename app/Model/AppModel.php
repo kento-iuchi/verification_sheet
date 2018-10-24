@@ -44,7 +44,7 @@ class AppModel extends Model {
         }
     }
 
-    public function generate_chatwork_message($title = null, $body = null)
+    public function generate_chatwork_message($body = null, $title = null)
     {
         $message = $body;
         if (isset($title)) {

@@ -64,16 +64,9 @@ class ReviewerAssigningsController extends AppController
         }
         // レビュワーのアサイン
         // APIを叩く
-        if (! empty($this->request->data['payload'])) {
-            $pull_request_number = $this->request->data['payload']['pull_request']['number'];
-            $target_item = $Item->find('first', array(
-                'conditions' => array('pullrequest_number' => $pullrequest_number)
-            ));
-            $item_id = Hash::get($Item->find('first', array('conditions' => '')), 'Item.pullrequest_number');
-        } else {
-            $Item = ClassRegistry::init('Item');
-            $pull_request_number = Hash::get($Item->read('pullrequest_number', $item_id), 'Item.pullrequest_number');
-        }
+        $Item = ClassRegistry::init('Item');
+        $pull_request_number = Hash::get($Item->read('pullrequest_number', $item_id), 'Item.pullrequest_number');
+
         if (! isset($pull_request_number)){
             $this->log('Reviewer assignings: failed to get pullrequest_number');
             return false;
