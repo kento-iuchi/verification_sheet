@@ -55,7 +55,7 @@ class ItemsController extends AppController
             if ($this->Item->save($this->request->data)) {
                 return $this->redirect(array('action' => 'index'));
             } else {
-                echo "500: failed to add Item";
+                echo "failed to add Item";
             }
         }
         return $this->redirect(array('action' => 'index'));
@@ -538,39 +538,23 @@ class ItemsController extends AppController
     {
         $this->log('##### closed #####');
 
-        // // クローズするデータの取得
-        // $close_item = $this->Item->find('first', array(
-        //         'conditions' => array(
-        //             'pullrequest_number' => $payload['pull_request']['number'],
-        //             'is_completed' => 0,
-        //         )
-        //     )
-        // );
-        // print_r($close_item);
-        // if (empty($close_item)) {
-        //     $this->log('Item not found');
-        //     return false;
-        // }
-        // $close_item['Item']['merge_finish_date_to_master'] = explode('T', $payload['pull_request']['merged_at'])[0];
-        // $close_item['Item']['is_completed'] = 1;
-
-        // // 保存
-        // if (! $this->Item->save($close_item)) {
-        //     $this->log('close from github: failed');
-        //     return false;
-        // }
-        $this->log($payload['pull_request']['merged_at']);
-        $this->log(explode('T', $payload['pull_request']['merged_at']));
-        $result = $this->Item->UpdateAll(
-            array(
-                'merge_finish_date_to_master' => "'" . explode('T', $payload['pull_request']['merged_at'])[0] . "'",
-                'is_completed' => 1,
-                'modified' => "'" . date('Y-m-d H:i:s') . "'",
-            ),
-            array(
-                'pullrequest_number' => $payload['pull_request']['number'],
+        // クローズするデータの取得
+        $close_item = $this->Item->find('first', array(
+                'conditions' => array(
+                    'pullrequest_number' => $payload['pull_request']['number'],
+                    'is_completed' => 0,
+                )
             )
         );
+        if (empty($close_item)) {
+            $this->log('Item not found');
+            return false;
+        }
+        $close_item['Item']['merge_finish_date_to_master'] = explode('T', $payload['pull_request']['merged_at'])[0];
+        $close_item['Item']['is_completed'] = 1;
+
+        // 保存
+        $result = $this->Item->save($close_item);
         $this->log($result);
         if ($result) {
             $this->log('close from github: succeed');
@@ -578,6 +562,26 @@ class ItemsController extends AppController
             $this->log('close from github: failed');
             return false;
         }
+
+        // $this->log($payload['pull_request']['merged_at']);
+        // $this->log(explode('T', $payload['pull_request']['merged_at']));
+        // $result = $this->Item->UpdateAll(
+        //     array(
+        //         'merge_finish_date_to_master' => "'" . explode('T', $payload['pull_request']['merged_at'])[0] . "'",
+        //         'is_completed' => 1,
+        //         'modified' => "'" . date('Y-m-d H:i:s') . "'",
+        //     ),
+        //     array(
+        //         'pullrequest_number' => $payload['pull_request']['number'],
+        //     )
+        // );
+        // $this->log($result);
+        // if ($result) {
+        //     $this->log('close from github: succeed');
+        // } else {
+        //     $this->log('close from github: failed');
+        //     return false;
+        // }
 
         ob_clean();
         $this->check_all_open_pullrequests_mergeability();
