@@ -5,7 +5,10 @@ App::uses('AppController', 'Controller');
 class ReviewerAssigningsController extends AppController
 {
     /**
-     *
+     * 
+     * webからアサインしたときもDBに保存したりするようにしたかった
+     * なのでcontrollerに実装してある
+     * 現状やってる処理はビューに何かを渡したりということは一切ないのでモデルでやるのが適切
      */
     public function assign_reviewer($item_id = null)
     {

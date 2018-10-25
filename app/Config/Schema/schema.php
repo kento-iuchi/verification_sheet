@@ -8,12 +8,23 @@ class AppSchema extends CakeSchema {
 	public function after($event = array()) {
 	}
 
+	public $active_reviewer_assignings = array(
+		'id' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'key' => 'primary'),
+		'item_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
+		'reviewing_author_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
+		'indexes' => array(
+			
+		),
+		'tableParameters' => array('comment' => 'VIEW')
+	);
+
 	public $authors = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
 		'name' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'github_account_name' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'chatwork_name' => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'chatwork_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),
+		'review_assign_weight' => array('type' => 'float', 'null' => true, 'default' => '1', 'unsigned' => false),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
