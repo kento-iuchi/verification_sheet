@@ -791,10 +791,10 @@ class ItemsController extends AppController
             if (isset($payload['issue'])) {
                 $url = $payload['issue']['html_url'];
                 $title = $payload['issue']['title'];
-                if (mb_strlen($payload['issue']['body']) > 40) {
-                    $comment_body = mb_substr($payload['issue']['body'], 0, 40) . '...';
+                if (mb_strlen($payload['comment']['body']) > 40) {
+                    $comment_body = mb_substr($payload['comment']['body'], 0, 40) . '...';
                 } else {
-                    $comment_body = $payload['issue']['body'];
+                    $comment_body = $payload['comment']['body'];
                 }
             } else if (isset($payload['comment'])){
                 $url = $payload['pull_request']['html_url'];
