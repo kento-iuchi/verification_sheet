@@ -19,6 +19,16 @@ class ReviewerAssigningsController extends AppController
         $newest_variable = $SystemVariable->find('first', array('order' => array('SystemVariable.id' => 'desc')));
         $newest_variable = $newest_variable['SystemVariable'];
 
+        // プルリク作成者のidを取得
+        $Item = ClassRegistry::init('item');
+        $target_item = $Item->find('first', array(
+            'fields' => array('author_id'),
+            'conditions' => array(
+                'id' => $item_id,
+            ),
+        ));
+        $author_id = Hash::get($target_item, 'Item.author_id');
+
         $Authors = ClassRegistry::init('Authors');
         // 一次レビュワー決定
         // 現在受け持っているプルリクの合計ポイントが最も低い人に
@@ -31,6 +41,8 @@ class ReviewerAssigningsController extends AppController
                 reviewer_tasks
             WHERE
                 reviewer_id IN ({$first_reviewer_ids})
+                AND
+                reviewer_id != {$author_id}
             ORDER BY
                 total_pivotal_point ASC,
                 review_count
@@ -53,6 +65,8 @@ class ReviewerAssigningsController extends AppController
                 reviewer_tasks
             WHERE
                 reviewer_id IN ({$second_reviewer_ids})
+                AND
+                reviewer_id != {$author_id}
             ORDER BY
                 total_pivotal_point ASC,
                 review_count ASC

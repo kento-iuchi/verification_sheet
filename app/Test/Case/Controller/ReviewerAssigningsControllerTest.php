@@ -55,6 +55,41 @@ class ReviewerAssigningsControllerTest extends ControllerTestCase
         $this->assertTrue(isset($newest_assignings[1]['ReviewerAssigning']['modified']));
     }
 
+    public function test_assign_reviewer_作成者と同じ人がアサインされないこと()
+    {
+        $result = $this->testAction(
+            '/reviewer_assignings/assign_reviewer/3',
+            array('method' => 'post')
+        );
+
+        $newest_assignings = $this->ReviewerAssigning->find('all', array(
+            'order' => array(
+                'id' => 'desc',
+            ),
+            'limit' => 2
+        ));
+
+        print_r($newest_assignings);
+
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['id'], '6');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['item_id'], '1');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['item_closed'], '0');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['reviewing_author_id'], '5');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['review_stage'], '2');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['is_reviewed'], '0');
+        $this->assertTrue(isset($newest_assignings[0]['ReviewerAssigning']['created']));
+        $this->assertTrue(isset($newest_assignings[0]['ReviewerAssigning']['modified']));
+
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['id'], '5');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['item_id'], '1');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['item_closed'], '0');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['reviewing_author_id'], '7');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['review_stage'], '1');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['is_reviewed'], '0');
+        $this->assertTrue(isset($newest_assignings[1]['ReviewerAssigning']['created']));
+        $this->assertTrue(isset($newest_assignings[1]['ReviewerAssigning']['modified']));
+    }
+
     // public function test_save_正常に保存できること()
     // {
     //     $data = array(
