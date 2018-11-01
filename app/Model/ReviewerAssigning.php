@@ -13,7 +13,6 @@ class ReviewerAssigning extends AppModel
             ),
         ));
         $author_id = Hash::get($target_item, 'Item.author_id');
-        $this->log($author_id);
 
         $Authors = ClassRegistry::init('Authors');
         // 一次レビュワー決定
@@ -143,8 +142,7 @@ class ReviewerAssigning extends AppModel
         }
 
         $Item = ClassRegistry::init('Item');
-        $pull_request_number = $payload['pull_request']['number'];
-        $item_id = $Item->getItemIdByPullRequestNumber($pull_request_number);
+        $item_id = $Item->getItemIdByPullRequestNumber($payload['pull_request']['number']);
         if (! $item_id) {
             $this->log('review_assigning: item not found');
             return false;
@@ -158,7 +156,6 @@ class ReviewerAssigning extends AppModel
             )
         ));
         $current_assigning_authors = Hash::extract($current_assignings, '{n}.ReviewerAssigning.reviewing_author_id');
-        $this->log($current_assigning_authors);
 
         $Author = ClassRegistry::init('Author');
         $reviewing_author_ids = array();
@@ -170,18 +167,21 @@ class ReviewerAssigning extends AppModel
             }
             $reviewing_author_ids[] = $requested_reviewer_id;
         }
-        $this->log($reviewing_author_ids);
 
         $result = array();
         foreach ($reviewing_author_ids as $reviewing_author_id) {
             if ($reviewing_author_id) {
-                $this->log($reviewing_author_id);
+                $second_reviewer_ids = Configure::read('stage_2_reviewr_ids');
+                $review_stage = in_array($reviewing_author_id, $second_reviewer_ids)
+                    ? 2
+                    : 1;
                 $this->create();
                 $new_assigning = array(
                     'ReviewerAssigning' => array(
                         'item_id' => $item_id,
                         'item_closed' => 0,
                         'reviewing_author_id' => $reviewing_author_id,
+                        'review_stage' => $review_stage,
                         'is_reviewed' => 0,
                     ),
                 );

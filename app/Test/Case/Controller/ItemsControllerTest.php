@@ -372,4 +372,57 @@ class ItemsControllerTest extends ControllerTestCase
         $this->assertTrue(true);
     }
 
+    public function test_accept_github_webhook_WEBHOOKからのアサインが正しく行われること()
+    {
+        $_SERVER['X-GitHub-Event'] = 'pull_request_review_comment';
+
+        // 保存成功
+        $data = array(
+            'payload' => '
+                {
+                    "action": "review_requested",
+                    "pull_request": {
+                        "number": 2074,
+                        "requested_reviewers": [
+                            {
+                                "login" : "test_github_author1"
+                            },
+                            {
+                                "login" : "test_github_author2"
+                            }
+                        ]
+                    }
+                }
+            ',
+        );
+
+        $result = $this->testAction(
+            '/items/accept_github_webhook?key=test_webhook_key',
+            array('data' => $data, 'method' => 'post')
+        );
+        $newest_assignings = $this->ReviewerAssigning->find('all', array(
+            'order' => array(
+                'id' => 'desc',
+            ),
+            'limit' => 2
+        ));
+
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['id'], '4');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['item_id'], '1');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['item_closed'], '0');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['reviewing_author_id'], '1');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['review_stage'], '1');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['is_reviewed'], '1');
+        $this->assertTrue(isset($newest_assignings[0]['ReviewerAssigning']['created']));
+        $this->assertTrue(isset($newest_assignings[0]['ReviewerAssigning']['modified']));
+
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['id'], '3');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['item_id'], '1');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['item_closed'], '0');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['reviewing_author_id'], '2');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['review_stage'], '2');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['is_reviewed'], '0');
+        $this->assertTrue(isset($newest_assignings[1]['ReviewerAssigning']['created']));
+        $this->assertTrue(isset($newest_assignings[1]['ReviewerAssigning']['modified']));
+    }
 }

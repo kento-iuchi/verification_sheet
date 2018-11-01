@@ -30,8 +30,6 @@ class ReviewerAssigningTest extends CakeTestCase
             'limit' => 2
         ));
 
-        print_r($newest_assignings);
-
         $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['id'], '6');
         $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['item_id'], '1');
         $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['item_closed'], '0');
@@ -79,6 +77,103 @@ class ReviewerAssigningTest extends CakeTestCase
         $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['is_reviewed'], '0');
         $this->assertTrue(isset($newest_assignings[1]['ReviewerAssigning']['created']));
         $this->assertTrue(isset($newest_assignings[1]['ReviewerAssigning']['modified']));
+    }
+
+    public function test_assignReviewerFromBrowser()
+    {
+        $payload = [
+            'action' => "review_requested",
+            'pull_request' => [
+                'number' => '3',
+                "requested_reviewers" => [
+                    [
+                        "login" =>  "test_github_author1",
+                    ],
+                    [
+                        "login" =>  "test_github_author2",
+                    ],
+                ],
+            ],
+        ];
+
+        $this->ReviewerAssigning->assignReviewerFromBrowser($payload);
+        $newest_assignings = $this->ReviewerAssigning->find('all', array(
+            'order' => array(
+                'id' => 'desc',
+            ),
+            'limit' => 2
+        ));
+
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['id'], '6');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['item_id'], '3');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['item_closed'], '0');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['reviewing_author_id'], '5');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['review_stage'], '2');
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['is_reviewed'], '0');
+        $this->assertTrue(isset($newest_assignings[0]['ReviewerAssigning']['created']));
+        $this->assertTrue(isset($newest_assignings[0]['ReviewerAssigning']['modified']));
+
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['id'], '5');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['item_id'], '3');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['item_closed'], '0');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['reviewing_author_id'], '1');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['review_stage'], '1');
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['is_reviewed'], '0');
+        $this->assertTrue(isset($newest_assignings[1]['ReviewerAssigning']['created']));
+        $this->assertTrue(isset($newest_assignings[1]['ReviewerAssigning']['modified']));
+
+        // 同じpayloadを再送する
+        // 同item_id, 同author_idのレコードが存在しているため
+        // 作成も更新も行われていないことを確認
+        $result = $this->ReviewerAssigning->assignReviewerFromBrowser($payload);
+        $this->assertTrue(empty($result));
+
+        $newest_assignings = $this->ReviewerAssigning->find('all', array(
+            'order' => array(
+                'id' => 'desc',
+            ),
+            'limit' => 2
+        ));
+
+        $this->assertEqual($newest_assignings[0]['ReviewerAssigning']['id'], '6');
+
+        $this->assertEqual($newest_assignings[1]['ReviewerAssigning']['id'], '5');
+
+    }
+
+    public function test_assignReviewerFromBrowser_二人同時にアサインしたが片方はassigningが既存()
+    {
+        $payload = [
+            'action' => "review_requested",
+            'pull_request' => [
+                'number' => '10000000',
+                "requested_reviewers" => [
+                    [
+                        "login" =>  "test_github_author1", // id = 1 既存
+                    ],
+                    [
+                        "login" =>  "test_github_author2", // id = 5
+                    ],
+                ],
+            ],
+        ];
+
+        $reuslt = $this->ReviewerAssigning->assignReviewerFromBrowser($payload);
+        $newest_assignings = $this->ReviewerAssigning->find('first', array(
+            'order' => array(
+                'id' => 'desc',
+            ),
+        ));
+
+        $this->assertEqual($newest_assignings['ReviewerAssigning']['id'], '5');
+        $this->assertEqual($newest_assignings['ReviewerAssigning']['item_id'], '2');
+        $this->assertEqual($newest_assignings['ReviewerAssigning']['item_closed'], '0');
+        $this->assertEqual($newest_assignings['ReviewerAssigning']['reviewing_author_id'], '5');
+        $this->assertEqual($newest_assignings['ReviewerAssigning']['review_stage'], '2');
+        $this->assertEqual($newest_assignings['ReviewerAssigning']['is_reviewed'], '0');
+        $this->assertTrue(isset($newest_assignings['ReviewerAssigning']['created']));
+        $this->assertTrue(isset($newest_assignings['ReviewerAssigning']['modified']));
+
     }
 
     public function test_alert_not_reviewd_items_通知が正しく送信できること()
