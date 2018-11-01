@@ -115,6 +115,7 @@ class AppSchema extends CakeSchema {
 
 	public $reviewer_tasks = array(
 		'reviewer_id' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
+		'reviewer_name' => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'review_count' => array('type' => 'biginteger', 'null' => false, 'default' => '0', 'length' => 21, 'unsigned' => false),
 		'total_pivotal_point' => array('type' => 'decimal', 'null' => true, 'default' => null, 'length' => '32,0', 'unsigned' => false),
 		'indexes' => array(

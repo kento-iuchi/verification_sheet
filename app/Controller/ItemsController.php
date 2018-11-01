@@ -125,10 +125,10 @@ class ItemsController extends AppController
                 $target_chatwork_name = Hash::get($target_chatwork_info, 'Author.chatwork_name');
             }
             $message = '';
-            if ($target_chatwork_id) {
+            if (isset($target_chatwork_id)) {
                 $message .= "[to:{$target_chatwork_id}]";
             }
-            if ($target_chatwork_name) {
+            if (isset($target_chatwork_name)) {
                 $message .= "{$target_chatwork_name}さん";
             }
             $title = Hash::get($target_item, 'Item.content');
@@ -186,7 +186,6 @@ class ItemsController extends AppController
     public function fetch_last_updated_time()
     {
         $this->autoRender = false;
-        $this->log($this->request->data);
         $result = $this->Item->read('last_updated_time', $this->request->data['id']);
         $last_updated_time = Hash::get($result, 'Item.last_updated_time');
 

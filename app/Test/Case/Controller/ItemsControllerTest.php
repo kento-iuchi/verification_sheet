@@ -5,7 +5,9 @@ class ItemsControllerTest extends ControllerTestCase
 {
     public $fixtures = array(
         'app.item',
+        'app.editing_item',
         'app.author',
+        'app.verifier',
         'app.reviewer_assigning',
         'app.reviewer_task',
         'app.verification_history',
@@ -17,7 +19,66 @@ class ItemsControllerTest extends ControllerTestCase
     {
         parent::setUp();
         $this->Item = ClassRegistry::init('Item');
+        $this->EditingItem = ClassRegistry::init('EditingItem');
         $this->ReviewerAssigning = ClassRegistry::init('ReviewerAssigning');
+    }
+
+    public function test_edit_ステータスを編集時、メッセージが送信されること()
+    {
+        /*
+        'サポート・営業確認中'の場合は検証担当者、
+        '差し戻し'の場合はauthorにメッセージが送信される
+        */
+        $data = array(
+            'id' => 1,
+            'content' => 'サポート・営業確認中',
+            'column_name' => 'status'
+        );
+        $result = $this->testAction(
+            '/items/edit',
+            array('data' => $data, 'method' => 'post')
+        );
+        $result = json_decode($result, true);
+        $this->assertEqual('サポート・営業確認中', $result['Item']['status']);
+
+        $data = array(
+            'id' => 1,
+            'content' => '改修中',
+            'column_name' => 'status'
+        );
+        $result = $this->testAction(
+            '/items/edit',
+            array('data' => $data, 'method' => 'post')
+        );
+        $result = json_decode($result, true);
+        $this->assertEqual('改修中', $result['Item']['status']);
+
+        $data = array(
+            'id' => 1,
+            'content' => '差し戻し',
+            'column_name' => 'status'
+        );
+        $result = $this->testAction(
+            '/items/edit',
+            array('data' => $data, 'method' => 'post')
+        );
+        $result = json_decode($result, true);
+        $this->assertEqual('差し戻し', $result['Item']['status']);
+    }
+
+    public function test_edit_リリース判断日を編集時、メッセージが送信されること()
+    {
+        $data = array(
+            'id' => 1,
+            'content' => '2018/12/31',
+            'column_name' => 'tech_release_jusgement'
+        );
+        $result = $this->testAction(
+            '/items/edit',
+            array('data' => $data, 'method' => 'post')
+        );
+        $result = json_decode($result, true);
+        $this->assertEqual($result['Item']['tech_release_jusgement'], '2018/12/31');
     }
 
     public function test_edit_マージ完了日を編集時、リリース予定日が記録されること(){
@@ -34,7 +95,8 @@ class ItemsControllerTest extends ControllerTestCase
         $this->assertTrue(! empty($result['Item']['scheduled_release_date']));
     }
 
-    public function test_edit_現在の内容とフォームの入力内容が同じである為、何も更新されないこと(){
+    public function test_edit_現在の内容とフォームの入力内容が同じである為、何も更新されないこと()
+    {
         $data = array(
             'id' => 1,
             'content' => '確認ポイント',
@@ -68,9 +130,57 @@ class ItemsControllerTest extends ControllerTestCase
         $this->assertEqual('2012-11-01 00:00:01', $target_item['Item']['modified']);
     }
 
-    public function test_accept_github_webhook()
+    public function test_fetch_last_edit_time_正常に取得できること()
     {
-        // キー不一致でエラー
+        $data = array('id' => 1,);
+        $result = $this->testAction(
+            '/items/fetch_last_updated_time',
+            array('data' => $data, 'method' => 'post')
+        );
+        $this->assertEqual($result, '100000');
+    }
+
+    public function test_fetch_items_list_somebody_editing_正常に取得できること()
+    {
+        $data = array('my_editor_token' => 'test_token1',);
+        $result = $this->testAction(
+            '/items/fetch_items_list_somebody_editing',
+            array('data' => $data, 'method' => 'post')
+        );
+        $this->assertEqual(json_decode($result, true), array(
+            array(
+                'id' => 2,
+                'item_id' => '2',
+                'item_column_name' => 'confirm_point',
+                'editor_token' => 'test_token2',
+                'created' => '2012-11-01 00:00:01',
+                'modified' => '2012-11-01 00:00:01',
+            ),
+        ));
+    }
+
+    public function test_register_item_editing_正常に登録できること()
+    {
+        $data = array(
+            'item_id' => 1,
+            'editor_token' => 'test_token3'
+        );
+        $result = $this->testAction(
+            '/items/register_item_editing',
+            array('data' => $data, 'method' => 'post')
+        );
+        $this->assertTrue(isset($result));
+
+        // $last_id = $this->EditingItem->getLastInsertID();
+        // echo $last_id;
+        // $last_editing_item = $this->EditingItem->read($last_id);
+        // print_r($last_editing_item);
+
+        // $this->assertEqual($last_editing_item['EditingItem']['id'], 3);
+    }
+
+    public function test_accept_github_webhook_キー不一致でエラーになること()
+    {
         $data = array();
         $result = $this->testAction(
             '/items/accept_github_webhook?key=wrong_webhook_key',
