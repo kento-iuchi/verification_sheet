@@ -59,4 +59,16 @@ class Item extends AppModel
         return parent::save($this->data, $validate, $fieldList);
     }
 
+    public function getItemIdByPullRequestNumber($pull_request_number)
+    {
+        $item = $this->find('first', array(
+            'conditions' => array(
+                'pullrequest_number' => $pull_request_number,
+            )
+        ));
+
+        $id = Hash::get($item, 'Item.id');
+        return $id;
+    }
+
 }

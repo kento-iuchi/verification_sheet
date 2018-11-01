@@ -125,6 +125,83 @@ class ReviewerAssigning extends AppModel
             return false;
         }
     }
+
+    /**
+     * ブラウザ上から直接アサインする時に使用
+     * ブラウザ上からの操作とAPIを経由する場合の違い
+     * 　・authorと同じ人をアサインできない（レビュワーの選択肢に表示されない）
+     *
+     * @param array $payload
+     */
+    public function assignReviewerFromBrowser($payload)
+    {
+        $this->autoRender = false;
+
+        if ($payload['action'] != 'review_requested') {
+            $this->log('unexpected payload ' . $payload['action']);
+            return false;
+        }
+
+        $Item = ClassRegistry::init('Item');
+        $pull_request_number = $payload['pull_request']['number'];
+        $item_id = $Item->getItemIdByPullRequestNumber($pull_request_number);
+        if (! $item_id) {
+            $this->log('review_assigning: item not found');
+            return false;
+        }
+
+        // 現在アサインされているauthorを取得
+        // 同item_id,同author_idのレコードが複数作成されるのを防ぐため
+        $current_assignings = $this->find('all', array(
+            'conditions' => array(
+                'item_id' => $item_id,
+            )
+        ));
+        $current_assigning_authors = Hash::extract($current_assignings, '{n}.ReviewerAssigning.reviewing_author_id');
+        $this->log($current_assigning_authors);
+
+        $Author = ClassRegistry::init('Author');
+        $reviewing_author_ids = array();
+        $requested_reviewers = $payload['pull_request']['requested_reviewers'];
+        foreach($requested_reviewers as $requested_reviewer) {
+            $requested_reviewer_id = $Author->getIdByGitHubAccountName($requested_reviewer['login']);
+            if (in_array($requested_reviewer_id, $current_assigning_authors)) {
+                continue;
+            }
+            $reviewing_author_ids[] = $requested_reviewer_id;
+        }
+        $this->log($reviewing_author_ids);
+
+        $result = array();
+        foreach ($reviewing_author_ids as $reviewing_author_id) {
+            if ($reviewing_author_id) {
+                $this->log($reviewing_author_id);
+                $this->create();
+                $new_assigning = array(
+                    'ReviewerAssigning' => array(
+                        'item_id' => $item_id,
+                        'item_closed' => 0,
+                        'reviewing_author_id' => $reviewing_author_id,
+                        'is_reviewed' => 0,
+                    ),
+                );
+                $saved_assigning = $this->save($new_assigning);
+                if (! $saved_assigning) {
+                    $result[] = 'save assigning: failed';
+                } else {
+                    $result[] = $saved_assigning;
+                }
+            }
+        }
+
+        $this->log($result);
+        if (! empty($result)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      *
      */
@@ -220,6 +297,7 @@ class ReviewerAssigning extends AppModel
             ));
             if (empty($target_item)) {
                 $this->log("item not found [pullrequest_number:{$pull_request_number}]");
+                return false;
             }
             $target_item_id = Hash::get($target_item, 'Item.id');
             if ($target_item_id) {

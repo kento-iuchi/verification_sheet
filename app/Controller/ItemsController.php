@@ -397,6 +397,9 @@ class ItemsController extends AppController
                     return $this->updateItemFromGitHubRequest($payload);
                 } else if ($payload['action'] == 'closed') {
                     return $this->completeItemFromGitHubRequest($payload);
+                } else if ($payload['action'] == 'review_requested') {
+                    $ReviewerAssigning = ClassRegistry::init('ReviewerAssigning');
+                    return $ReviewerAssigning->assignReviewerFromBrowser($payload);
                 }
             } else if ($this->request->header('X-GitHub-Event') == 'issue_comment'
                     || $this->request->header('X-GitHub-Event') == 'pull_request_review_comment') {
