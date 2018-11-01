@@ -39,6 +39,7 @@ class ItemFixture extends CakeTestFixture
                 // 'error_code' => '550',
                 'verifier_id' => 2,
                 'confirm_points' => '確認ポイント',
+                'author_id' => 7,
                 'created' => '2012-11-01 00:00:01',
                 'modified' => '2012-11-01 00:00:01',
                 'is_completed' => 0,

@@ -2,8 +2,6 @@
 ini_set('display_errors',1);
 
 App::uses('AppController', 'Controller');
-App::import('Controller', 'ReviewerAssignings');
-
 class ItemsController extends AppController
 {
     public $uses = array('Item', 'Author', 'Verifier', 'VerificationHistory', 'EditingItem', 'SystemVariable');
@@ -488,8 +486,8 @@ class ItemsController extends AppController
 
         // 後処理２
         // レビュワーのアサイン
-        $ReviewerAssigningsController = new ReviewerAssigningsController;
-        $ReviewerAssigningsController->assign_reviewer(Hash::get($saved_item, 'Item.id'));
+        $ReviewerAssigning = ClassRegistry::init('ReviewerAssigning');
+        $ReviewerAssigning->assignReviewer(Hash::get($saved_item, 'Item.id'));
 
         return true;
     }
