@@ -368,6 +368,9 @@ class ItemsController extends AppController
                         'supp_release_judgement' => null,
                         'supp_release_judgement' => '',
                     ),
+                ),
+                'order' => array(
+                    'tech_release_judgement' => 'asc',
                 )
             )
         );
@@ -381,6 +384,9 @@ class ItemsController extends AppController
                     'NOT' => array(
                         'supp_release_judgement' => null,
                     ),
+                ),
+                'order' => array(
+                    'supp_release_judgement' => 'asc',
                 )
             )
         );
