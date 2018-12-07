@@ -350,30 +350,97 @@ class ItemsController extends AppController
 
     public function send_elapsed_days_alert()
     {
-        $message = '[info][title]おしらせ[/title]';
-        $today_date = new Datetime(date("y-m-d"));
-        $column_name_text = array(
-            'tech_release_judgement' => '技術リリースOK判断日',
-            'supp_release_judgement' => 'サポートリリースOK判断日',
-            'sale_release_judgement' => '営業リリースOK判断日',
+        $this->autoRender = false;
+
+        // メッセージ生成
+        $message = '[info][title]確認待ち項目[/title]';
+        // 各判断日ごとに経過日数を求める
+
+        // 技術リリースOK判断日
+        $target_items = $this->Item->find('all',
+            array(
+                'conditions' => array(
+                    'is_completed' => 0,
+                    'NOT' => array(
+                        'tech_release_judgement' => null,
+                    ),
+                    'OR' => array(
+                        'supp_release_judgement' => null,
+                        'supp_release_judgement' => '',
+                    ),
+                )
+            )
         );
-        $items = $this->Item->find('all', array('conditions' => array('is_completed' => 0)));
-        $titles = Hash::extract($items, '{n}.Item.content');
-        foreach ($column_name_text as $column_name=> $column_name_jp) {
-            $target_column = Hash::extract($items, "{n}.Item.{$column_name}");
-            foreach ($target_column as $idx => $judge_date) {
-                $judge_date = new Datetime($judge_date);
-                $elapsed_days = $judge_date->diff($today_date)->format('%r%a');
-                if($elapsed_days >= 3){
-                    $message .=  '■'. $titles[$idx] . "\n";
-                    $message .=  "　{$column_name_text[$column_name]}から {$elapsed_days} 日経過しています\n";
-                }
+        $title_and_elapsed_days = $this->calcElapsedDaysOfItems($target_items, 'tech_release_judgement');
+
+        // サポートリリースOK判断日
+        $target_items = $this->Item->find('all',
+            array(
+                'conditions' => array(
+                    'is_completed' => 0,
+                    'NOT' => array(
+                        'supp_release_judgement' => null,
+                    ),
+                )
+            )
+        );
+        $title_and_elapsed_days = array_merge(
+            $title_and_elapsed_days, $this->calcElapsedDaysOfItems($target_items, 'supp_release_judgement'));
+
+        if (empty(array_filter($title_and_elapsed_days))) {
+            return;
+        }
+
+        foreach ($title_and_elapsed_days as $date_type => $contents) {
+            switch ($date_type) {
+                case 'tech_release_judgement':
+                    $message .= "サポート確認待ち\n";
+                    foreach ($contents as $elapsed_days => $titles) {
+                        $message .= "■" .  $elapsed_days . "日経過\n";
+                        foreach ($titles as $title) {
+                            $message .= "・" .  $title . "\n";
+                        }
+                    }
+                    break;
+                case 'supp_release_judgement':
+                    $message .= "マージ待ち\n";
+                    foreach ($contents as $elapsed_days => $titles) {
+                        $message .= "■" .  $elapsed_days . "日経過\n";
+                        foreach ($titles as $title) {
+                            $message .= "・" .  $title . "\n";
+                        }
+                    }
+                    break;
             }
+            $message .= "\n";
         }
 
         $message.= '[/info]';
 
         $this->send_message_to_chatwork($message);
+    }
+
+    private function calcElapsedDaysOfItems($target_items, $column_name)
+    {
+        $results = array(
+            $column_name => array(),
+        );
+
+        $target_column = Hash::extract($target_items, "{n}.Item.{$column_name}");
+        $titles = Hash::extract($target_items, '{n}.Item.content');
+        $today_date = new Datetime(date("y-m-d"));
+        foreach ($target_column as $idx => $judge_date) {
+            $judge_date = new Datetime($judge_date);
+            $elapsed_days = $judge_date->diff($today_date)->format('%r%a');
+            if ($elapsed_days) {
+                if (! isset($results[$column_name][$elapsed_days])) {
+                    $results[$column_name][$elapsed_days] = array();
+                }
+                $results[$column_name][$elapsed_days][] = $titles[$idx];
+            }
+        }
+
+        return $results;
     }
 
     /**
