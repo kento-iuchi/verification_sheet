@@ -517,7 +517,7 @@ class ItemsController extends AppController
         preg_match('/\[#[0-9]+\]/', $payload['pull_request']['title'], $title_head);
         if (empty($title_head)) {
             $this->log('failed to extract story id');
-            $new_item['pivotal_point'] = 0;
+            $new_item['pivotal_point'] = 1;
         } else {
             preg_match('/[0-9]+/', $title_head[0], $pivotal_id);
             $pivotal_tracker_token = Configure::read('pivotal_tracker_token');
@@ -530,7 +530,7 @@ class ItemsController extends AppController
                     $this->log('failed to fetch pivotal story');
                     $this->log($story['error']);
                 }
-                $new_item['pivotal_point'] = 0;
+                $new_item['pivotal_point'] = 1;
             }
         }
 
